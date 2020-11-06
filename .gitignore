@@ -1,4 +1,4 @@
-*/node_modules/**/*
+*/node_modules/
 #specific to frontend
 ShopItFrontend/.expo/*
 ShopItFrontend/npm-debug.*
