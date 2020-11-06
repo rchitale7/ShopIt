@@ -18,14 +18,12 @@ connection.once('open', () => {
 })
 
 const usersRouter = require('./routes/users');
-const rusheesRouter = require('./routes/rushees');
 
 app.get('/', function (req, res) {
-    res.send('Welcome to Sift API!');
+    res.send('Welcome to ShopIt\'s API!');
   });
 
 app.use('/users', usersRouter);
-app.use('/rushees', rusheesRouter);
 
 app.listen(port, () => {
     console.log(`This shit\'s running on port ${port}!`);
