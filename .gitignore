@@ -1,5 +1,6 @@
 */node_modules/
-#specific to frontend
+
+# Frontend
 ShopItFrontend/.expo/*
 ShopItFrontend/npm-debug.*
 ShopItFrontend/*.jks
@@ -12,3 +13,6 @@ ShopItFrontend/web-build/
 
 # macOS
 .DS_Store
+
+# Backend
+ShopItBackend/.env
