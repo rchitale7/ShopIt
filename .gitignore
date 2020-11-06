@@ -1,0 +1,14 @@
+*/node_modules/**/*
+#specific to frontend
+ShopItFrontend/.expo/*
+ShopItFrontend/npm-debug.*
+ShopItFrontend/*.jks
+ShopItFrontend/*.p8
+ShopItFrontend/*.p12
+ShopItFrontend/*.key
+ShopItFrontend/*.mobileprovision
+ShopItFrontend/*.orig.*
+ShopItFrontend/web-build/
+
+# macOS
+.DS_Store
