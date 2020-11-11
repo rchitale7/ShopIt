@@ -15,13 +15,6 @@ Most likely, we will pass a prop called items, which will be the input data.
 Sample Usage:
     <ItemList/>
 
-Files touched:
--ItemList.jsx
--Item.jsx
--App.js
--package.json
-
-
 TO-DO: Think about the Map wrapper and how it may be implemented.
 */
 const ItemList = () => {
