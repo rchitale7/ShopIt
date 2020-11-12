@@ -18,7 +18,7 @@ const InventorySearch = () => {
       {title: 'Pantry', data: [{name: 'pasta', description: 'penne'}]},
       {title: 'Produce', data: [{name: 'lettuce', description: 'ice berg'}]},
       {title: 'Snacks', data: [{name: 'goldfish', description: 'flavor blasted'}]}
-  ]
+  ];
 
   // if the user has typed in the search bar, we display a filtered list of the inventory, and
   // we no longer separate by category
@@ -48,11 +48,6 @@ const InventorySearch = () => {
 
   return (
     <View>
-        <CheckBox
-    disabled={false}
-    value={toggleCheckBox}
-    onValueChange={(newValue) => setToggleCheckBox(newValue)}
-  />
       <TextInput 
         placeholder='Search for groceries!'
         onChangeText={text => setSearchKey(text)}
