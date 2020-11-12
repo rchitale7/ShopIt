@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { SectionList, Text, TextInput, View } from 'react-native';
+import { FlatList, SectionList, Text, TextInput, View } from 'react-native';
 
 const InventorySearch = () => {
   const [searchKey, setSearchKey] = useState('');
-
 
   // TODO: change from hardcoded data to result from backend API query
   // assuming that a grocery is an object with a name and description field
@@ -21,19 +20,45 @@ const InventorySearch = () => {
       {title: 'Snacks', data: [{name: 'goldfish', description: 'flavor blasted'}]}
   ]
 
-  return (
-    <View>
-      <TextInput 
-        placeholder='Search for groceries!'
-        onChangeText={text => setSearchKey(text)}
-        defaultValue={searchKey}
-      />
+  // if the user has typed in the search bar, we display a filtered list of the inventory, and
+  // we no longer separate by category
+  let inventoryList;
+  if (!searchKey) {
+    inventoryList = 
       <SectionList
         sections={inventory}
         renderItem={({item}) => <Text>{item.name}</Text>}
         renderSectionHeader={({section}) => <Text style={{fontWeight: "bold"}}>{section.title}</Text>}
         keyExtractor={(item, index) => index}
+      />;
+  }
+  else {
+    let filteredInventory = inventory
+      .map(category => category.data)
+      .flat()
+      .filter(item => item.name.toLowerCase().includes(searchKey.toLowerCase()));
+    
+    inventoryList =
+      <FlatList
+        data={filteredInventory}
+        renderItem={({item}) => <Text>{item.name}</Text>}
+        keyExtractor={(item, index) => index.toString()}
+      />;
+  }
+
+  return (
+    <View>
+        <CheckBox
+    disabled={false}
+    value={toggleCheckBox}
+    onValueChange={(newValue) => setToggleCheckBox(newValue)}
+  />
+      <TextInput 
+        placeholder='Search for groceries!'
+        onChangeText={text => setSearchKey(text)}
+        defaultValue={searchKey}
       />
+      {inventoryList}
     </View>
   );
 }
