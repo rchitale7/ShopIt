@@ -6,7 +6,7 @@ import GroceryStoreSearch from './components/GroceryStoreSearch';
 import Menu from './components/navigation';
 import Map from './components/map';
 import InventorySearch from './components/InventorySearch';
-import Cart from './components/cart';
+import ShoppingCart from './components/ShoppingCart';
 
 export default function App() {
   const [ mode, setMode ] = useState("Map");
@@ -17,7 +17,7 @@ export default function App() {
       return <Map></Map>;
     }
     else if (mode == "Cart") {
-      return <Cart></Cart>
+      return <ShoppingCart></ShoppingCart>
     }
     else if (mode == "Search") {
       return <InventorySearch></InventorySearch>
