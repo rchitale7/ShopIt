@@ -25,7 +25,7 @@ export default function App() {
   
   return (
     <View style={styles.container}>
-      <Mode style={styles.container}></Mode>
+      <Mode></Mode>
       <Menu pressCallback={changeMode}></Menu>
       <StatusBar style="auto" />
     </View>
