@@ -60,9 +60,7 @@ const styles = StyleSheet.create({
 
     },
     itemDiv :{
-        padding:15,
         flexDirection:"row"
-
     }
 })
 
