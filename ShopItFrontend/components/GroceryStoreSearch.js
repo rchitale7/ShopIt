@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import {Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity, Image } from 'react-native';
 import * as Location from 'expo-location';
 import { AppLoading } from 'expo';
 import { SearchBar } from 'react-native-elements';
 import {useFonts, ComicNeue_400Regular } from '@expo-google-fonts/comic-neue';
+import logo_filled from '../assets/logo_filled.png'
 const API_KEY = 'AIzaSyB0OBBZB0abirvfDAjbAWbCeGqk-knKvtw';
 
 const GroceryStoreSearch = () => {
@@ -50,6 +51,7 @@ const GroceryStoreSearch = () => {
                     store.url = geocodeUrl;
 
                     stores.push(store);
+                    console.log(store)
                 }
             })
             .then(res => {
@@ -64,7 +66,7 @@ const GroceryStoreSearch = () => {
             .then(res => {
                 console.log(stores)
                 // set top 10 stores
-                setStores(stores);
+                setStores(stores.slice(0,9));
             })
             .catch(error => {
                 console.log(error);
@@ -87,14 +89,22 @@ const GroceryStoreSearch = () => {
 
     return (
         <View style={styles.container}>
-            <TextInput 
+            <Image style={styles.image} source={logo_filled}/>
+            <SearchBar
+            round
+            searchIcon={{ size: 24 }}
+            lightTheme = "true"
+            // onChangeText={setSearch(search)}
+            // value={search}
+            />
+            {/* <TextInput 
             placeholder='Search for stores'
             onChangeText={text => setSearch(text)}
-            />
+            /> */}
             <FlatList
             data={stores}
             renderItem={renderItem}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => index.toString() }
             />
         </View>
     );
@@ -104,10 +114,13 @@ const GroceryStoreSearch = () => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
+      backgroundColor: '#91E78C',
+    //   alignItems: 'center',
       justifyContent: 'flex-start',
       paddingTop: 50,
+    },
+    image: {
+        alignSelf: 'center',
     },
     button: {
         alignItems: "flex-start",

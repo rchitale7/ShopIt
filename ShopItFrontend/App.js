@@ -5,9 +5,7 @@ import GroceryStoreSearch from './components/GroceryStoreSearch';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <GroceryStoreSearch />
-    </View>
+    <GroceryStoreSearch />
   );
 }
 
