@@ -5,7 +5,7 @@ import GroceryStoreSearch from './components/GroceryStoreSearch';
 
 import Menu from './components/navigation';
 import Map from './components/map';
-import Search from './components/search';
+import InventorySearch from './components/InventorySearch';
 import Cart from './components/cart';
 
 export default function App() {
@@ -20,7 +20,7 @@ export default function App() {
       return <Cart></Cart>
     }
     else if (mode == "Search") {
-      return <Search></Search>
+      return <InventorySearch></InventorySearch>
     }
   }
   
