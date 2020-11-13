@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import GroceryStoreSearch from './components/GroceryStoreSearch';
 
 import Menu from './components/navigation';
 import Map from './components/map';
