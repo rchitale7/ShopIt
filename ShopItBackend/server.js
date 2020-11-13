@@ -18,12 +18,16 @@ connection.once('open', () => {
 })
 
 const usersRouter = require('./routes/users');
+const itemsRouter = require('./routes/items');
+const sectorsRouter = require('./routes/sectors');
 
 app.get('/', function (req, res) {
     res.send('Welcome to ShopIt\'s API!');
   });
 
 app.use('/users', usersRouter);
+app.use('/items', itemsRouter);
+app.use('/sectors', sectorsRouter);
 
 app.listen(port, () => {
     console.log(`This shit\'s running on port ${port}!`);
