@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 
 const schema = mongoose.Schema;
 
+
 const itemSchema = new schema({
+
     name: {
         type: String,
         required: true,
@@ -10,7 +12,7 @@ const itemSchema = new schema({
         minlength: 1
     },
     price: {
-        type: Number,
+        type: mongoose.Decimal128,
         required: true
 
     },
@@ -19,9 +21,29 @@ const itemSchema = new schema({
         required: true,
         trim: true,
         minlength: 1
+    }, 
+    size: {
+        type: String,
+        required: true
+    }, 
+    storeID: {
+        type: String,
+        required: true
+    }, 
+    aisleNumber: {
+        type: Number, 
+        required: true
+    }, 
+    sectorX: {
+        type: Number,
+        required: true
+    }, 
+    sectorY: {
+        type: Number, 
+        required: true
     }
 }, {
-    timestampes: true
+    timestamps: true
 });
 
 const Item = mongoose.model('Item', itemSchema);
