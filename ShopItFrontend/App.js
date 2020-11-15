@@ -11,6 +11,8 @@ import InventorySearch from './components/InventorySearch';
 import ShoppingCart from './components/ShoppingCart';
 import ItemList from './components/ItemList';
 
+import CommonStyles from './CommonStyles';
+
 export default function App() {
   const [ mode, setMode ] = useState("Map");
   const changeMode = (newMode) => { setMode(newMode) };
