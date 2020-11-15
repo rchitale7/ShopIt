@@ -1,35 +1,64 @@
 const express = require('express');
-
+const mongoose = require('mongoose');
 const router = express.Router();
 let Item = require('../models/item.model');
 
-// Return all items
+
+
+// Return items for a specific grocery store
+// if no grocery store is specified, returns all items
 router.route('/').get((req, res) => {
-    Item.find()
+    let store = req.query.store;
+    console.log(store)
+    if (store != null) {
+        Item.find({storeID: { $eq : store }})
         .then(items => res.json(items))
         .catch(err => res.status(400).json('Error: ' + err));
-});
-
-// Add new item to database
-router.route('/add').post((req, res) => {
-    const { name, price, imageURL } = req.body;
-
-    // Will add image upload later
-    const newItem = new Item( {"name": name, "price": price, "imageURL": imageURL} );
-
-    newItem.save()
-        .then(() => res.json(`Item "${name}" was added!`))
+    } else {
+        Item.find()
+        .then(items => res.json(items))
         .catch(err => res.status(400).json('Error: ' + err));
+    }
 });
 
-// Delete item from database given its _id
+
+// Add items in bulk
+// TODO: add logging 
+router.route('/add').post((req, res) => {
+    let docs = req.body.data;      
+    let bulk = Item.collection.initializeUnorderedBulkOp();
+    for (let i = 0; i < docs.length; i += 1) {
+        bulk.insert(docs[i]);
+    }
+
+  
+    bulk.execute(function (err) {
+        if (err) { 
+            res.status(400).json('Error: ' + err); 
+        } else {
+            res.json(`"${docs.length}" items were added!`); 
+        }
+    });               
+});
+
+// Delete items in bulk
+// TODO: add logging
 router.route('/delete').delete((req, res) => {
-    const id = req.body.id;
-    
-    // Will add image deletion later
-    Item.findOneAndDelete({ _id: { $eq : id } })
-        .then((item) => res.json(`${item.name} has been deleted!`))
-        .catch(err => res.status(400).json(`Unable to delete item. Error: ${err}`));
+    let docs = req.body.data;
+    let bulk = Item.collection.initializeUnorderedBulkOp();
+
+    for (let i = 0; i < docs.length; i++) {
+        let object_id = new mongoose.Types.ObjectId(docs[i].id)
+        bulk.find({_id: object_id}).remove()
+    }
+    bulk.execute(function (err) {
+        if (err) { 
+            res.status(400).json('Error: ' + err); 
+        } else {
+            res.json(`"${docs.length}" items were deleted!`); 
+        }
+    });     
+
 });
 
 module.exports = router;
