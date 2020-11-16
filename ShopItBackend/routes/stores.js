@@ -4,12 +4,12 @@ const router = express.Router();
 let Store = require('../models/store.model');
 
 
-// Return grocery store ID and aisles of grocery store
+// Return grocery store
 router.route('/').get((req, res) => {
 
     let long = parseFloat(req.query.long);
     let lat = parseFloat(req.query.lat);
-    Store.find({long: { $eq : long }, lat: { $eq : lat }})
+    Store.findOne({long: { $eq : long }, lat: { $eq : lat }})
         .then(store => res.json(store))
         .catch(err => res.status(400).json('Error: ' + err));
 });
@@ -20,7 +20,7 @@ router.route('/add').post((req, res) => {
 
     newStore.save()
         .then((store) => res.json(`A new Store (${store._id}) was added!`))
-        .catch(err => res.status(400).json('Error: ' + err));
+        .catch(err => res.status(400).json('Unable to add store. Error: ' + err));
 });
 
 // Delete grocery store
@@ -29,7 +29,7 @@ router.route('/delete').delete((req, res) => {
     
     Store.findOneAndDelete({ _id: { $eq : id } })
         .then((store) => res.json(`Store (${store._id}) has been deleted!`))
-        .catch(err => res.status(400).json(`Unable to delete sector. Error: ${err}`));
+        .catch(err => res.status(400).json(`Unable to delete store. Error: ${err}`));
 });
 
 module.exports = router;
