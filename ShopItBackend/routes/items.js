@@ -4,7 +4,6 @@ const router = express.Router();
 let Store = require('../models/store.model');
 
 
-
 // Return items for a specific grocery store
 router.route('/').get((req, res) => {
     let object_id = req.query.id; 
@@ -47,7 +46,7 @@ router.route('/delete').delete((req, res) => {
         } else {
             res.json(`"${docs.length}" items were deleted!`);
         }
-    });   
+    }); 
 });
 
 module.exports = router;
