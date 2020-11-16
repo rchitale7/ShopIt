@@ -18,9 +18,9 @@ const GroceryStoreSearch = () => {
     const [predictions, setPredictions] = useState([]);
     const [errorMsg, setErrorMsg] = useState(null);
 
-    // if (!fontsLoaded) {
-    //     return <AppLoading />;
-    // }
+    if (!fontsLoaded) {
+        return <AppLoading />;
+    }
 
     async function getLocation() {
         let { status } = await Location.requestPermissionsAsync();

@@ -1,35 +1,52 @@
 const express = require('express');
-
+const mongoose = require('mongoose');
 const router = express.Router();
-let Item = require('../models/item.model');
+let Store = require('../models/store.model');
 
-// Return all items
+
+// Return items for a specific grocery store
 router.route('/').get((req, res) => {
-    Item.find()
-        .then(items => res.json(items))
-        .catch(err => res.status(400).json('Error: ' + err));
+    let object_id = req.query.id; 
+    Store.findOne({_id: object_id})
+    .then(store => res.json(store["items"]))
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
-// Add new item to database
+
+// Add items in bulk
+// TODO: add logging 
 router.route('/add').post((req, res) => {
-    const { name, price, imageURL } = req.body;
+    let object_id = req.body.id;
+    let docs = req.body.data;
+    Store.updateMany({_id: object_id}, {
+        $push: {
+            items: {
+                $each: docs
+            }
+        }
+    }, function(err, response) {
+        if (err != null) {
+            res.status(400).json('Error: ' + err);
+        } else {
+            res.json(`"${docs.length}" items were added!`);
+        }
+    }); 
+});   
 
-    // Will add image upload later
-    const newItem = new Item( {"name": name, "price": price, "imageURL": imageURL} );
 
-    newItem.save()
-        .then(() => res.json(`Item "${name}" was added!`))
-        .catch(err => res.status(400).json('Error: ' + err));
-});
 
-// Delete item from database given its _id
+// TODO: Delete items in bulk
+// TODO: add logging
 router.route('/delete').delete((req, res) => {
-    const id = req.body.id;
-    
-    // Will add image deletion later
-    Item.findOneAndDelete({ _id: { $eq : id } })
-        .then((item) => res.json(`${item.name} has been deleted!`))
-        .catch(err => res.status(400).json(`Unable to delete item. Error: ${err}`));
+    let object_id = req.body.id;
+    let docs = req.body.data
+    Store.updateMany({_id: object_id}, { $pull: { items: {_id: { $in: docs } }} }, function(err, response) {
+        if (err != null) {
+            res.status(400).json('Error: ' + err);
+        } else {
+            res.json(`"${docs.length}" items were deleted!`);
+        }
+    }); 
 });
 
 module.exports = router;
