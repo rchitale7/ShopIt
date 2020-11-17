@@ -1,6 +1,5 @@
 import { StyleSheet, View, Text} from 'react-native';
 import React from 'react';
-import { AppLoading } from 'expo';
 import {
     useFonts,
     ComicNeue_400Regular,
@@ -15,7 +14,7 @@ const Map = ({children}) => {
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
 
     if(!fontsLoaded){
-        return <AppLoading/>;
+        return <Text> Fonts haven't loaded just yet!</Text>;
     }else{
         return (
             <View style={styles.map}>  
