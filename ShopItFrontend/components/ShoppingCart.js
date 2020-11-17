@@ -95,31 +95,13 @@ class ShoppingCart extends React.Component {
     });
   }
 
-  renderItem(item) {
-    console.log("Creating item " + item.title);
-    return (
-      <View style={styles.item}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.descripton}>
-          {item.description.brand}, {item.description.quantity}
-        </Text>
-        <Button
-          onPress={() => this.removeItem(item.title)}
-          title="x"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-      </View>
-    );
-  }
-
   render() {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.title}>Your Cart</Text>
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false}/>}
+          renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false} mainViewStyle={{flexDirection:"row", width:275}}/>}
           keyExtractor={({ item, index }) => index}
           ItemSeparatorComponent={this.renderSeparatorView}
         />

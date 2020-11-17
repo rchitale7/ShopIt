@@ -16,9 +16,6 @@ Most likely, we will pass a prop called items, which will be the input data.
 Sample Usage:
     <ItemList/>
 
-TO-DO: - The components for the search, grocery cart, and location buttons at the bottom of this
-        view need to be added into this component.
-       - box around the list?
 */
 const ItemList = () => {
     const renderSeparatorView = () => {
@@ -55,7 +52,6 @@ const ItemList = () => {
               },
         }
     ]
-    //const items = [{title: 'Cheetos'}, {title: 'Chicken'},{title:"Beyond Meat"}, {title:"Salsa Verde"},{title:"Oat Milk"},{title:"Bananas"},{title:"Hot Dogs"}]
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
 
     
@@ -69,7 +65,7 @@ const ItemList = () => {
                         <Text style={styles.heading}>Item List </Text>
                         <FlatList
                             data = {items}
-                            renderItem = {({item}) => <Item item={item} handleDelete={() => {}} isCheckBox={true}/>}
+                            renderItem = {({item}) => <Item item={item} handleDelete={() => {}} isCheckBox={true} mainViewStyle={{flexDirection:"row"}}/>}
                             keyExtractor = {(item, index) => index.toString()}
                             style={styles.list}          
                             ItemSeparatorComponent={renderSeparatorView}
