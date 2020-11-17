@@ -64,7 +64,7 @@ const ItemList = () => {
                         <Text style={styles.heading}>Item List </Text>
                         <FlatList
                             data = {items}
-                            renderItem = {({item}) => <Item item={item} handleDelete={() => {}} isCheckBox={true} mainViewStyle={{flexDirection:"row"}}/>}
+                            renderItem = {({item}) => <Item item={item} strikeThrough={true} handleDelete={() => {}} isCheckBox={true} mainViewStyle={{flexDirection:"row"}}/>}
                             keyExtractor = {(item, index) => index.toString()}
                             style={styles.list}          
                             ItemSeparatorComponent={renderSeparatorView}

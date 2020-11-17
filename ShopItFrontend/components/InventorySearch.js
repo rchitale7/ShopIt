@@ -29,7 +29,7 @@ const InventorySearch = () => {
     inventoryList = 
       <SectionList
         sections={inventory}
-        renderItem={({item}) => <Item item={item} isCheckBox={true} handleDelete={() => {}} mainViewStyle={{flexDirection:"row", width:300}}/>}
+        renderItem={({item}) => <Item item={item} strikeThrough={false} isCheckBox={true} handleDelete={() => {}} mainViewStyle={{flexDirection:"row", width:300}}/>}
         renderSectionHeader={({section}) => <Text style={{fontWeight: "bold"}}>{section.category}</Text>}
         keyExtractor={(item, index) => index}
       />;
@@ -43,7 +43,7 @@ const InventorySearch = () => {
     inventoryList =
       <FlatList
         data={filteredInventory}
-        renderItem={({item}) => <Item item={item} isCheckBox={true} handleDelete={() => {}} mainViewStyle={{flexDirection:"row", width:300}}/>}
+        renderItem={({item}) => <Item item={item} strikeThrough={false} isCheckBox={true} handleDelete={() => {}} mainViewStyle={{flexDirection:"row", width:300}}/>}
         keyExtractor={(item, index) => index.toString()}
       />;
   }

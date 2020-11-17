@@ -29,8 +29,10 @@ isCheckBox: The boolean value to determine which button to display.
 
 mainViewStyle: The associated style for the main view of the item component.
 
+strikeThrough: boolean value to determine whether we display a strikethrough.
+
 */
-const Item = ({item, handleDelete, isCheckBox, mainViewStyle}) => {
+const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) => {
     const {title, description:{brand, quantity}} = item;
     const [selected, setCheckBox] = useState(false);
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
@@ -43,7 +45,7 @@ const Item = ({item, handleDelete, isCheckBox, mainViewStyle}) => {
                 <>
                     <View style={{flex:1, flexDirection:'column'}}>
                         <>
-                            {selected 
+                            {selected && strikeThrough
                                 ? <Text style={styles.selectedItem}>{title}</Text>
                                 :<Text style={styles.unselectedItem}> {title}</Text>
                             }
