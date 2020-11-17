@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, FlatList} from 'react-native';
 import Item from './Item';
-import Map from './Map';
+import MapWrapper from './MapWrapper';
 import {
     useFonts,
     ComicNeue_400Regular,
@@ -58,7 +58,7 @@ const ItemList = () => {
         return <Text>Fonts haven't loaded just yet!</Text>;
     }else{
         return (
-            <Map>
+            <MapWrapper>
                 <View style={styles.whiteContainer}>
                     <>
                         <Text style={styles.heading}>Item List </Text>
@@ -71,7 +71,7 @@ const ItemList = () => {
                         />
                     </>
                 </View>
-            </Map>
+            </MapWrapper>
         );
     }
 }
