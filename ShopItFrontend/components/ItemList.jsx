@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import { StyleSheet, Text, View, FlatList} from 'react-native';
 import Item from './Item';
 import Map from './Map';
-import { AppLoading } from 'expo';
 import {
     useFonts,
     ComicNeue_400Regular,
@@ -18,17 +17,7 @@ Sample Usage:
 
 */
 const ItemList = () => {
-    const renderSeparatorView = () => {
-        return (
-          <View style={{
-              height: 1, 
-              width: "100%",
-              backgroundColor: "#CEDCCE",
-              top:-15
-            }}
-          />
-        );
-      };
+    let [fontsLoaded] = useFonts({ComicNeue_400Regular});
     const items = [
         {
             title: 'Cheetos',
@@ -42,21 +31,31 @@ const ItemList = () => {
             description: {
                 brand: "Trader Joe's",
                 quantity: "1 lb",
-          },
+            },
         },
         {
             title:"Beyond Meat",
             description: {
                 brand: "Trader Joe's",
                 quantity: "1 lb",
-              },
+            },
         }
     ]
-    let [fontsLoaded] = useFonts({ComicNeue_400Regular});
+    const renderSeparatorView = () => {
+        return (
+          <View style={{
+              height: 1, 
+              width: "100%",
+              backgroundColor: "#CEDCCE",
+              top:-15
+            }}
+          />
+        );
+      };
 
     
     if (!fontsLoaded){
-        return <AppLoading/>;
+        return <Text>Fonts haven't loaded just yet!</Text>;
     }else{
         return (
             <Map>
@@ -73,7 +72,6 @@ const ItemList = () => {
                     </>
                 </View>
             </Map>
-
         );
     }
 }

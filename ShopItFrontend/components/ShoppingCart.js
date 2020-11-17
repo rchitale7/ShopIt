@@ -102,7 +102,7 @@ class ShoppingCart extends React.Component {
         <FlatList
           data={this.state.data}
           renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false} mainViewStyle={{flexDirection:"row", width:275}}/>}
-          keyExtractor={({ item, index }) => index}
+          keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={this.renderSeparatorView}
         />
       </SafeAreaView> 

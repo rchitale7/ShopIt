@@ -51,8 +51,8 @@ const Item = ({item, handleDelete, isCheckBox, mainViewStyle}) => {
                         </>
                     </View>
                     {isCheckBox 
-                    ? <CheckBox checked={selected} onPress={ () => setCheckBox(!selected)} style={{flexGrow:1}}/>
-                    : <Button onPress={ () => handleDelete(title)} style={{flexGrow:1}} title="X" color="#841584"/>
+                        ? <CheckBox checked={selected} onPress={ () => setCheckBox(!selected)} style={{flexGrow:1}}/>
+                        : <Button onPress={ () => handleDelete(title)} style={{flexGrow:1}} title="X" color="#841584"/>
                     }
                 </>
             </View>
@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
         lineHeight:28.75,
         flexGrow:1,
         fontFamily:'ComicNeue_400Regular'
-
     },
     selectedItem:{
         fontSize:25,
@@ -76,7 +75,6 @@ const styles = StyleSheet.create({
         textDecorationLine:'line-through',
         fontFamily:'ComicNeue_400Regular', 
         paddingLeft:8 //On selecting checkbox, this prevents the label from moving on the UI.
-
     }
 })
 
