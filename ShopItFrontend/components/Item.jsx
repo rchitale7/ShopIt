@@ -11,7 +11,7 @@ This component is used to display a single item and a button to the side.
 This button can be either a checkmark or an X mark.
 
 Sample Usage:
-<Item item={...} handleDelete={...} isCheckBox={...} mainViewStyle={...}/>
+<Item item={...} handleDelete={...} isCheckBox={...} mainViewStyle={...} strikeThrough={...}/>
 
 item: the json containing all the information about the object. 
 Below is the assumed json data format.
