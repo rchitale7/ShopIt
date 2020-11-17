@@ -1,4 +1,5 @@
 import React from 'react';
+import Item from './Item';
 import { SafeAreaView,
          View,
          FlatList,
@@ -75,7 +76,19 @@ class ShoppingCart extends React.Component {
 
   }
 
-  removeItem(title) {
+  renderSeparatorView = () => {
+    return (
+      <View style={{
+          height: 1, 
+          width: "100%",
+          backgroundColor: "#CEDCCE",
+          margin:20
+        }}
+      />
+    );
+  };
+
+  removeItem = (title) => {
     console.log("Removing " + title);
     this.setState({
        data: this.state.data.filter((_item) => _item.title !== title)
@@ -106,8 +119,9 @@ class ShoppingCart extends React.Component {
         <Text style={styles.title}>Your Cart</Text>
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) => this.renderItem(item)}
+          renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false}/>}
           keyExtractor={({ item, index }) => index}
+          ItemSeparatorComponent={this.renderSeparatorView}
         />
       </SafeAreaView> 
     );

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View, Button} from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { AppLoading } from 'expo';
 import {
@@ -15,8 +15,8 @@ Sample Usage:
 <Item item={someItemObject}/>
 
 */
-const Item = ({item}) => {
-    const {title} = item;
+const Item = ({item, handleDelete, isCheckBox}) => {
+    const {title, description:{brand, quantity}} = item;
     const [selected, setCheckBox] = useState(false);
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
 
@@ -24,17 +24,21 @@ const Item = ({item}) => {
         return <AppLoading />;
     }else{
         return (
-            <View style={styles.itemDiv}>
+            <View style={isCheckBox ? styles.ItemListItem : styles.ShoppingCartItem}>
                 <>
-                    {selected 
-                        ? <Text style={styles.checkedItem}>{title}</Text>
-                        :<Text style={styles.unCheckedItem}> {title}</Text>
+                    <View style={{flex:1, flexDirection:'column'}}>
+                        <>
+                            {selected 
+                                ? <Text style={styles.selectedItem}>{title}</Text>
+                                :<Text style={styles.unselectedItem}> {title}</Text>
+                            }
+                            {!isCheckBox && <Text style={{marginLeft:8}}>{brand} {quantity}</Text>}
+                        </>
+                    </View>
+                    {isCheckBox 
+                    ? <CheckBox checked={selected} onPress={ () => setCheckBox(!selected)} style={{flexGrow:1}}/>
+                    : <Button onPress={ () => handleDelete(title)} style={{flexGrow:1}} title="X"/>
                     }
-                    <CheckBox
-                        checked={selected}
-                        onPress={ () => setCheckBox(!selected)}
-                        style={{flexGrow:1}}
-                    />
                 </>
             </View>
         );
@@ -42,14 +46,14 @@ const Item = ({item}) => {
 }
 
 const styles = StyleSheet.create({
-    unCheckedItem :{
+    unselectedItem :{
         fontSize:25,
         lineHeight:28.75,
         flexGrow:1,
         fontFamily:'ComicNeue_400Regular'
 
     },
-    checkedItem:{
+    selectedItem:{
         fontSize:25,
         lineHeight:28.75,
 
@@ -59,8 +63,12 @@ const styles = StyleSheet.create({
         paddingLeft:8 //On selecting checkbox, this prevents the label from moving on the UI.
 
     },
-    itemDiv :{
+    ItemListItem :{
         flexDirection:"row"
+    },
+    ShoppingCartItem:{
+        flexDirection:"row",
+        width:275
     }
 })
 

@@ -32,7 +32,29 @@ const ItemList = () => {
           />
         );
       };
-    const items = [{title: 'Cheetos'}, {title: 'Chicken'},{title:"Beyond Meat"}]
+    const items = [
+        {
+            title: 'Cheetos',
+            description: {
+                brand: "Trader Joe's",
+                quantity: "1 lb",
+            },
+        }, 
+        {
+            title: 'Chicken',
+            description: {
+                brand: "Trader Joe's",
+                quantity: "1 lb",
+          },
+        },
+        {
+            title:"Beyond Meat",
+            description: {
+                brand: "Trader Joe's",
+                quantity: "1 lb",
+              },
+        }
+    ]
     //const items = [{title: 'Cheetos'}, {title: 'Chicken'},{title:"Beyond Meat"}, {title:"Salsa Verde"},{title:"Oat Milk"},{title:"Bananas"},{title:"Hot Dogs"}]
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
 
@@ -47,7 +69,7 @@ const ItemList = () => {
                         <Text style={styles.heading}>Item List </Text>
                         <FlatList
                             data = {items}
-                            renderItem = {({item}) => <Item item={item}/>}
+                            renderItem = {({item}) => <Item item={item} handleDelete={() => {}} isCheckBox={true}/>}
                             keyExtractor = {(item, index) => index.toString()}
                             style={styles.list}          
                             ItemSeparatorComponent={renderSeparatorView}
