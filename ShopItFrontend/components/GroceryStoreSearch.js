@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity, Image, TouchableHighlight } from 'react-native';
+import {Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity, Image, TouchableHighlight, Icon } from 'react-native';
 import * as Location from 'expo-location';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { AppLoading } from 'expo';
-import { SearchBar } from 'react-native-elements';
 import {useFonts, ComicNeue_400Regular } from '@expo-google-fonts/comic-neue';
 import logo_filled from '../assets/logo_filled.png'
+import search_icon from '../assets/search.png'
+import location_icon from '../assets/location.png'
 
 const API_KEY='AIzaSyB0OBBZB0abirvfDAjbAWbCeGqk-knKvtw';
 
@@ -18,9 +18,13 @@ const GroceryStoreSearch = () => {
     const [predictions, setPredictions] = useState([]);
     const [errorMsg, setErrorMsg] = useState(null);
 
-    if (!fontsLoaded) {
-        return <AppLoading />;
-    }
+    // if (!fontsLoaded) {
+    //     return <AppLoading />;
+    // }
+
+    useEffect(() => {
+        getLocation();
+    }, []);
 
     async function getLocation() {
         let { status } = await Location.requestPermissionsAsync();
@@ -29,7 +33,6 @@ const GroceryStoreSearch = () => {
         }
 
         var location = await Location.getLastKnownPositionAsync({});
-        // setLocation(location);
 
         const latitude = location.coords.latitude;
         setLatitude(latitude);
@@ -37,7 +40,7 @@ const GroceryStoreSearch = () => {
         setLongitude(longitude);
     }
 
-    function locateStores() {
+    useEffect(() => {
         const placeUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&rankby=distance&keyword=grocery store&key=${API_KEY}`;
     
         const stores = [];
@@ -72,69 +75,32 @@ const GroceryStoreSearch = () => {
         .then(res => {
             console.log(stores)
             // set top 10 stores
-            setStores(stores.slice(0,9));
+            setStores(stores.slice(0,10));
+            setSearch("");
         })
         .catch(error => {
             console.log(error);
         });
+    }, [longitude]);
+
+    function updateLocation(location) {
+        var placeId = location.place_id;
+
+        const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
+
+        fetch(detailsUrl)
+        .then(res => {
+            return res.json();
+        })
+        .then(res => {
+            var location = res.result.geometry.location;
+
+            const latitude = location.lat;
+            setLatitude(latitude);
+            const longitude = location.lng;
+            setLongitude(longitude); 
+        })      
     }
-
-    // useEffect(() => {
-    //     (async () => {
-    //         let { status } = await Location.requestPermissionsAsync();
-    //         if (status !== 'granted') {
-    //             setErrorMsg('Permission to access location was denied');
-    //         }
-
-    //         var location = await Location.getLastKnownPositionAsync({});
-    //         // setLocation(location);
-
-    //         const latitude = location.coords.latitude;
-    //         setLatitude(latitude);
-    //         const longitude = location.coords.longitude;
-    //         setLongitude(longitude);
-
-    //         const placeUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&rankby=distance&keyword=grocery store&key=${API_KEY}`;
-    
-    //         const stores = [];
-
-    //         fetch(placeUrl)
-    //         .then(res => {
-    //             return res.json()
-    //         })
-    //         .then(res => {
-    //             for (let googlePlace of res.results) {
-    //                 var store = {};
-
-    //                 var placeId = googlePlace.place_id;
-                    
-    //                 const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${API_KEY}`;
-                    
-    //                 store.name = googlePlace.name;
-    //                 store.url = geocodeUrl;
-
-    //                 stores.push(store);
-    //             }
-    //         })
-    //         .then(res => {
-    //             return Promise.all(stores.map((store, i) => 
-    //                 fetch(store.url)
-    //                 .then(res => res.json()
-    //                 .then(res => {
-    //                     var address = res.results[0].formatted_address;
-    //                     store.address = address;
-    //                 }))))
-    //         })
-    //         .then(res => {
-    //             console.log(stores)
-    //             // set top 10 stores
-    //             setStores(stores.slice(0,9));
-    //         })
-    //         .catch(error => {
-    //             console.log(error);
-    //         });
-    //     })()
-    // }, []);
 
     function onChangeDestination(search) {
         setSearch(search);
@@ -147,6 +113,7 @@ const GroceryStoreSearch = () => {
         })
         .then(res => {
             var predictions = res.predictions;
+            console.log(predictions)
             setPredictions(predictions);
         })
         .catch(error => {
@@ -155,18 +122,24 @@ const GroceryStoreSearch = () => {
     }
 
     function renderSuggestion(item) {
-        return (
-            <TouchableHighlight styles={styles.highlight} 
-            onPress={() => console.log("suggestion pressed")}>
-                <Text style={styles.suggestions}>{item.item.description}</Text>
-            </TouchableHighlight>
-        )
+        if (search != "") {
+            return (
+                <View>
+                    <TouchableHighlight styles={styles.highlight} 
+                    onPress={() => updateLocation(item.item)}>
+                        <Text style={styles.suggestions}>{item.item.description}</Text>
+                    </TouchableHighlight>
+                </View>
+            )
+        }
     }
 
     const renderButton = ({item}) => {
         return (
-            <View style={styles.item}>
-                <TouchableOpacity style={styles.button} onPress={() => console.log("button pressed")}>
+            <View>
+                <TouchableOpacity style={styles.button} 
+                activeOpacity={0.7}
+                onPress={() => console.log("button pressed")}>
                     <Text style={styles.title}>{item.name}</Text>
                     <Text style={styles.descripton}>{item.address}</Text>
                 </TouchableOpacity>
@@ -176,22 +149,34 @@ const GroceryStoreSearch = () => {
 
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={logo_filled}/>
-            <TextInput style={styles.input}
-            placeholder="Search"
-            onChangeText={search => onChangeDestination(search)}
-            value={search}
-            />
-            <FlatList
-            data={predictions}
-            renderItem={item => renderSuggestion(item)}
-            keyExtractor={(item, index) => index.toString()}
-            />
-            <FlatList style={styles.list}
-            data={stores}
-            renderItem={renderButton}
-            keyExtractor={(item, index) => index.toString()}
-            />
+            <Image style={styles.logo} source={logo_filled}/>
+            <View style={styles.searchSection}>
+                <TextInput style={styles.input}
+                placeholder="Search"
+                onChangeText={search => onChangeDestination(search)}
+                value={search}
+                />
+                <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => getLocation()}>
+                    <Image style={styles.locationIcon} source={location_icon}></Image>
+                </TouchableOpacity>
+                <Image style={styles.searchIcon} source={search_icon}/>
+            </View>
+            <View style={{flex:1}}>
+                <FlatList
+                data={stores}
+                renderItem={renderButton}
+                keyExtractor={(item, index) => index.toString()}
+                />
+            </View>
+            <View style={styles.suggestionsList}>
+                <FlatList
+                data={predictions}
+                renderItem={item => renderSuggestion(item)}
+                keyExtractor={(item, index) => index.toString()}
+                />
+            </View>
         </View>
     );
 
@@ -204,43 +189,68 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
       paddingTop: 50,
     },
-    image: {
+    logo: {
         alignSelf: 'center',
+    },
+    searchSection: {
+        marginBottom: 10,
+    },
+    locationIcon: {
+        flex: 1,
+        position: 'absolute',
+        height: 35,
+        width: 35,
+        top: -53,
+        left: 360,
+        resizeMode: 'contain',
+    },
+    searchIcon: {
+        position: 'absolute',
+        top: 10,
+        left: 20,
+    },
+    suggestionsList: {
+        position: 'absolute',
+        top: 225,
+        width: 390,
+        marginTop: 10,
+        marginLeft: 12,
+        borderRadius: 19,
+        overflow: 'hidden',
+        backgroundColor: '#FFF',
     },
     suggestions: {
         marginLeft: 10,
-        marginRight: 10,
-        padding: 5,
+        padding: 7,
         fontSize: 18,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFF',
         fontFamily:"ComicNeue_400Regular"
     },
     input: {
-        height: 40,
+        height: 50,
+        marginBottom: 10,
         marginLeft: 10,
         marginRight: 10,
-        padding: 5,
+        paddingLeft: 50,
+        borderRadius: 19,
         fontSize: 24,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFFEE3',
         fontFamily:"ComicNeue_400Regular"
     },
     highlight: {
         marginLeft: 10,
         marginRight: 10,
     },
-    list: {
-        paddingTop: 75,
-    },
     button: {
         alignItems: "flex-start",
         backgroundColor: "#FFFEE3",
-        padding: 10
-    },
-    item: {
-        backgroundColor: '#FFFEE3',
+        marginTop: 5,
+        marginBottom: 10,
+        marginLeft: 20,
+        marginRight: 10,
         padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
+        borderRadius: 19,
+        borderColor: "#FFFEE3"
     },
     title: {
         fontSize: 32,
