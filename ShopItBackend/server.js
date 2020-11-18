@@ -21,15 +21,14 @@ const usersRouter = require('./routes/users');
 const itemsRouter = require('./routes/items');
 const storesRouter = require('./routes/stores');
 
-
 app.get('/', function (req, res) {
     res.send('Welcome to ShopIt\'s API!');
-  });
+});
 
 app.use('/users', usersRouter);
 app.use('/items', itemsRouter);
 app.use('/stores', storesRouter);
 
 app.listen(port, () => {
-    console.log(`This sh!t\'s running on port ${port}!`);
+    console.log(`This app is running on port ${port}!`);
 }); 
