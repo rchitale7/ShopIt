@@ -12,6 +12,8 @@ jobs:
         with:
           node-version: 12
       - name: Install dependencies
+        working-directory: ./ShopItBackend
         run: npm ci
       - name: Run ESLint
+        working-directory: ./ShopItBackend
         run: npx eslint .
