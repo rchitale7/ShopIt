@@ -24,7 +24,7 @@ const itemSchema = new schema({
     },
     imageURL: {
         type: String,
-        required: true
+        default: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
     },
     sectorX: {
         type: Number,
@@ -32,6 +32,11 @@ const itemSchema = new schema({
     }, 
     sectorY: {
         type: Number, 
+        required: true
+    },
+    aisle: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Aisle',
         required: true
     }
 }, {

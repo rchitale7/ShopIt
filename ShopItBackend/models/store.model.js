@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const aisle = require('./aisle.model');
+const item = require('./item.model.js');
 
 const schema = mongoose.Schema;
 
@@ -18,11 +19,11 @@ const storeSchema = new schema({
     },
     aisles: {
         type: [aisle.schema], 
-        required: true
+        default: []
     },
     items: {
         type: [item.schema],
-        required: true
+        default: []
     }
 }, {
     timestamps: true
