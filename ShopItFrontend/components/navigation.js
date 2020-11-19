@@ -9,7 +9,14 @@ function Menu({ pressCallback }) {
     return (
         <View style={{position: 'absolute', height: windowHeight - 40, backgroundColor: '#f3f3f3'}}>
           <ActionButton buttonColor='#00edb6' btnOutRange='#dbdbdb' radius={100} size={67} itemSize={40}>
-            <ActionButton.Item buttonColor='#00edb6' angle={3.28} title="Search" onPress={() => {
+
+            <ActionButton.Item buttonColor='#00edb6' angle={3.28} title="StoreFinder" onPress={() => {
+              pressCallback("StoreFinder");
+            }}>
+              <Icon type='evilicon' name='chevron-left' color='#ffffff' style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            
+            <ActionButton.Item buttonColor='#00edb6' title="Search" onPress={() => {
               pressCallback("Search");
             }}>
               <Icon type='evilicon' name='search' color='#ffffff' style={styles.actionButtonIcon} />
@@ -26,6 +33,7 @@ function Menu({ pressCallback }) {
             }}>
               <Icon type='evilicon' name='location' color='#ffffff' style={styles.actionButtonIcon} />
             </ActionButton.Item>
+            
           </ActionButton>
         </View>
     );
