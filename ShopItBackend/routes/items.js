@@ -64,9 +64,41 @@ router.route('/delete').delete((req, res) => {
 
     Store.findByIdAndUpdate(storeId, { $pull: { items: { _id: itemId } } })
         .then(store => {
-            console.log(`Deleted item ${itemId} from store ${storeId}: `, store);
+            console.log(`Deleted item ${itemId} from store ${storeId}: ` + store);
             res.json(`Successfully deleted item ${itemId}`);
         })
+});
+
+/**
+ * Add items in bulk
+ */
+router.route('/add').post((req, res) => {
+    const object_id = req.body.id;
+    const docs = req.body.data;
+
+    Store.updateMany(
+        {_id: object_id}, 
+        { $push: { items: { $each: docs } } },
+        function(err) {
+            if (err) res.status(400).json(err);
+            else res.json(`"${docs.length}" items were added!`);
+        }); 
+});   
+
+/**
+ * Remove items in bulk
+ */
+router.route('/delete').delete((req, res) => {
+    const object_id = req.body.id;
+    const docs = req.body.data
+
+    Store.updateMany({_id: object_id}, { $pull: { items: {_id: { $in: docs } } } }, function(err) {
+        if (err) {
+            res.status(400).json('Error: ' + err);
+        } else {
+            res.json(`"${docs.length}" items were deleted!`);
+        }
+    });
 });
 
 module.exports = router;
