@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const aisle = require('./aisle.model');
 const item = require('./item.model.js');
 
 const schema = mongoose.Schema;
@@ -16,10 +15,6 @@ const storeSchema = new schema({
     lat: {
         type: mongoose.Decimal128, 
         required: true
-    },
-    aisles: {
-        type: [aisle.schema], 
-        default: []
     },
     items: {
         type: [item.schema],
