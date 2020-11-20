@@ -37,3 +37,5 @@ app.use('/aisles', aislesRouter);
 app.listen(port, () => {
     console.log(`This app is running on port ${port}!`);
 }); 
+
+module.exports = app;
