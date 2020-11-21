@@ -55,6 +55,15 @@ const clusterItems = (items, clusterRadius) => {
     return res;
 }
 
+/**
+ * Recursively removes an array from a list of clusters and returns new array. 
+ * The original array is not altered.
+ * 
+ * @param {Array} clusters Array of clusters from which to remove an item
+ * @param {Object} item Item to be removed
+ * 
+ * @returns {Array} Array of clusters wit item removed
+ */
 const removeItemFromClusters = (clusters, item) => {
     let res = _.cloneDeep(clusters);
 
