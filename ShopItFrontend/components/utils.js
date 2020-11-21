@@ -31,18 +31,24 @@ const clusterItems = (items, clusterRadius) => {
         if (!included.has(i)) {
             included.add(i);
             let currCluster = [items[i]];
-            let { xPos, yPos } = items[i]
+            let { _id, xPos, yPos } = items[i]
 
             for (let j = i + 1; j < items.length; j++) {
                 if (!included.has(j)) {
-                    if (itemDistance(items[i], items[j]) < clusterRadius) {
+                    if (itemDistance(items[i], items[j]) <= clusterRadius) {
                         included.add(j);
                         currCluster.push(items[j]);
                     }
                 }
             }
             
-            res.push({"xPos": xPos, "yPos": yPos, "cluster": currCluster});
+            // We add _id to because apparently React uses keys to track changes
+            res.push({
+                "_id": _id,
+                "xPos": xPos,
+                "yPos": yPos,
+                "cluster": currCluster
+            });
         }
     }
 

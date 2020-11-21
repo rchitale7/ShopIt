@@ -15,7 +15,10 @@ import { useFonts, ComicNeue_400Regular, ComicNeue_700Bold  } from '@expo-google
 // Other
 import { clusterItems, removeItemFromClusters } from './utils';
 
-function Map() {
+function Map(props) {
+    const { pinSize = 20 } = props;
+    const clusterRadius = pinSize;
+    
     const rawData = [
         {
             _id: '5fb91ef4a75df917718cd3ff',
@@ -25,6 +28,26 @@ function Map() {
             brand: "Sunkist",
             category: "Fruit",
             price: 3.99,
+            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
+        },
+        {
+            _id: '5fb91ef4a75df917718cd3fz',
+            xPos: 110,
+            yPos: 110,
+            name: "Garden Peach",
+            brand: "Garden of Eden",
+            category: "Fruit",
+            price: 6.99,
+            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
+        },
+        {
+            _id: '5fb91ef4a75df917718cd3fq',
+            xPos: 110,
+            yPos: 90,
+            name: "Thicc Peach",
+            brand: "Homegrown",
+            category: "Fruit",
+            price: 10.99,
             imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
         },
         {
@@ -69,13 +92,17 @@ function Map() {
         }
     ]
     
+    // React hooks
     const [fontsLoaded] = useFonts({ComicNeue_400Regular, ComicNeue_700Bold});
     const [modalVisible, setModalVisible] = useState(false);
     const [modalInfo, setModalInfo] = useState({"cluster": []});
-    const [items, setItems] = useState(clusterItems(rawData, 50));
+    const [items, setItems] = useState(clusterItems(rawData, clusterRadius));
 
     // Pseudo component for bold text
     const B = (props) => <Text style={{fontFamily: 'ComicNeue_700Bold'}}>{props.children}</Text>
+
+    // Wait for fonts to load (useFonts is asynchronous)
+    if (!fontsLoaded) return null;
 
     return (
         <View>
@@ -92,12 +119,12 @@ function Map() {
                                 setModalVisible(!modalVisible);
                             }}
                         >
-                            <Icon type='evilicon' name='close-o' color='lightgrey' size='25' />
+                            <Icon type='evilicon' name='close-o' color='lightgrey' size={25} />
                         </Pressable>
                         <ScrollView centerContent='true' showsVerticalScrollIndicator='false'>
                             {modalInfo.cluster.map((item) => {
                                 return (
-                                    <View style={{marginTop: 20, marginBottom: 20}}>
+                                    <View style={{marginTop: 20, marginBottom: 20}} key={item._id}>
                                         <Text style={[styles.textStyle, {fontSize: 25}]}><B>{item.name}</B></Text>
                                         <Text style={styles.textStyle}><B>Brand:</B> {item.brand}</Text>
                                         <Text style={styles.textStyle}><B>Category:</B> {item.category}</Text>
@@ -137,14 +164,20 @@ function Map() {
                                     onPressIn={() => {
                                         setModalVisible(true);
                                         setModalInfo(cluster);
-                                    }
-                                }>
+                                    }}
+                                    key={cluster._id}
+                                >
                                     <Image 
                                         source={LocationPin}
                                         style={[
                                             styles.locationPin, 
                                             styles.shadow,
-                                            {left: cluster.xPos, top: cluster.yPos}
+                                            {
+                                                left: cluster.xPos,
+                                                top: cluster.yPos,
+                                                width: pinSize,
+                                                height: pinSize
+                                            }
                                             ]}>
                                     </Image>
                                 </Pressable>
@@ -154,7 +187,7 @@ function Map() {
                     <Pressable
                         style={{ ...styles.modalButton, backgroundColor: 'coral', position: 'absolute', top: 10, left: 14 }}
                         onPress={() => {
-                            setItems(clusterItems(rawData, 50));
+                            setItems(clusterItems(rawData, clusterRadius));
                         }}
                     >
                         <Text style={[styles.textStyle, {color: "white"}]}>Reset</Text>
