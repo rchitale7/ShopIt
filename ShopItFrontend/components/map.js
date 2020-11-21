@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
 
-import { View, Text, Image, StyleSheet, Dimensions, ImageBackground, Modal, Pressable, CheckBox } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, ImageBackground, Modal, Pressable, ScrollView } from 'react-native';
+import { Icon } from 'react-native-elements'
 import ImageZoom from 'react-native-image-pan-zoom';
-import { useFonts, ComicNeue_400Regular, ComicNeue_700Bold } from '@expo-google-fonts/comic-neue';
 
+// Static assets
 import SampleMap from '../assets/sample_map.png';
 import LocationPin from '../assets/location_pin.png';
 
+// Styles
+import { Colors } from '../CommonStyles';
+import { useFonts, ComicNeue_400Regular, ComicNeue_700Bold  } from '@expo-google-fonts/comic-neue';
+
+// Other
+import { clusterItems, removeItemFromClusters } from './utils';
+
 function Map() {
-    const locations = [
+    const rawData = [
         {
+            _id: '5fb91ef4a75df917718cd3ff',
             xPos: 110,
             yPos: 100,
             name: "Big Peach",
@@ -19,6 +28,7 @@ function Map() {
             imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
         },
         {
+            _id: '5fb91efe6697712645c5ca8f',
             xPos: 110,
             yPos: 124,
             name: "Small Peach",
@@ -28,6 +38,7 @@ function Map() {
             imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
         },
         {
+            _id: '5fb91f1727849d4eb446c8fe',
             xPos: 110,
             yPos: 148,
             name: "Juicy Peach",
@@ -37,15 +48,17 @@ function Map() {
             imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
         },
         {
+            _id: '5fb91f214b8c5dd70ce5b57e',
             xPos: 300,
             yPos: 105,
             name: "Healthy Apple",
             brand: "Signature",
             category: "Fruit",
             price: 2.99,
-            imageURL: 'https://lh3.googleusercontent.com/proxy/KOezBLzcH4VsMYYNv5S-GA36mBYcW3cY4zR5Caz0YWWvi0Q9n8C_127njE4abpIvYcMWwnTCh8-vmNJ2dXPOvIQV'
+            imageURL: 'https://lh3.googleusercontent.com/proxy/Y-SKDCNcvBVEtbPntgj9Ehitr28Wagbg5nOk1ZakpLaIcOzuRNRFUYXxWDNVUBwoDIA7HkaSf4LaQlRHwV0om_vy'
         },
         {
+            _id: '5fb91f28301528be1054d9b1',
             xPos: 197,
             yPos: 400,
             name: "Rotten Peach",
@@ -53,13 +66,15 @@ function Map() {
             category: "Fruit",
             price: 1.99,
             imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
-        },
+        }
     ]
     
     const [fontsLoaded] = useFonts({ComicNeue_400Regular, ComicNeue_700Bold});
     const [modalVisible, setModalVisible] = useState(false);
-    const [modalInfo, setModalInfo] = useState({});
+    const [modalInfo, setModalInfo] = useState({"cluster": []});
+    const [items, setItems] = useState(clusterItems(rawData, 50));
 
+    // Pseudo component for bold text
     const B = (props) => <Text style={{fontFamily: 'ComicNeue_700Bold'}}>{props.children}</Text>
 
     return (
@@ -71,23 +86,41 @@ function Map() {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={[styles.textStyle, {fontSize: 25}]}><B>{modalInfo.name}</B></Text>
-                        <Text style={styles.textStyle}><B>Brand:</B> {modalInfo.brand}</Text>
-                        <Text style={styles.textStyle}><B>Category:</B> {modalInfo.category}</Text>
-                        <Text style={styles.textStyle}><B>Price:</B> ${modalInfo.price}</Text>
-
-                        <Image 
-                            source={{ uri: modalInfo.imageURL }}
-                            style={{width: 200, height: 200, marginTop: 20, marginBottom: 20}} />
-
                         <Pressable
-                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                            style={{ position: 'absolute', top: 12, right: 12 }}
                             onPress={() => {
                                 setModalVisible(!modalVisible);
                             }}
                         >
-                            <Text style={[styles.textStyle, {color: "white"}]}>Back to map</Text>
+                            <Icon type='evilicon' name='close-o' color='lightgrey' size='25' />
                         </Pressable>
+                        <ScrollView centerContent='true' showsVerticalScrollIndicator='false'>
+                            {modalInfo.cluster.map((item) => {
+                                return (
+                                    <View style={{marginTop: 20, marginBottom: 20}}>
+                                        <Text style={[styles.textStyle, {fontSize: 25}]}><B>{item.name}</B></Text>
+                                        <Text style={styles.textStyle}><B>Brand:</B> {item.brand}</Text>
+                                        <Text style={styles.textStyle}><B>Category:</B> {item.category}</Text>
+                                        <Text style={styles.textStyle}><B>Price:</B> ${item.price}</Text>
+
+                                        <Image 
+                                            source={{ uri: item.imageURL }}
+                                            style={{width: 200, height: 200, marginTop: 20, marginBottom: 20}} />
+                                            
+                                        <Pressable
+                                            style={{ ...styles.modalButton }}
+                                            onPress={() => {
+                                                setModalVisible(!modalVisible);
+                                                // TODO: replace with Bradley's context
+                                                setItems(prevItems => removeItemFromClusters(prevItems, item));
+                                            }}
+                                        >
+                                            <Text style={[styles.textStyle, {color: "white"}]}>Check off item</Text>
+                                        </Pressable>
+                                    </View>
+                                )
+                            })}
+                        </ScrollView>
                     </View>
                 </View>
             </Modal>
@@ -97,24 +130,35 @@ function Map() {
                         imageWidth={360}
                         imageHeight={600}>
                 <ImageBackground source={SampleMap} style={{width: 360, height: 600}}>
-                    {locations.map(loc => {
-                        return (
-                            <Pressable
-                                onPressIn={() => {
-                                    setModalVisible(true);
-                                    setModalInfo(loc);
-                                }
-                            }>
-                                <Image 
-                                    source={LocationPin}
-                                    style={[
-                                        styles.locationPin, 
-                                        {left: loc.xPos, top: loc.yPos}
-                                        ]}>
-                                </Image>
-                            </Pressable>
-                        )
+                    {items.map((cluster) => {
+                        if (cluster.cluster.length > 0) {
+                            return (
+                                <Pressable
+                                    onPressIn={() => {
+                                        setModalVisible(true);
+                                        setModalInfo(cluster);
+                                    }
+                                }>
+                                    <Image 
+                                        source={LocationPin}
+                                        style={[
+                                            styles.locationPin, 
+                                            styles.shadow,
+                                            {left: cluster.xPos, top: cluster.yPos}
+                                            ]}>
+                                    </Image>
+                                </Pressable>
+                            )
+                        }
                     })}
+                    <Pressable
+                        style={{ ...styles.modalButton, backgroundColor: 'coral', position: 'absolute', top: 10, left: 14 }}
+                        onPress={() => {
+                            setItems(clusterItems(rawData, 50));
+                        }}
+                    >
+                        <Text style={[styles.textStyle, {color: "white"}]}>Reset</Text>
+                    </Pressable>
                 </ImageBackground>
             </ImageZoom>
         </View>
@@ -124,16 +168,26 @@ function Map() {
 export default Map;
 
 const styles = StyleSheet.create({
+    shadow: {
+        shadowOpacity: 0.3,
+        shadowOffset: {
+            width: 0,
+            height: 1,
+            },
+        shadowColor: 'dimgray',
+        shadowRadius: 1
+    },
     locationPin: {
         position: 'absolute',
         width: 20,
         height: 20
     },
     modalView: {
+        height: 450,
         margin: 20,
         backgroundColor: "white",
-        borderRadius: 50,
-        padding: 35,
+        borderRadius: 30,
+        padding: 30,
         justifyContent: "center",
         alignItems: "center",
         shadowColor: "#000",
@@ -145,11 +199,11 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 5
     },
-    openButton: {
-        backgroundColor: "#F194FF",
+    modalButton: {
+        backgroundColor: Colors.green,
         borderRadius: 20,
         padding: 10,
-        elevation: 2
+        elevation: 2,
     },
     centeredView: {
         flex: 1,
