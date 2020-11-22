@@ -1,7 +1,6 @@
 import React from 'react';
 import Item from './Item';
-import { SafeAreaView,
-         View,
+import { View,
          FlatList,
          StyleSheet,
          Dimensions,
@@ -65,10 +64,7 @@ class ShoppingCart extends React.Component {
     });
   }
 
-  render() {
-    // if (!this.state.assetsLoaded){
-    //     return <AppLoading/>;
-    // } else{
+  render() {      
       return (
         <View style={styles.container}>
           <View style={{marginTop: 10}}>

@@ -146,7 +146,7 @@ const InventorySearch = () => {
 
   if (!fontsLoaded){
       return <AppLoading/>;
-  } else{
+  } else {
     return (
       <View style={styles.container}>
         <View style={styles.searchSection}>
