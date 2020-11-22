@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList,
-         SectionList,
-         Text,
          TextInput,
          TouchableOpacity,
          View,
          Dimensions,
          Image,
-         SafeAreaView,
          StyleSheet,
-         Button,
          StatusBar } from 'react-native';
 import { AppLoading } from 'expo';
 import Item from './Item';
 import InventorySearchSection from './InventorySearchSection';
-import Collapsible from 'react-collapsible';
-import CollapsibleList from "react-native-collapsible-list";
 import search_icon from '../assets/search.png'
-import expand_icon from '../assets/expand.png'
 import erase_icon from '../assets/erase.png'
 import collapse_icon from '../assets/collapse.png'
 import {
@@ -147,7 +140,7 @@ const InventorySearch = () => {
 
   if (!fontsLoaded){
       return <AppLoading/>;
-  } else{
+  } else {
     return (
       <View style={styles.container}>
         <View style={styles.searchSection}>

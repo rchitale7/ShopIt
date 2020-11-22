@@ -1,18 +1,11 @@
 import React from 'react';
 import Item from './Item';
-import { SafeAreaView,
-         View,
+import { View,
          FlatList,
          StyleSheet,
          Dimensions,
          Text,
-         Font,
-         StatusBar,
-         Button } from 'react-native';
-import { useFonts,
-         ComicNeue_400Regular,
-} from '@expo-google-fonts/comic-neue';
-import { AppLoading } from 'expo';
+         Font } from 'react-native';
 
 class ShoppingCart extends React.Component {
   state = {
@@ -65,10 +58,7 @@ class ShoppingCart extends React.Component {
     });
   }
 
-  render() {
-    // if (!this.state.assetsLoaded){
-    //     return <AppLoading/>;
-    // } else{
+  render() {      
       return (
         <View style={styles.container}>
           <View style={{marginTop: 10}}>
@@ -76,7 +66,7 @@ class ShoppingCart extends React.Component {
           </View>
           <FlatList style={styles.section}
             data={this.state.data}
-            renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false} strikeThrough={false} mainViewStyle={{flexDirection:"row", width:275}/>}
+            renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false} strikeThrough={false} mainViewStyle={{flexDirection:"row", width:275}} />}
             keyExtractor={({ item, index }) => index}
             ItemSeparatorComponent={this.renderSeparatorView}
           />
