@@ -1,6 +1,5 @@
 import { StyleSheet, View, Text} from 'react-native';
 import React from 'react';
-import { AppLoading } from 'expo';
 import {
     useFonts,
     ComicNeue_400Regular,
@@ -11,11 +10,11 @@ This is a helper wrapper component to display the green "Map" frame.
 Note: -We will need our children component to have flex:1 
       -The View tag here is the root of all view tags.
 */
-const Map = ({children}) => {
+const MapWrapper = ({children}) => {
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
 
     if(!fontsLoaded){
-        return <AppLoading/>;
+        return <Text> Fonts haven't loaded just yet!</Text>;
     }else{
         return (
             <View style={styles.map}>  
@@ -47,4 +46,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Map;
+export default MapWrapper;

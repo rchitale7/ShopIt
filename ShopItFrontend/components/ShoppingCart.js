@@ -1,4 +1,5 @@
 import React from 'react';
+import Item from './Item';
 import { SafeAreaView,
          View,
          FlatList,
@@ -75,29 +76,23 @@ class ShoppingCart extends React.Component {
 
   }
 
-  removeItem(title) {
+  renderSeparatorView = () => {
+    return (
+      <View style={{
+          height: 1, 
+          width: "100%",
+          backgroundColor: "#CEDCCE",
+          margin:20
+        }}
+      />
+    );
+  };
+
+  removeItem = (title) => {
     console.log("Removing " + title);
     this.setState({
        data: this.state.data.filter((_item) => _item.title !== title)
     });
-  }
-
-  renderItem(item) {
-    console.log("Creating item " + item.title);
-    return (
-      <View style={styles.item}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.descripton}>
-          {item.description.brand}, {item.description.quantity}
-        </Text>
-        <Button
-          onPress={() => this.removeItem(item.title)}
-          title="x"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-      </View>
-    );
   }
 
   render() {
@@ -106,8 +101,9 @@ class ShoppingCart extends React.Component {
         <Text style={styles.title}>Your Cart</Text>
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={({ item, index }) => index}
+          renderItem={({ item }) => <Item item={item} strikeThrough={false} handleDelete={this.removeItem} isCheckBox={false} mainViewStyle={{flexDirection:"row", width:275}}/>}
+          keyExtractor={(item, index) => index.toString()}
+          ItemSeparatorComponent={this.renderSeparatorView}
         />
       </SafeAreaView> 
     );
