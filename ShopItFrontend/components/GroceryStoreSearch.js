@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity, Image, TouchableHighlight, Icon } from 'react-native';
+import {Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity, Image, TouchableHighlight } from 'react-native';
 import * as Location from 'expo-location';
-import { AppLoading } from 'expo';
-import {useFonts, ComicNeue_400Regular } from '@expo-google-fonts/comic-neue';
+import { useFonts, ComicNeue_400Regular } from '@expo-google-fonts/comic-neue';
 import logo_filled from '../assets/logo_filled.png'
 import search_icon from '../assets/search.png'
 import location_icon from '../assets/location.png'
@@ -17,10 +16,6 @@ const GroceryStoreSearch = () => {
     const [stores, setStores] = useState([]);
     const [predictions, setPredictions] = useState([]);
     const [errorMsg, setErrorMsg] = useState(null);
-
-    // if (!fontsLoaded) {
-    //     return <AppLoading />;
-    // }
 
     useEffect(() => {
         getLocation();
@@ -147,38 +142,42 @@ const GroceryStoreSearch = () => {
         );
      };
 
-    return (
-        <View style={styles.container}>
-            <Image style={styles.logo} source={logo_filled}/>
-            <View style={styles.searchSection}>
-                <TextInput style={styles.input}
-                placeholder="Search"
-                onChangeText={search => onChangeDestination(search)}
-                value={search}
-                />
-                <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => getLocation()}>
-                    <Image style={styles.locationIcon} source={location_icon}></Image>
-                </TouchableOpacity>
-                <Image style={styles.searchIcon} source={search_icon}/>
+    if (!fontsLoaded) {
+        return <Text></Text>;
+    } else {
+        return (
+            <View style={styles.container}>
+                <Image style={styles.logo} source={logo_filled}/>
+                <View style={styles.searchSection}>
+                    <TextInput style={styles.input}
+                    placeholder="Search"
+                    onChangeText={search => onChangeDestination(search)}
+                    value={search}
+                    />
+                    <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={() => getLocation()}>
+                        <Image style={styles.locationIcon} source={location_icon}></Image>
+                    </TouchableOpacity>
+                    <Image style={styles.searchIcon} source={search_icon}/>
+                </View>
+                <View style={{flex:1}}>
+                    <FlatList
+                    data={stores}
+                    renderItem={renderButton}
+                    keyExtractor={(item, index) => index.toString()}
+                    />
+                </View>
+                <View style={styles.suggestionsList}>
+                    <FlatList
+                    data={predictions}
+                    renderItem={item => renderSuggestion(item)}
+                    keyExtractor={(item, index) => index.toString()}
+                    />
+                </View>
             </View>
-            <View style={{flex:1}}>
-                <FlatList
-                data={stores}
-                renderItem={renderButton}
-                keyExtractor={(item, index) => index.toString()}
-                />
-            </View>
-            <View style={styles.suggestionsList}>
-                <FlatList
-                data={predictions}
-                renderItem={item => renderSuggestion(item)}
-                keyExtractor={(item, index) => index.toString()}
-                />
-            </View>
-        </View>
-    );
+        );
+    }
 
 }
 
