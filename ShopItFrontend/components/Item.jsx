@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Button, TouchableOpacity, Image} from 'react-native';
 import { CheckBox } from 'react-native-elements';
-import { AppLoading } from 'expo';
 import {
     useFonts,
     ComicNeue_400Regular,
@@ -9,21 +8,41 @@ import {
 import erase_icon from '../assets/erase.png'
 
 /*
-This component is used to display a single item and a checkbox that we can
-set to mark off the item as picked up.
+This component is used to display a single item and a button to the side.
+This button can be either a checkmark or an X mark.
+
 Sample Usage:
-<Item item={someItemObject}/>
+<Item item={...} handleDelete={...} isCheckBox={...} mainViewStyle={...} strikeThrough={...}/>
+
+item: the json containing all the information about the object. 
+Below is the assumed json data format.
+    {
+        title: 'lime yogurt',
+        description: {
+          brand: "Trader Joe's",
+          quantity: "1 lb",
+        }
+     }
+
+handleDelete: The event handler fcn for handling deletes in shopping cart.
+
+isCheckBox: The boolean value to determine which button to display.
+
+mainViewStyle: The associated style for the main view of the item component.
+
+strikeThrough: boolean value to determine whether we display a strikethrough.
+
 */
-const Item = ({item, handleDelete, isCheckBox, strikeThrough}) => {
+const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) => {
     const {title, description:{brand, quantity}} = item;
     const [selected, setCheckBox] = useState(false);
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
 
     if(!fontsLoaded){
-        return <AppLoading />;
+        return <Text>Fonts haven't loaded just yet!</Text>;
     }else{
         return (
-            <View style={isCheckBox ? styles.ItemListItem : styles.ShoppingCartItem}>
+            <View style={mainViewStyle}>
                 <>
                     <View style={{flex:1, flexDirection:'column'}}>
                         <>
@@ -52,7 +71,6 @@ const styles = StyleSheet.create({
         lineHeight:28.75,
         flexGrow:1,
         fontFamily:'ComicNeue_400Regular'
-
     },
     erase:{
       width: 30,
@@ -65,14 +83,6 @@ const styles = StyleSheet.create({
         textDecorationLine:'line-through',
         fontFamily:'ComicNeue_400Regular',
         paddingLeft:8 //On selecting checkbox, this prevents the label from moving on the UI.
-
-    },
-    ItemListItem :{
-        flexDirection:"row"
-    },
-    ShoppingCartItem:{
-        flexDirection:"row",
-        width:275
     }
 })
 

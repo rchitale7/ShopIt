@@ -2,8 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, FlatList} from 'react-native';
 import Item from './Item';
-import Map from './Map';
-import { AppLoading } from 'expo';
+import MapWrapper from './MapWrapper';
 import {
     useFonts,
     ComicNeue_400Regular,
@@ -16,11 +15,32 @@ Most likely, we will pass a prop called items, which will be the input data.
 Sample Usage:
     <ItemList/>
 
-TO-DO: - The components for the search, grocery cart, and location buttons at the bottom of this
-        view need to be added into this component.
-       - box around the list?
 */
 const ItemList = () => {
+    let [fontsLoaded] = useFonts({ComicNeue_400Regular});
+    const items = [
+        {
+            title: 'Cheetos',
+            description: {
+                brand: "Trader Joe's",
+                quantity: "1 lb",
+            },
+        }, 
+        {
+            title: 'Chicken',
+            description: {
+                brand: "Trader Joe's",
+                quantity: "1 lb",
+            },
+        },
+        {
+            title:"Beyond Meat",
+            description: {
+                brand: "Trader Joe's",
+                quantity: "1 lb",
+            },
+        }
+    ]
     const renderSeparatorView = () => {
         return (
           <View style={{
@@ -32,30 +52,26 @@ const ItemList = () => {
           />
         );
       };
-    const items = [{title: 'Cheetos'}, {title: 'Chicken'},{title:"Beyond Meat"}]
-    //const items = [{title: 'Cheetos'}, {title: 'Chicken'},{title:"Beyond Meat"}, {title:"Salsa Verde"},{title:"Oat Milk"},{title:"Bananas"},{title:"Hot Dogs"}]
-    let [fontsLoaded] = useFonts({ComicNeue_400Regular});
 
     
     if (!fontsLoaded){
-        return <AppLoading/>;
+        return <Text>Fonts haven't loaded just yet!</Text>;
     }else{
         return (
-            <Map>
+            <MapWrapper>
                 <View style={styles.whiteContainer}>
                     <>
                         <Text style={styles.heading}>Item List </Text>
                         <FlatList
                             data = {items}
-                            renderItem = {({item}) => <Item item={item}/>}
+                            renderItem = {({item}) => <Item item={item} strikeThrough={true} handleDelete={() => {}} isCheckBox={true} mainViewStyle={{flexDirection:"row"}}/>}
                             keyExtractor = {(item, index) => index.toString()}
                             style={styles.list}          
                             ItemSeparatorComponent={renderSeparatorView}
                         />
                     </>
                 </View>
-            </Map>
-
+            </MapWrapper>
         );
     }
 }

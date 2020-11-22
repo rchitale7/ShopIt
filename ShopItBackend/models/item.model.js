@@ -6,22 +6,36 @@ const itemSchema = new schema({
     name: {
         type: String,
         required: true,
-        trim: true,
-        minlength: 1
+        trim: true
+    },
+    brand: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    category: {
+        type: String,
+        enum: ['Meat', 'Dairy', 'Vegetables', 'Fruit', 'Wheat', 'Candy', 'Alcohol', 'Beverages'],
+        required: true
     },
     price: {
-        type: Number,
+        type: mongoose.Decimal128,
         required: true
-
     },
     imageURL: {
         type: String,
-        required: true,
-        trim: true,
-        minlength: 1
+        default: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
+    },
+    posX: {
+        type: Number,
+        required: true
+    },
+    posY: {
+        type: Number,
+        required: true
     }
 }, {
-    timestampes: true
+    timestamps: true
 });
 
 const Item = mongoose.model('Item', itemSchema);
