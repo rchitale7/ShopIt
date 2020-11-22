@@ -17,3 +17,9 @@ jobs:
       - name: Run ESLint
         working-directory: ./ShopItBackend
         run: npx eslint .
+      - name: Test backend (Mocha)
+        env:
+          ATLAS_URI: ${{ secrets.ATLAS_URI }}
+        working-directory: ./ShopItBackend
+        run: |
+          npm test
