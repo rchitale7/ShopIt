@@ -5,7 +5,13 @@ import { View,
          StyleSheet,
          Dimensions,
          Text,
-         Font } from 'react-native';
+         Font,
+         StatusBar,
+         Button } from 'react-native';
+import { useFonts,
+         ComicNeue_400Regular,
+} from '@expo-google-fonts/comic-neue';
+import { AppLoading } from 'expo';
 
 class ShoppingCart extends React.Component {
   state = {
@@ -66,7 +72,7 @@ class ShoppingCart extends React.Component {
           </View>
           <FlatList style={styles.section}
             data={this.state.data}
-            renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false} strikeThrough={false} mainViewStyle={{flexDirection:"row", width:275}} />}
+            renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false} strikeThrough={false} mainViewStyle={{flexDirection:"row", width:275}}/>}
             keyExtractor={({ item, index }) => index}
             ItemSeparatorComponent={this.renderSeparatorView}
           />

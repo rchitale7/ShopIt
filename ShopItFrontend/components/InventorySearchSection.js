@@ -4,7 +4,9 @@ import { FlatList,
          View,
          Dimensions,
          Image,
+         SafeAreaView,
          StyleSheet,
+         Button,
          StatusBar } from 'react-native';
 import { AppLoading } from 'expo';
 import Item from './Item';
@@ -54,7 +56,7 @@ const InventorySearchSection = ({item}) => {
               : setExpanderSource(expand_icon)
             }
           >
-            <View style={styles.collapsibleItem}> 
+            <View style={styles.collapsibleItem}>
             </View>
             <View style={styles.collapsibleItem}>
               <FlatList style={styles.section}

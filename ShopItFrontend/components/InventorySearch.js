@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList,
+         SectionList,
+         Text,
          TextInput,
          TouchableOpacity,
          View,
          Dimensions,
          Image,
+         SafeAreaView,
          StyleSheet,
+         Button,
          StatusBar } from 'react-native';
 import { AppLoading } from 'expo';
 import Item from './Item';
 import InventorySearchSection from './InventorySearchSection';
+import CollapsibleList from "react-native-collapsible-list";
 import search_icon from '../assets/search.png'
+import expand_icon from '../assets/expand.png'
 import erase_icon from '../assets/erase.png'
 import collapse_icon from '../assets/collapse.png'
 import {
@@ -123,7 +129,7 @@ const InventorySearch = () => {
   }
   else {
     let filteredInventory = inventory
-      .map(category => category.data) 
+      .map(category => category.data)
       .flat()
       .filter(item => item.title.toLowerCase().includes(searchKey.toLowerCase()));
 
@@ -131,7 +137,7 @@ const InventorySearch = () => {
       <View style={styles.collapsibleItem}>
         <FlatList style={styles.section}
           data={filteredInventory}
-          renderItem={({ item }) => <Item item={item} isCheckBox={true} strikeThrough={false}/>}
+          renderItem={({ item }) => <Item item={item} isCheckBox={true} strikeThrough={false} mainViewStyle={{flexDirection:"row"}}/>}
           keyExtractor={({ item, index }) => index}
           ItemSeparatorComponent={renderSeparatorView}
         />
