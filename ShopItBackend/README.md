@@ -10,3 +10,8 @@ Install dependencies and run the server. Nodemon automatically refreshes the ser
 npm install
 npx nodemon server.js
 ```
+
+Linting instructions:
+```
+npx eslint .
+```

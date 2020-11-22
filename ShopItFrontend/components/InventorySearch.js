@@ -31,6 +31,7 @@ const InventorySearch = () => {
 
   // TODO: change from hardcoded data to result from backend API query
   // assuming that a grocery is an object with a name and description field
+  //All data format should be similar for consistency.
   const inventory = [
     { type: "Alcohol",
       data: [
@@ -111,7 +112,6 @@ const InventorySearch = () => {
   }
 
   let [fontsLoaded] = useFonts({ComicNeue_400Regular});
-
   // if the user has typed in the search bar, we display a filtered list of the inventory, and
   // we no longer separate by category
   let inventoryList;
@@ -130,7 +130,7 @@ const InventorySearch = () => {
   }
   else {
     let filteredInventory = inventory
-      .map(category => category.data)
+      .map(category => category.data) 
       .flat()
       .filter(item => item.title.toLowerCase().includes(searchKey.toLowerCase()));
 

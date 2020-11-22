@@ -8,13 +8,14 @@ const userSchema = new schema({
         required: true,
         unique: true,
         trim: true,
-        minlength: 3
+        minlength: 5
     },
     admin: {
+        type: Boolean,
         default: false
     }
 }, {
-    timestampes: true
+    timestamps: true
 });
 
 const User = mongoose.model('User', userSchema);

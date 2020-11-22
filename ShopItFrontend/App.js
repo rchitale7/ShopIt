@@ -1,5 +1,3 @@
-
-
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -10,6 +8,8 @@ import Map from './components/map';
 import InventorySearch from './components/InventorySearch';
 import ShoppingCart from './components/ShoppingCart';
 import ItemList from './components/ItemList';
+
+import CommonStyles from './CommonStyles';
 
 export default function App() {
   const [ mode, setMode ] = useState("Map");
@@ -24,6 +24,9 @@ export default function App() {
     }
     else if (mode == "Search") {
       return <InventorySearch></InventorySearch>
+    }
+    else if (mode == "StoreFinder" ) {
+      return <GroceryStoreSearch></GroceryStoreSearch>
     }
   }
   

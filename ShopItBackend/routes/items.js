@@ -1,35 +1,103 @@
 const express = require('express');
 
 const router = express.Router();
-let Item = require('../models/item.model');
 
-// Return all items
+let Store = require('../models/store.model.js');
+let Item = require('../models/item.model.js');
+
+/**
+ * Return items for a specific grocery store
+ */
 router.route('/').get((req, res) => {
-    Item.find()
-        .then(items => res.json(items))
-        .catch(err => res.status(400).json('Error: ' + err));
+    const storeId = req.query.id;
+
+    Store.findById(storeId)
+        .then(store => {
+            if (!store) res.status(404).json('Cannot find store.');
+            res.json(store.items);
+        })
+        .catch(err => res.status(400).json(err));
 });
 
-// Add new item to database
+/**
+ * Create item and add item to grocery store
+ * 
+ * TODO: after adding image infra in, add back imageURL to the validation and object creation
+ */
 router.route('/add').post((req, res) => {
-    const { name, price, imageURL } = req.body;
+    const storeId = req.body.id;
+    const { name, brand, category, price, posX, posY } = req.body;
+    
+    Store.findById(storeId)
+        .then(store => {
+            if (!store) res.status(404).json('Error: Cannot find store.');
 
-    // Will add image upload later
-    const newItem = new Item( {"name": name, "price": price, "imageURL": imageURL} );
+            const newItem = new Item({
+                name: name,
+                brand: brand,
+                category: category,
+                price: price,
+                posX: posX,
+                posY: posY
+            });
 
-    newItem.save()
-        .then(() => res.json(`Item "${name}" was added!`))
-        .catch(err => res.status(400).json('Error: ' + err));
+            store.items.push(newItem);
+            return store.save();
+        })
+        .then(store => {
+            console.log('Created item and added to store: ' + store);
+            res.json(`Successfully created ${name}!`);
+        })
+        .catch(err => {
+            console.log('Failed to create item: ' + err);
+            res.status(500).json(err);
+        });
 });
 
-// Delete item from database given its _id
+/**
+ * Delete an item from a store
+ */
 router.route('/delete').delete((req, res) => {
-    const id = req.body.id;
-    
-    // Will add image deletion later
-    Item.findOneAndDelete({ _id: { $eq : id } })
-        .then((item) => res.json(`${item.name} has been deleted!`))
-        .catch(err => res.status(400).json(`Unable to delete item. Error: ${err}`));
+    const storeId = req.body.id;
+    const itemId = req.body.itemId;
+
+    Store.findByIdAndUpdate(storeId, { $pull: { items: { _id: itemId } } })
+        .then(store => {
+            console.log(`Deleted item ${itemId} from store ${storeId}: ` + store);
+            res.json(`Successfully deleted item ${itemId}`);
+        })
+});
+
+/**
+ * Add items in bulk
+ */
+router.route('/add').post((req, res) => {
+    const object_id = req.body.id;
+    const docs = req.body.data;
+
+    Store.updateMany(
+        {_id: object_id}, 
+        { $push: { items: { $each: docs } } },
+        function(err) {
+            if (err) res.status(400).json(err);
+            else res.json(`"${docs.length}" items were added!`);
+        }); 
+});   
+
+/**
+ * Remove items in bulk
+ */
+router.route('/delete').delete((req, res) => {
+    const object_id = req.body.id;
+    const docs = req.body.data
+
+    Store.updateMany({_id: object_id}, { $pull: { items: {_id: { $in: docs } } } }, function(err) {
+        if (err) {
+            res.status(400).json('Error: ' + err);
+        } else {
+            res.json(`"${docs.length}" items were deleted!`);
+        }
+    });
 });
 
 module.exports = router;
