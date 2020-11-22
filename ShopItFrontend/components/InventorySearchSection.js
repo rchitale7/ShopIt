@@ -10,7 +10,6 @@ import { FlatList,
          StatusBar } from 'react-native';
 import { AppLoading } from 'expo';
 import Item from './Item';
-import Collapsible from 'react-collapsible';
 import CollapsibleList from "react-native-collapsible-list";
 import expand_icon from '../assets/expand.png'
 import collapse_icon from '../assets/collapse.png'
@@ -57,7 +56,7 @@ const InventorySearchSection = ({item}) => {
               : setExpanderSource(expand_icon)
             }
           >
-            <View style={styles.collapsibleItem}> 
+            <View style={styles.collapsibleItem}>
             </View>
             <View style={styles.collapsibleItem}>
               <FlatList style={styles.section}
