@@ -7,7 +7,6 @@ import Menu from './components/navigation';
 import Map from './components/map';
 import InventorySearch from './components/InventorySearch';
 import ShoppingCart from './components/ShoppingCart';
-import ItemList from './components/ItemList';
 
 import { retrieveStoreInventory, ItemContext, itemReducer } from './components/GlobalItemStore';
 
@@ -32,10 +31,12 @@ export default function App() {
     else if (mode == "Search") {
       return <InventorySearch></InventorySearch>
     }
+    else if (mode == "StoreFinder" ) {
+      return <GroceryStoreSearch></GroceryStoreSearch>
+    }
   }
   
   return (
-
     <View style={styles.container}>
       <ItemContext.Provider 
         value={{
@@ -43,17 +44,8 @@ export default function App() {
           dispatch
         }}
       >
-      
-        {/*
         <Mode></Mode>
-        */}
-
-        <TestComp/>
-
-
-        {/*
         <Menu pressCallback={changeMode}></Menu>
-        */}
         <StatusBar style="auto" />
       </ItemContext.Provider>
     </View>
@@ -69,21 +61,21 @@ const styles = StyleSheet.create({
   }
 });
 
+// for testing/demonstration purposes
 const TestComp = () => {
 
   // retrieve itemState (global state) amd dispatch (function to update global state) from context
   const {itemState, dispatch} = React.useContext(ItemContext);
 
   // access all of the inventory
-  //console.log(itemState.storeInventory);
+  console.log(itemState.storeInventory);
 
   // access the groceries on the user's shopping list
   console.log(itemState.shoppingList);
 
   // update the global state by using dispatch to perform an action
   return <Text onPress={() => dispatch({
-    type: 'toggleItemRetrievedStatus',
-    //type: 'addToCart',
+    type: 'addToCart',
     payload: {
       name: 'test', 
       description: 'test item', 
