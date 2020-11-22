@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Button} from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableOpacity, Image} from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import {
     useFonts,
     ComicNeue_400Regular,
   } from '@expo-google-fonts/comic-neue';
+import erase_icon from '../assets/erase.png'
 
 /*
 This component is used to display a single item and a button to the side.
@@ -49,12 +50,14 @@ const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) =>
                                 ? <Text style={styles.selectedItem}>{title}</Text>
                                 :<Text style={styles.unselectedItem}> {title}</Text>
                             }
-                            {!isCheckBox && <Text style={{marginLeft:8}}>{brand} {quantity}</Text>}
+                            <Text style={{marginLeft:8}}>{brand} {quantity}</Text>
                         </>
                     </View>
-                    {isCheckBox 
-                        ? <CheckBox checked={selected} onPress={ () => setCheckBox(!selected)} style={{flexGrow:1}}/>
-                        : <Button onPress={ () => handleDelete(title)} style={{flexGrow:1}} title="X" color="#841584"/>
+                    {isCheckBox
+                    ? <CheckBox checked={selected} onPress={ () => setCheckBox(!selected)} style={{flexGrow:1}}/>
+                    : <TouchableOpacity onPress={() => handleDelete(title)} style={styles.addButton}>
+                        <Image style={styles.erase} source={erase_icon}/>
+                    </TouchableOpacity>
                     }
                 </>
             </View>
@@ -69,13 +72,16 @@ const styles = StyleSheet.create({
         flexGrow:1,
         fontFamily:'ComicNeue_400Regular'
     },
+    erase:{
+      width: 30,
+      height: 30,
+    },
     selectedItem:{
         fontSize:25,
         lineHeight:28.75,
-
         flexGrow:1,
         textDecorationLine:'line-through',
-        fontFamily:'ComicNeue_400Regular', 
+        fontFamily:'ComicNeue_400Regular',
         paddingLeft:8 //On selecting checkbox, this prevents the label from moving on the UI.
     }
 })
