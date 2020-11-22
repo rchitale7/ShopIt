@@ -17,3 +17,6 @@ jobs:
       - name: Run ESLint
         working-directory: ./ShopItBackend
         run: npx eslint .
+      - name: Test backend (Mocha)
+        working-directory: ./ShopItBackend
+        run: npm test
