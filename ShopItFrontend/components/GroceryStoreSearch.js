@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity, Image, TouchableHighlight } from 'react-native';
+import {Text, View, Dimensions, StyleSheet, TextInput, FlatList, TouchableOpacity, Image, TouchableHighlight } from 'react-native';
 import * as Location from 'expo-location';
 import { useFonts, ComicNeue_400Regular } from '@expo-google-fonts/comic-neue';
 import logo_filled from '../assets/logo_filled.png'
@@ -184,6 +184,8 @@ const GroceryStoreSearch = () => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+      width: Dimensions.get('window').width,
+      height: Dimensions.get('window').height,
       backgroundColor: '#91E78C',
       justifyContent: 'flex-start',
       paddingTop: 50,
