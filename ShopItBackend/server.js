@@ -26,7 +26,8 @@ connection.once('open', () => {
 
     app.listen(port, () => {
         console.log(`This app is running on port ${port}!\n`);
-    }); 
+        app.emit("Ready");
+    });
 
     app.get('/', (req, res) => { res.json('Welcome to ShopIt\'s API!') });
     app.use('/users', usersRouter);

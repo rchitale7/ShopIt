@@ -19,6 +19,10 @@ const exampleStore2 = {
     "lat": 200
 }
 
+before((done) => {
+    app.on("Ready", () => done());
+});
+
 describe('Stores', () => {
     beforeEach(async () => { //Before each test we empty the database
         await Store.deleteMany({});
