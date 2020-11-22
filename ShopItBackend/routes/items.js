@@ -26,7 +26,7 @@ router.route('/').get((req, res) => {
  */
 router.route('/add').post((req, res) => {
     const storeId = req.body.id;
-    const { name, brand, category, price, sectorX, sectorY, aisle } = req.body;
+    const { name, brand, category, price, posX, posY } = req.body;
     
     Store.findById(storeId)
         .then(store => {
@@ -37,9 +37,8 @@ router.route('/add').post((req, res) => {
                 brand: brand,
                 category: category,
                 price: price,
-                sectorX: sectorX,
-                sectorY: sectorY,
-                aisle: aisle
+                posX: posX,
+                posY: posY
             });
 
             store.items.push(newItem);
