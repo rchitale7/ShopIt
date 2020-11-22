@@ -21,6 +21,7 @@ const exampleStore2 = {
 
 describe('Stores', () => {
     beforeEach(async () => { //Before each test we empty the database
+        console.log("Deleting all...");
         await Store.deleteMany({});
     });
 
