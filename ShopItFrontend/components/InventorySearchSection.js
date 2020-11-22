@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FlatList,
          Text,
          View,
          Dimensions,
          Image,
-         SafeAreaView,
          StyleSheet,
-         Button,
          StatusBar } from 'react-native';
 import { AppLoading } from 'expo';
 import Item from './Item';
-import Collapsible from 'react-collapsible';
 import CollapsibleList from "react-native-collapsible-list";
 import expand_icon from '../assets/expand.png'
 import collapse_icon from '../assets/collapse.png'
