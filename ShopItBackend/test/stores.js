@@ -1,13 +1,11 @@
-const Store = require('../models/store.model');
-
-//Require the dev-dependencies
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const assert = require('assert');
 const app = require('../server.js');
 
-chai.use(chaiHttp);
+const Store = require('../models/store.model');
 
-const assert = require('assert');
+chai.use(chaiHttp);
 
 const exampleStore = {
     "name": "Safeway",
@@ -28,55 +26,51 @@ describe('Stores', () => {
 
     describe('Store CRUD', () => {
 
-        it('Should return list of all stores', () => {
-            const newStore = new Store(exampleStore);
-            const newStore2 = new Store(exampleStore2);
-            return newStore.save()
-                .then(console.log('ufkc'))
-                .then(chai.request(app).get('/stores'))
+        it('Should return list of all stores', async () => {
+            let newStore1 = new Store(exampleStore);
+            let newStore2 = new Store(exampleStore2);
+
+            await newStore1.save();
+            await newStore2.save();
+
+            return await chai.request(app)
+                .get('/stores')
                 .then((res) => {
-                    console.log(res);
-                    res.should.have.status(200);
-                    res.body.should.be.a('array');
-                    res.body.length.should.be.eql(0);
-                });
+                    assert.strictEqual(res.status, 200);
+                    assert.ok(Array.isArray(res.body));
+                    assert.strictEqual(res.body.length, 2);
+                })
         });
         
-        it.skip('Should add a store', (done, fuck) => {
-            chai.request(app)
+        it('Should add a store', async () => {
+            return await chai.request(app)
                 .post('/stores/add')
                 .send({
                     "name": "Safeway",
                     "long": 100,
                     "lat": 100
                 })
-                .end(async (err, res) => {
-                    res.should.have.status(200);
-                    const stores = await Store.find();
-                    stores.length.should.be.eql(1);
-                    done();
+                .then(async (res) => {
+                    assert.strictEqual(res.status, 200);
+                    let stores = await Store.find();
+                    assert.strictEqual(stores.length, 1);
                 })
-                .finally(done());
         });
 
-        it.skip('Should delete a store', (done) => {
-            const newStore = new Store(exampleStore);
-            newStore.save().then((store) => {
-                    chai.request(app)
-                        .delete('/stores/delete')
-                        .send({
-                            "id": store._id
-                        })
-                        .end((err, res) => {
-                            res.should.have.status(200);
-                            Store.find().then((stores) => {
-                                stores.length.should.be.eql(2);
-                                done();
-                            })
-                        })
-                }
-            )
-            .finally(done());
+        it('Should delete a store', async () => {
+            let newStore = new Store(exampleStore);
+            let dbNewStore = await newStore.save();
+
+            return await chai.request(app)
+                .delete('/stores/delete')
+                .send({
+                    "id": dbNewStore._id
+                })
+                .then(async (res) => {
+                    assert.strictEqual(res.status, 200);
+                    let stores = await Store.find();
+                    assert.strictEqual(stores.length, 0);
+                })
         });
     });
 });
