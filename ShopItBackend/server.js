@@ -19,7 +19,6 @@ mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedT
 const usersRouter = require('./routes/users');
 const itemsRouter = require('./routes/items');
 const storesRouter = require('./routes/stores');
-const aislesRouter = require('./routes/aisles');
 
 const connection = mongoose.connection;
 connection.once('open', () => {
@@ -27,13 +26,13 @@ connection.once('open', () => {
 
     app.listen(port, () => {
         console.log(`This app is running on port ${port}!\n`);
-    }); 
+        app.emit("Ready");
+    });
 
     app.get('/', (req, res) => { res.json('Welcome to ShopIt\'s API!') });
     app.use('/users', usersRouter);
     app.use('/items', itemsRouter);
     app.use('/stores', storesRouter);
-    app.use('/aisles', aislesRouter);
 })
 
 module.exports = app;
