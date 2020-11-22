@@ -9,7 +9,7 @@ let Item = require('../models/item.model.js');
  * Return items for a specific grocery store
  */
 router.route('/').get((req, res) => {
-    const storeId = req.query.id;
+    const storeId = req.query.storeId;
 
     Store.findById(storeId)
         .then(store => {
@@ -25,13 +25,11 @@ router.route('/').get((req, res) => {
  * TODO: after adding image infra in, add back imageURL to the validation and object creation
  */
 router.route('/add').post((req, res) => {
-    const storeId = req.body.id;
-    const { name, brand, category, price, sectorX, sectorY, aisle } = req.body;
-    
+    const storeId = req.body.storeId;
+    const { name, brand, category, price, sectorX, sectorY, aisle, size } = req.body.data;
     Store.findById(storeId)
         .then(store => {
             if (!store) res.status(404).json('Error: Cannot find store.');
-
             const newItem = new Item({
                 name: name,
                 brand: brand,
@@ -39,7 +37,8 @@ router.route('/add').post((req, res) => {
                 price: price,
                 sectorX: sectorX,
                 sectorY: sectorY,
-                aisle: aisle
+                aisle: aisle,
+                size: size
             });
 
             store.items.push(newItem);
@@ -59,7 +58,7 @@ router.route('/add').post((req, res) => {
  * Delete an item from a store
  */
 router.route('/delete').delete((req, res) => {
-    const storeId = req.body.id;
+    const storeId = req.body.storeId;
     const itemId = req.body.itemId;
 
     Store.findByIdAndUpdate(storeId, { $pull: { items: { _id: itemId } } })
@@ -72,12 +71,12 @@ router.route('/delete').delete((req, res) => {
 /**
  * Add items in bulk
  */
-router.route('/add').post((req, res) => {
-    const object_id = req.body.id;
+router.route('/addMany').post((req, res) => {
+    const store_id = req.body.storeId;
     const docs = req.body.data;
-
+    console.log(docs)
     Store.updateMany(
-        {_id: object_id}, 
+        {_id: store_id}, 
         { $push: { items: { $each: docs } } },
         function(err) {
             if (err) res.status(400).json(err);
@@ -88,11 +87,11 @@ router.route('/add').post((req, res) => {
 /**
  * Remove items in bulk
  */
-router.route('/delete').delete((req, res) => {
-    const object_id = req.body.id;
+router.route('/deleteMany').delete((req, res) => {
+    const store_id = req.body.storeId;
     const docs = req.body.data
 
-    Store.updateMany({_id: object_id}, { $pull: { items: {_id: { $in: docs } } } }, function(err) {
+    Store.updateMany({_id: store_id}, { $pull: { items: {_id: { $in: docs } } } }, function(err) {
         if (err) {
             res.status(400).json('Error: ' + err);
         } else {

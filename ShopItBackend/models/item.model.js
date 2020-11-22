@@ -13,6 +13,11 @@ const itemSchema = new schema({
         required: true,
         trim: true
     },
+    size: {
+        type: String, 
+        required: true, 
+        trim: true
+    },
     category: {
         type: String,
         enum: ['Meat', 'Dairy', 'Vegetables', 'Fruit', 'Wheat', 'Candy', 'Alcohol', 'Beverages'],

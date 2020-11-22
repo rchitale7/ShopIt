@@ -9,7 +9,7 @@ let Aisle = require('../models/aisle.model.js');
  * Return aisles for a specific grocery store
  */
 router.route('/').get((req, res) => {
-    const storeId = req.query.id;
+    const storeId = req.query.storeId;
 
     Store.findById(storeId)
         .then(store => res.json(store.aisles))
@@ -17,13 +17,13 @@ router.route('/').get((req, res) => {
 });
 
 /**
- * Create item and add item to grocery store
+ * Create item and add aisle to grocery store
  * 
  * TODO: after adding image infra in, add back imageURL to the object creation
  */
 router.route('/add').post((req, res) => {
     const storeId = req.body.storeId;
-    const { xPos, yPos, length, width, sectorLength, sectorWidth, rotation } = req.body;
+    const { xPos, yPos, length, width, sectorLength, sectorWidth, rotation } = req.body.data;
 
     Store.findById(storeId)
         .then(store => {
@@ -56,7 +56,7 @@ router.route('/add').post((req, res) => {
  * Delete an aisle from a store
  */
 router.route('/delete').delete(async (req, res) => {
-    const storeId = req.body.id;
+    const storeId = req.body.storeId;
     const aisleId = req.body.aisleId;
 
     try {
@@ -69,7 +69,7 @@ router.route('/delete').delete(async (req, res) => {
         await store.save();
 
         console.log(`Deleted aisle ${aisleId} from store ${storeId}: ` + aisle);
-        res.json(`Successfully deleted item ${aisleId}`);
+        res.json(`Successfully deleted aisle ${aisleId}`);
     } catch (err) {
         console.log('Error: Unable to delete aisle ' + err);
         res.status(400).json(err);

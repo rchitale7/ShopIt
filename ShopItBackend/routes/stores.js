@@ -5,19 +5,29 @@ let Store = require('../models/store.model');
 
 // Return all grocery stosres
 router.route('/').get((req, res) => {
-    Store.find()
+    let long = parseFloat(req.query.long);
+    let lat = parseFloat(req.query.lat);
+
+    if (long != undefined && lat != undefined) {
+        Store.findOne({long: { $eq : long }, lat: { $eq : lat }})
+        .then(store => res.json(store))
+        .catch(err => res.status(400).json('Error: ' + err));
+    } else {
+        Store.find()
         .then(stores => res.json(stores))
         .catch(err => res.status(400).json(err));
+    }
 });
 
 // Add grocery store
 router.route('/add').post((req, res) => {
-    const { name, long, lat } = req.body;
+    const { name, long, lat, aisles } = req.body;
 
     const newStore = new Store({
         name: name,
         long: long,
-        lat: lat
+        lat: lat, 
+        aisles: (aisles == undefined ? [] : aisles)
     });
 
     newStore.save()
@@ -27,7 +37,7 @@ router.route('/add').post((req, res) => {
 
 // Delete grocery store
 router.route('/delete').delete(async (req, res) => {
-    const storeId = req.body.id;
+    const storeId = req.body.storeId;
     
     Store.findByIdAndDelete(storeId)
         .then(store => res.json(`Store (${store._id}) has been deleted!`))

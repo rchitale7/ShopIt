@@ -20,10 +20,6 @@ const storeSchema = new schema({
     aisles: {
         type: [aisle.schema], 
         default: []
-    },
-    items: {
-        type: [item.schema],
-        default: []
     }
 }, {
     timestamps: true
