@@ -3,7 +3,8 @@ const express = require('express');
 const router = express.Router();
 let Store = require('../models/store.model');
 
-// Return all grocery stosres
+// Return grocery store give lat and long
+// if lat and long are not given, return all stores
 router.route('/').get((req, res) => {
     let long = parseFloat(req.query.long);
     let lat = parseFloat(req.query.lat);
@@ -21,13 +22,13 @@ router.route('/').get((req, res) => {
 
 // Add grocery store
 router.route('/add').post((req, res) => {
-    const { name, long, lat, aisles } = req.body;
+    const { name, long, lat, items } = req.body;
 
     const newStore = new Store({
         name: name,
         long: long,
         lat: lat, 
-        aisles: (aisles == undefined ? [] : aisles)
+        items: (items == undefined ? [] : items)
     });
 
     newStore.save()

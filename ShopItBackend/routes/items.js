@@ -26,7 +26,8 @@ router.route('/').get((req, res) => {
  */
 router.route('/add').post((req, res) => {
     const storeId = req.body.storeId;
-    const { name, brand, category, price, sectorX, sectorY, aisle, size } = req.body.data;
+    const { name, brand, size, category, price, posX, posY } = req.body.data;
+    
     Store.findById(storeId)
         .then(store => {
             if (!store) res.status(404).json('Error: Cannot find store.');
@@ -34,11 +35,10 @@ router.route('/add').post((req, res) => {
                 name: name,
                 brand: brand,
                 category: category,
+                size: size,
                 price: price,
-                sectorX: sectorX,
-                sectorY: sectorY,
-                aisle: aisle,
-                size: size
+                posX: posX,
+                posY: posY
             });
 
             store.items.push(newItem);
@@ -72,11 +72,10 @@ router.route('/delete').delete((req, res) => {
  * Add items in bulk
  */
 router.route('/addMany').post((req, res) => {
-    const store_id = req.body.storeId;
+    const storeId = req.body.storeId;
     const docs = req.body.data;
-    console.log(docs)
     Store.updateMany(
-        {_id: store_id}, 
+        {_id: storeId}, 
         { $push: { items: { $each: docs } } },
         function(err) {
             if (err) res.status(400).json(err);
@@ -88,10 +87,10 @@ router.route('/addMany').post((req, res) => {
  * Remove items in bulk
  */
 router.route('/deleteMany').delete((req, res) => {
-    const store_id = req.body.storeId;
+    const storeId = req.body.storeId;
     const docs = req.body.data
 
-    Store.updateMany({_id: store_id}, { $pull: { items: {_id: { $in: docs } } } }, function(err) {
+    Store.updateMany({_id: storeId}, { $pull: { items: {_id: { $in: docs } } } }, function(err) {
         if (err) {
             res.status(400).json('Error: ' + err);
         } else {
