@@ -1,5 +1,3 @@
-
-
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -27,15 +25,17 @@ export default function App() {
     else if (mode == "Search") {
       return <InventorySearch></InventorySearch>
     }
+    else if (mode == "StoreFinder" ) {
+      return <GroceryStoreSearch></GroceryStoreSearch>
+    }
   }
   
   return (
-    // <View style={styles.container}>
-    //   <Mode></Mode>
-    //   <Menu pressCallback={changeMode}></Menu>
-    //   <StatusBar style="auto" />
-    // </View>
-    <GroceryStoreSearch></GroceryStoreSearch>
+    <View style={styles.container}>
+      <Mode></Mode>
+      <Menu pressCallback={changeMode}></Menu>
+      <StatusBar style="auto" />
+    </View>
   );
 }
 

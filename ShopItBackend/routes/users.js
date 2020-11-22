@@ -21,12 +21,13 @@ router.route('/add').post((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+// Delete user from database
 router.route('/delete').delete((req, res) => {
     const username = req.body.username;
 
     User.findOneAndDelete({ username: { $eq : username } })
         .then(() => res.json(`${username} has been deleted!`))
-        .catch(err => res.status(400).json(`Error: Unable to delete ${username}.`));
+        .catch(err => res.status(400).json('Error: ', err));
 });
 
 module.exports = router;

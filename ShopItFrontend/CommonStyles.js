@@ -1,7 +1,15 @@
 import { StyleSheet } from 'react-native';
 
+// Theme color definitions
+const themeColors = {
+  'green': '#a5e495'
+}
+
+// Central stylesheet
 export default StyleSheet.create({
-    // exampler: {
-    //   exampleProperty: 1
-    // }
+    example: {
+
+    }
   });
+
+module.exports.Colors = themeColors;
