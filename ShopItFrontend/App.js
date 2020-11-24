@@ -1,12 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 // Components
 import GroceryStoreSearch from './components/GroceryStoreSearch';
-import Menu from './components/navigation';
 import Map from './components/map';
 import InventorySearch from './components/InventorySearch';
 import ShoppingCart from './components/ShoppingCart';
@@ -14,6 +12,8 @@ import ShoppingCart from './components/ShoppingCart';
 // Other
 import { Colors } from './CommonStyles';
 import { retrieveStoreInventory, ItemContext, itemReducer } from './components/GlobalItemStore';
+import { Fontisto } from '@expo/vector-icons';
+import { create } from 'lodash';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -27,52 +27,66 @@ export default function App() {
   };
 
   const [itemState, dispatch] = React.useReducer(itemReducer, initialState);
-
-  function Mode() {
-    if (mode == "Map") {
-      return <Map></Map>;
-    }
-    else if (mode == "Cart") {
-      return <ShoppingCart></ShoppingCart>
-    }
-    else if (mode == "Search") {
-      return <InventorySearch></InventorySearch>
-    }
-    else if (mode == "StoreFinder" ) {
-      return <GroceryStoreSearch></GroceryStoreSearch>
-    }
-  }
   
   return (
-    <NavigationContainer>
-      {/* <View style={styles.container}>
-        <ItemContext.Provider 
-          value={{
-            itemState,
-            dispatch
-          }}
+    <ItemContext.Provider 
+      value={{ itemState, dispatch }}
+    >
+      <NavigationContainer>
+        <Tab.Navigator 
+          tabBarBadge={true} 
+          barStyle={styles.navbar} 
+          shifting={false}
+          labeled={false}
+          activeColor={Colors.green}
+          inactiveColor='white'
         >
-          <Mode></Mode>
-          <Menu pressCallback={changeMode}></Menu>
-          <StatusBar style="auto" />
-        </ItemContext.Provider>
-      </View> */}
-      <Tab.Navigator barStyle={{ backgroundColor: Colors.green }} shifting={false}>
-        <Tab.Screen name="Back" component={GroceryStoreSearch} />
-        <Tab.Screen name="Search" component={InventorySearch} />
-        <Tab.Screen name="Cart" component={ShoppingCart} />
-        <Tab.Screen name="Map" component={Map} />
-      </Tab.Navigator>
-    </NavigationContainer>
+          <Tab.Screen name="Stores" component={GroceryStoreSearch}
+            options={{
+              tabBarLabel: 'Stores',
+              tabBarIcon: ({ color }) => (
+                <Fontisto name="map" color={color} size={18} />
+              )
+            }}
+          />
+          <Tab.Screen name="Search" component={InventorySearch}
+            options={{
+              tabBarLabel: 'Search',
+              tabBarIcon: ({ color }) => (
+                <Fontisto name="search" color={color} size={18} />
+              )
+            }}
+          />
+          <Tab.Screen name="Cart" component={ShoppingCart}
+            options={{
+              tabBarLabel: 'Cart',
+              tabBarIcon: ({ color }) => (
+                <Fontisto name="shopping-basket" color={color} size={18} />
+              )
+            }}
+          />
+          <Tab.Screen name="Map" component={Map}
+            options={{
+              tabBarLabel: 'Map',
+              tabBarIcon: ({ color }) => (
+                <Fontisto name="map-marker-alt" color={color} size={18} />
+              )
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </ItemContext.Provider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  navbar: {
+    height: 75,
+    backgroundColor: 'black',
+    borderWidth: 5,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    position: 'absolute'
   }
 });
 
