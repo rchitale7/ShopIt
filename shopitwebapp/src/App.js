@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import AddData from './components/AddData';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import Success from './components/Success';
 
 function App() {
+  const [ mode, setMode ] = useState("Login");
+  const changeMode = (newMode) => { setMode(newMode) };
+
+  function Mode() {
+    if (mode == "Login") {
+      return <Login></Login>;
+    }
+    else if (mode == "Signup") {
+      return <Signup></Signup>
+    }
+    else if (mode == "AddData") {
+      return <AddData></AddData>
+    }
+    else if (mode == "Success" ) {
+      return <Success></Success>
+    }
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Login />
     </div>
   );
 }
