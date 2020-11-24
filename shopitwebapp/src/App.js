@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import AddData from './components/AddData';
 import Login from './components/Login';
 import Signup from './components/Signup';
@@ -23,17 +24,15 @@ function App() {
     }
   }
 
-  var page = {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#91E78C'
-  }
-
   return (
-    <div style={page}>
-      {/* <Login /> */}
-      <Signup/>
+    <Router>
+    <div>
+      <Route exact path="/" component={Login} />
+      <Route path="/signup" component={Signup} />
+      <Route path="/adddata" component={AddData} />
+      <Route path="/success" component={Success} />
     </div>
+  </Router>
   );
 }
 

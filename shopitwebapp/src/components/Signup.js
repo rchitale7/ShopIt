@@ -1,13 +1,14 @@
-const Signup = () => {
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-
-    
-
-    return (
-        <div style={page}>
-            <a href={'http://google.com'}>Sign up</a>
-        </div>
-    )
+function Signup() {
+  return (
+    <>
+      <div> sign up page! </div>
+      <li>
+        <Link to="/">Log in</Link>
+      </li>
+    </>
+  );
 }
 
 export default Signup;
