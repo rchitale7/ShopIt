@@ -105,7 +105,7 @@ function Map(props) {
     if (!fontsLoaded) return null;
 
     return (
-        <View>
+        <View style={{ backgroundColor: Colors.beige }}>
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -170,8 +170,7 @@ function Map(props) {
                                     <Image 
                                         source={LocationPin}
                                         style={[
-                                            styles.locationPin, 
-                                            styles.shadow,
+                                            styles.locationPin,
                                             {
                                                 left: cluster.xPos,
                                                 top: cluster.yPos,
@@ -201,15 +200,6 @@ function Map(props) {
 export default Map;
 
 const styles = StyleSheet.create({
-    shadow: {
-        shadowOpacity: 0.3,
-        shadowOffset: {
-            width: 0,
-            height: 1,
-            },
-        shadowColor: 'dimgray',
-        shadowRadius: 1
-    },
     locationPin: {
         position: 'absolute',
         width: 20,

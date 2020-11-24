@@ -4,25 +4,25 @@ import { FlatList,
          View,
          Dimensions,
          Image,
-         SafeAreaView,
          StyleSheet,
-         Button,
          StatusBar } from 'react-native';
 import { AppLoading } from 'expo';
+
 import Item from './Item';
 import CollapsibleList from "react-native-collapsible-list";
+
 import expand_icon from '../assets/expand.png'
 import collapse_icon from '../assets/collapse.png'
+
+import { Colors } from '../CommonStyles';
 import {
     useFonts,
     ComicNeue_400Regular,
   } from '@expo-google-fonts/comic-neue';
 
-
 const InventorySearchSection = ({item}) => {
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
     const [expanderSource, setExpanderSource] = useState(expand_icon);
-
 
     const renderSeparatorView = () => {
       return (
@@ -74,7 +74,7 @@ const InventorySearchSection = ({item}) => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#FFFEE3',
+      backgroundColor: Colors.beige,
       width: Dimensions.get('window').width,
       marginTop: StatusBar.currentHeight || 0,
     },
