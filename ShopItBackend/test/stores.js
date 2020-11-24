@@ -28,53 +28,146 @@ describe('Stores', () => {
         await Store.deleteMany({});
     });
 
-    describe('Store CRUD', () => {
+    describe('GET', () => {
+        describe('Find all stores', () => {
+            it('Should return list of all stores', async () => {
+                let newStore1 = new Store(exampleStore);
+                let newStore2 = new Store(exampleStore2);
 
-        it('Should return list of all stores', async () => {
-            let newStore1 = new Store(exampleStore);
-            let newStore2 = new Store(exampleStore2);
+                await newStore1.save();
+                await newStore2.save();
 
-            await newStore1.save();
-            await newStore2.save();
+                return await chai.request(app)
+                    .get('/stores')
+                    .then((res) => {
+                        assert.strictEqual(res.status, 200);
+                        assert.ok(Array.isArray(res.body));
+                        assert.strictEqual(res.body.length, 2);
+                    })
+            });
 
-            return await chai.request(app)
-                .get('/stores')
-                .then((res) => {
-                    assert.strictEqual(res.status, 200);
-                    assert.ok(Array.isArray(res.body));
-                    assert.strictEqual(res.body.length, 2);
-                })
-        });
-        
-        it('Should add a store', async () => {
-            return await chai.request(app)
-                .post('/stores/add')
-                .send({
-                    "name": "Safeway",
-                    "long": 100,
-                    "lat": 100
-                })
-                .then(async (res) => {
-                    assert.strictEqual(res.status, 200);
-                    let stores = await Store.find();
-                    assert.strictEqual(stores.length, 1);
-                })
+            it('Should return empty list if no stores exist', async () => {
+                return await chai.request(app)
+                    .get('/stores')
+                    .then((res) => {
+                        assert.strictEqual(res.status, 200);
+                        assert.ok(Array.isArray(res.body));
+                        assert.strictEqual(res.body.length, 0);
+                    })
+            });
         });
 
-        it('Should delete a store', async () => {
-            let newStore = new Store(exampleStore);
-            let dbNewStore = await newStore.save();
+        describe('Find store at specified latitude and longitude', () => {
+            it('Should return store at location', async () => {
+                let newStore1 = new Store(exampleStore);
+                let newStore2 = new Store(exampleStore2);
 
-            return await chai.request(app)
-                .delete('/stores/delete')
-                .send({
-                    "id": dbNewStore._id
-                })
-                .then(async (res) => {
-                    assert.strictEqual(res.status, 200);
-                    let stores = await Store.find();
-                    assert.strictEqual(stores.length, 0);
-                })
+                await newStore1.save();
+                await newStore2.save();
+
+                return await chai.request(app)
+                    .get('/stores/at')
+                    .query({ lat: newStore1.lat, long: newStore1.long })
+                    .then((res) => {
+                        assert.strictEqual(res.status, 200);
+                        assert.strictEqual(res.body.name, newStore1.name);
+                    })
+            });
+
+            it('Should return an error if store not found', async () => {
+                let newStore1 = new Store(exampleStore);
+                let newStore2 = new Store(exampleStore2);
+
+                await newStore1.save();
+                await newStore2.save();
+
+                return await chai.request(app)
+                    .get('/stores/at')
+                    .query({ lat: newStore1.lat, long: newStore2.long })
+                    .then((res) => {
+                        assert.strictEqual(res.status, 404);
+                    })
+            });
+
+            it('Should return an error if long or lat not given', async () => {
+                return await chai.request(app)
+                    .get('/stores/at')
+                    .then((res) => {
+                        assert.strictEqual(res.status, 400);
+                    })
+            });
+        });
+    });
+    
+    describe('POST', () => {
+        describe('Add a store', () => {
+            it('Should add a store', async () => {
+                return await chai.request(app)
+                    .post('/stores/add')
+                    .send(exampleStore)
+                    .then(async (res) => {
+                        assert.strictEqual(res.status, 200);
+                        let stores = await Store.find();
+                        assert.strictEqual(stores.length, 1);
+                    })
+            });
+
+            it('Should return return an error if not all required parameters' 
+                + ' are given', async () => {
+                return await chai.request(app)
+                    .post('/stores/add')
+                    .send({
+                        "long": 100,
+                        "lat": 100
+                    })
+                    .then(async (res) => {
+                        assert.strictEqual(res.status, 400);
+                    })
+            });
+
+            it('Should return return an error if store with same (lat, long) already'
+                + ' exists in the database', async () => {
+                let newStore = new Store(exampleStore);
+                await newStore.save();
+
+                return await chai.request(app)
+                    .post('/stores/add')
+                    .send(exampleStore)
+                    .then(async (res) => {
+                        assert.strictEqual(res.status, 400);
+                    })
+            });
+        });
+    });
+
+    describe('DELETE', () => {
+        describe('Remove a store', () => {
+            it('Should delete a store', async () => {
+                let newStore = new Store(exampleStore);
+                let dbNewStore = await newStore.save();
+
+                return await chai.request(app)
+                    .delete('/stores/delete')
+                    .send({
+                        "storeId": dbNewStore._id
+                    })
+                    .then(async (res) => {
+                        assert.strictEqual(res.status, 200);
+                        let stores = await Store.find();
+                        assert.strictEqual(stores.length, 0);
+                    })
+            });
+
+            it('Should return an error if store not found', async () => {
+                return await chai.request(app)
+                    .delete('/stores/delete')
+                    .send({
+                        "storeId": 'wrongId'
+                    })
+                    .then(async (res) => {
+                        assert.strictEqual(res.status, 404);
+                    })
+            });
         });
     });
 });

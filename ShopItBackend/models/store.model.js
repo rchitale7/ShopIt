@@ -9,11 +9,11 @@ const storeSchema = new schema({
         required: true
     },
     long: {
-        type: mongoose.Decimal128, 
+        type: Number, 
         required: true
     }, 
     lat: {
-        type: mongoose.Decimal128, 
+        type: Number, 
         required: true
     },
     items: {
@@ -23,6 +23,8 @@ const storeSchema = new schema({
 }, {
     timestamps: true
 });
+
+storeSchema.index({lat: 1, long: 1}, {unique: true});
 
 const Store = mongoose.model('Store', storeSchema);
 
