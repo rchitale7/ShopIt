@@ -1,14 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
+// Components
 import GroceryStoreSearch from './components/GroceryStoreSearch';
 import Menu from './components/navigation';
 import Map from './components/map';
 import InventorySearch from './components/InventorySearch';
 import ShoppingCart from './components/ShoppingCart';
 
+// Other
+import { Colors } from './CommonStyles';
 import { retrieveStoreInventory, ItemContext, itemReducer } from './components/GlobalItemStore';
+
+const Tab = createMaterialBottomTabNavigator();
 
 export default function App() {
   const [ mode, setMode ] = useState("Search");
@@ -37,18 +44,26 @@ export default function App() {
   }
   
   return (
-    <View style={styles.container}>
-      <ItemContext.Provider 
-        value={{
-          itemState,
-          dispatch
-        }}
-      >
-        <Mode></Mode>
-        <Menu pressCallback={changeMode}></Menu>
-        <StatusBar style="auto" />
-      </ItemContext.Provider>
-    </View>
+    <NavigationContainer>
+      {/* <View style={styles.container}>
+        <ItemContext.Provider 
+          value={{
+            itemState,
+            dispatch
+          }}
+        >
+          <Mode></Mode>
+          <Menu pressCallback={changeMode}></Menu>
+          <StatusBar style="auto" />
+        </ItemContext.Provider>
+      </View> */}
+      <Tab.Navigator barStyle={{ backgroundColor: Colors.green }} shifting={false}>
+        <Tab.Screen name="Back" component={GroceryStoreSearch} />
+        <Tab.Screen name="Search" component={InventorySearch} />
+        <Tab.Screen name="Cart" component={ShoppingCart} />
+        <Tab.Screen name="Map" component={Map} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
