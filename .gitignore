@@ -17,3 +17,7 @@ ShopItFrontend/web-build/
 
 # Backend
 ShopItBackend/.env
+
+# Istanbul
+.nyc_output/
+coverage/
