@@ -5,13 +5,9 @@ import { View,
          StyleSheet,
          Dimensions,
          Text,
-         Font,
-         StatusBar,
-         Button } from 'react-native';
-import { useFonts,
-         ComicNeue_400Regular,
-} from '@expo-google-fonts/comic-neue';
-import { AppLoading } from 'expo';
+         Font } from 'react-native';
+
+import { Colors } from '../CommonStyles';
 
 class ShoppingCart extends React.Component {
   state = {
@@ -67,7 +63,7 @@ class ShoppingCart extends React.Component {
   render() {      
       return (
         <View style={styles.container}>
-          <View style={{marginTop: 10}}>
+          <View style={{marginTop: 30}}>
             <Text style={styles.title}>Your Cart</Text>
           </View>
           <FlatList style={styles.section}
@@ -87,11 +83,11 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height,
     width: Dimensions.get('window').width,
     flex: 1,
-    backgroundColor: '#FFFEE3',
+    backgroundColor: Colors.beige,
   },
   title: {
     'textAlign': 'center',
-    fontFamily:"ComicNeue_400Regular",
+    fontFamily: "ComicNeue_400Regular",
     fontSize: 32,
     padding: 10,
   },
@@ -99,7 +95,7 @@ const styles = StyleSheet.create({
     'borderStyle': 'solid',
     'borderWidth': 1,
     backgroundColor: '#FFFFFF',
-    marginBottom: 130,
+    marginBottom: 90,
     marginLeft: 30,
     marginRight: 30,
     borderRadius: 10,

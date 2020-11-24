@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {Text, View, Dimensions, StyleSheet, TextInput, FlatList, TouchableOpacity, Image, TouchableHighlight } from 'react-native';
 import * as Location from 'expo-location';
-import { useFonts, ComicNeue_400Regular } from '@expo-google-fonts/comic-neue';
+
 import logo_filled from '../assets/logo_filled.png'
 import search_icon from '../assets/search.png'
-import location_icon from '../assets/location.png'
+
+import { Colors } from '../CommonStyles';
+import { useFonts, ComicNeue_400Regular } from '@expo-google-fonts/comic-neue';
+import { Fontisto } from '@expo/vector-icons';
 
 const API_KEY='AIzaSyB0OBBZB0abirvfDAjbAWbCeGqk-knKvtw';
 
@@ -136,7 +139,7 @@ const GroceryStoreSearch = () => {
                 activeOpacity={0.7}
                 onPress={() => console.log("button pressed")}>
                     <Text style={styles.title}>{item.name}</Text>
-                    <Text style={styles.descripton}>{item.address}</Text>
+                    <Text style={styles.description}>{item.address}</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -157,7 +160,8 @@ const GroceryStoreSearch = () => {
                     <TouchableOpacity
                     activeOpacity={0.5}
                     onPress={() => getLocation()}>
-                        <Image style={styles.locationIcon} source={location_icon}></Image>
+                        <Fontisto style={styles.locationIcon} name="map-marker-alt" color='dimgrey' size={30} />
+                        {/* <Image style={styles.locationIcon} source={location_icon}></Image> */}
                     </TouchableOpacity>
                     <Image style={styles.searchIcon} source={search_icon}/>
                 </View>
@@ -186,9 +190,10 @@ const styles = StyleSheet.create({
       flex: 1,
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
-      backgroundColor: '#91E78C',
+      backgroundColor: Colors.green,
       justifyContent: 'flex-start',
       paddingTop: 50,
+      paddingBottom: 80
     },
     logo: {
         alignSelf: 'center',
@@ -199,10 +204,10 @@ const styles = StyleSheet.create({
     locationIcon: {
         flex: 1,
         position: 'absolute',
-        height: 35,
-        width: 35,
-        top: -53,
-        left: 360,
+        height: 32,
+        width: 32,
+        top: -51,
+        left: 365,
         resizeMode: 'contain',
     },
     searchIcon: {
@@ -235,7 +240,7 @@ const styles = StyleSheet.create({
         paddingLeft: 50,
         borderRadius: 19,
         fontSize: 24,
-        backgroundColor: '#FFFEE3',
+        backgroundColor: Colors.beige,
         fontFamily:"ComicNeue_400Regular"
     },
     highlight: {
@@ -244,21 +249,21 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: "flex-start",
-        backgroundColor: "#FFFEE3",
+        backgroundColor: Colors.beige,
         marginTop: 5,
         marginBottom: 10,
         marginLeft: 20,
         marginRight: 10,
         padding: 20,
         borderRadius: 19,
-        borderColor: "#FFFEE3"
+        borderColor: Colors.beige
     },
     title: {
         fontSize: 32,
         fontFamily:"ComicNeue_400Regular"
     },
     description: {
-        fontSize: 24,
+        fontSize: 15,
         fontFamily:"ComicNeue_400Regular"
     },
 });

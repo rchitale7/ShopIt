@@ -1,28 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FlatList,
-         SectionList,
-         Text,
          TextInput,
          TouchableOpacity,
          View,
          Dimensions,
          Image,
-         SafeAreaView,
          StyleSheet,
-         Button,
          StatusBar } from 'react-native';
 import { AppLoading } from 'expo';
+
 import Item from './Item';
 import InventorySearchSection from './InventorySearchSection';
-import CollapsibleList from "react-native-collapsible-list";
+
 import search_icon from '../assets/search.png'
-import expand_icon from '../assets/expand.png'
 import erase_icon from '../assets/erase.png'
 import collapse_icon from '../assets/collapse.png'
-import {
-    useFonts,
-    ComicNeue_400Regular,
-  } from '@expo-google-fonts/comic-neue';
+
+import { Colors } from '../CommonStyles';
+import { useFonts, ComicNeue_400Regular } from '@expo-google-fonts/comic-neue';
 
 const InventorySearch = () => {
   const [searchKey, setSearchKey] = useState('');
@@ -167,20 +162,20 @@ const InventorySearch = () => {
   }
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFEE3',
+    backgroundColor: Colors.beige,
     width: Dimensions.get('window').width,
     marginTop: StatusBar.currentHeight || 0,
+    paddingTop: 20,
+    paddingBottom: 40
   },
   subcontainer: {
     flex: 1,
-    backgroundColor: '#FFFEE3',
+    backgroundColor: Colors.beige,
     width: Dimensions.get('window').width,
-    marginTop: StatusBar.currentHeight || 0,
-    marginBottom: 140,
+    marginTop: StatusBar.currentHeight || 0
   },
   searchIcon: {
     position: 'absolute',
