@@ -62,7 +62,7 @@ const InventorySearchSection = ({item}) => {
               <FlatList style={styles.section}
                 data={item.data}
                 renderItem={({ item }) => <Item item={item} isCheckBox={true} strikeThrough={false} mainViewStyle={{flexDirection:"row"}}/>}
-                keyExtractor={({ item, index }) => index}
+                keyExtractor={(item) => item._id}
                 ItemSeparatorComponent={renderSeparatorView}
               />
             </View>

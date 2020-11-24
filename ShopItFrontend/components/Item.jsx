@@ -34,7 +34,7 @@ strikeThrough: boolean value to determine whether we display a strikethrough.
 
 */
 const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) => {
-    const {title, description:{brand, quantity}} = item;
+    const { _id, title, description:{brand, quantity}} = item;
     const [selected, setCheckBox] = useState(false);
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
 

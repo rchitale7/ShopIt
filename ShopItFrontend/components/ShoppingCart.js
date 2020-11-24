@@ -27,16 +27,16 @@ class ShoppingCart extends React.Component {
 
   constructor(props){
     const data = [
-      { title: 'bagel', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'donut', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'guava juice', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'lemonade', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'peanut m&ms', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'whoppers', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'brie', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'celery', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'zucchini', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'bleach', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: 1, title: 'bagel', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: 2, title: 'donut', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: 3, title: 'guava juice', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: 4, title: 'lemonade', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: 5, title: 'peanut m&ms', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: 6, title: 'whoppers', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: 7, title: 'brie', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: 8, title: 'celery', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: 9, title: 'zucchini', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: 10, title: 'bleach', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
     ];
     super(props);
     this.state = {
@@ -73,7 +73,7 @@ class ShoppingCart extends React.Component {
           <FlatList style={styles.section}
             data={this.state.data}
             renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false} strikeThrough={false} mainViewStyle={{flexDirection:"row", width:275}}/>}
-            keyExtractor={({ item, index }) => index}
+            keyExtractor={(item) => item._id}
             ItemSeparatorComponent={this.renderSeparatorView}
           />
         </View>
