@@ -5,7 +5,6 @@ import { Icon } from 'react-native-elements'
 import ImageZoom from 'react-native-image-pan-zoom';
 
 // Static assets
-import SampleMap from '../assets/sample_map.png';
 import LocationPin from '../assets/location_pin.png';
 
 // Styles
@@ -18,6 +17,13 @@ import { clusterItems, removeItemFromClusters } from './utils';
 function Map(props) {
     const { pinSize = 20 } = props;
     const clusterRadius = pinSize;
+
+    const groceryStore = {
+        name: "Trade Joe's",
+        lat: 100,
+        long: 100,
+        floorplanURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/floorplan-images/sample_map.png'
+    }
     
     const rawData = [
         {
@@ -28,7 +34,7 @@ function Map(props) {
             brand: "Sunkist",
             category: "Fruit",
             price: 3.99,
-            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
+            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/peach.png'
         },
         {
             _id: '5fb91ef4a75df917718cd3fz',
@@ -38,7 +44,7 @@ function Map(props) {
             brand: "Garden of Eden",
             category: "Fruit",
             price: 6.99,
-            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
+            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/peach.png'
         },
         {
             _id: '5fb91ef4a75df917718cd3fq',
@@ -48,7 +54,7 @@ function Map(props) {
             brand: "Homegrown",
             category: "Fruit",
             price: 10.99,
-            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
+            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/peach.png'
         },
         {
             _id: '5fb91efe6697712645c5ca8f',
@@ -58,7 +64,7 @@ function Map(props) {
             brand: "Trader Joe's",
             category: "Fruit",
             price: 6.99,
-            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
+            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/peach.png'
         },
         {
             _id: '5fb91f1727849d4eb446c8fe',
@@ -68,7 +74,7 @@ function Map(props) {
             brand: "Minute Maid",
             category: "Fruit",
             price: 5.99,
-            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
+            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/peach.png'
         },
         {
             _id: '5fb91f214b8c5dd70ce5b57e',
@@ -78,7 +84,7 @@ function Map(props) {
             brand: "Signature",
             category: "Fruit",
             price: 2.99,
-            imageURL: 'https://lh3.googleusercontent.com/proxy/Y-SKDCNcvBVEtbPntgj9Ehitr28Wagbg5nOk1ZakpLaIcOzuRNRFUYXxWDNVUBwoDIA7HkaSf4LaQlRHwV0om_vy'
+            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/apple.png'
         },
         {
             _id: '5fb91f28301528be1054d9b1',
@@ -88,7 +94,7 @@ function Map(props) {
             brand: "No Name",
             category: "Fruit",
             price: 1.99,
-            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
+            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/peach.png'
         }
     ]
     
@@ -156,7 +162,7 @@ function Map(props) {
                         cropHeight={Dimensions.get('window').height}
                         imageWidth={360}
                         imageHeight={600}>
-                <ImageBackground source={SampleMap} style={{width: 360, height: 600}}>
+                <ImageBackground source={{ uri: groceryStore.floorplanURL }} style={{width: 360, height: 600}}>
                     {items.map((cluster) => {
                         if (cluster.cluster.length > 0) {
                             return (

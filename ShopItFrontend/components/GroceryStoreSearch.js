@@ -208,7 +208,6 @@ const styles = StyleSheet.create({
         width: 32,
         top: -51,
         left: 365,
-        resizeMode: 'contain',
     },
     searchIcon: {
         position: 'absolute',
