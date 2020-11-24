@@ -23,16 +23,16 @@ class ShoppingCart extends React.Component {
 
   constructor(props){
     const data = [
-      { _id: 1, title: 'bagel', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: 2, title: 'donut', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: 3, title: 'guava juice', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: 4, title: 'lemonade', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: 5, title: 'peanut m&ms', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: 6, title: 'whoppers', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: 7, title: 'brie', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: 8, title: 'celery', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: 9, title: 'zucchini', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: 10, title: 'bleach', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '1', title: 'bagel', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '2', title: 'donut', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '3', title: 'guava juice', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '4', title: 'lemonade', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '5', title: 'peanut m&ms', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '6', title: 'whoppers', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '7', title: 'brie', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '8', title: 'celery', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '9', title: 'zucchini', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '10', title: 'bleach', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
     ];
     super(props);
     this.state = {

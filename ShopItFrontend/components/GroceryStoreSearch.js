@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
       backgroundColor: Colors.green,
       justifyContent: 'flex-start',
       paddingTop: 50,
-      paddingBottom: 80
+      paddingBottom: 75
     },
     logo: {
         alignSelf: 'center',
