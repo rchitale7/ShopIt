@@ -3,21 +3,25 @@ const express = require('express');
 const router = express.Router();
 let Store = require('../models/store.model');
 
-// Return grocery store give lat and long
-// if lat and long are not given, return all stores
+// Returns all grocery stores
 router.route('/').get((req, res) => {
-    let long = parseFloat(req.query.long);
-    let lat = parseFloat(req.query.lat);
-
-    if (long != undefined && lat != undefined) {
-        Store.findOne({long: { $eq : long }, lat: { $eq : lat }})
-        .then(store => res.json(store))
-        .catch(err => res.status(400).json('Error: ' + err));
-    } else {
-        Store.find()
+    Store.find()
         .then(stores => res.json(stores))
         .catch(err => res.status(400).json(err));
-    }
+});
+
+// Returns grocery store given lat and long
+router.route('/at').get((req, res) => {
+    const { lat, long }  = req.query;
+
+    if (!lat || !long) res.status(400).json('Lat and/or long not in query params');
+
+    Store.findOne({long: { $eq : long }, lat: { $eq : lat }})
+        .then(store => {
+            if (store) res.json(store)
+            else res.status(404).json(`Could not find store at ${lat}, ${long}`)
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
 });
 
 // Add grocery store
@@ -42,7 +46,7 @@ router.route('/delete').delete(async (req, res) => {
     
     Store.findByIdAndDelete(storeId)
         .then(store => res.json(`Store (${store._id}) has been deleted!`))
-        .catch(err => res.status(400).json(err));
+        .catch(err => res.status(404).json(err));
 });
 
 module.exports = router;
