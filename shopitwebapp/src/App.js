@@ -22,9 +22,17 @@ function App() {
       return <Success></Success>
     }
   }
+
+  var page = {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#91E78C'
+  }
+
   return (
-    <div>
-      <Login />
+    <div style={page}>
+      {/* <Login /> */}
+      <Signup/>
     </div>
   );
 }
