@@ -88,6 +88,14 @@ describe('Stores', () => {
                         assert.strictEqual(res.status, 404);
                     })
             });
+
+            it('Should return an error if long or lat not given', async () => {
+                return await chai.request(app)
+                    .get('/stores/at')
+                    .then((res) => {
+                        assert.strictEqual(res.status, 400);
+                    })
+            });
         });
     });
     
