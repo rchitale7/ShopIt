@@ -8,10 +8,10 @@ function Login() {
       <div className="header">Are you a grocery store?</div>
       <div className="container">
         <form>
-          <input className="input" type="text" id="username" placeholder="username"/>
+          <input className="input" type="text" id="username" placeholder="username..."/>
         </form>
         <form> 
-          <input className="input" type="text" id="password" placeholder="password"/>
+          <input className="input" type="text" id="password" placeholder="password..."/>
         </form>
         <button className="button"
             type="button"
