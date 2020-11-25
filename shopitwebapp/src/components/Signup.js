@@ -4,9 +4,13 @@ function Signup() {
   return (
     <>
       <div> sign up page! </div>
-      <li>
-        <Link to="/">Log in</Link>
-      </li>
+      <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.href='/';
+            }}
+      >Log In</button>
     </>
   );
 }
