@@ -1,12 +1,11 @@
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import '../index.css'
+import logo from './logo_filled.png';
 
 function Signup() {
   return (
     <>
-      <div className="header">
-          <h1>Welcome to ShopIt!</h1>
-      </div>
+      <img src={logo} className="img" />
+      <div className="header">Welcome to ShopIt!</div>
       <div className="container">
         <button className="button"
             type="button"

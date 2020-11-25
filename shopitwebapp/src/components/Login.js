@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import logo from './logo_filled.png';
 
 function Login() {
   return (
     <>
-      <div> login page! </div>
+      <img src={logo} className="img" />
+      <div className="header">Are you a grocery store?</div>
       <div className="container">
         <form>
           <input className="input" type="text" id="username" placeholder="username"/>
