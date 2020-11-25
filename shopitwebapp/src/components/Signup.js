@@ -4,7 +4,9 @@ import '../index.css'
 function Signup() {
   return (
     <>
-      <div> sign up page! </div>
+      <div className="header">
+          <h1>Welcome to ShopIt!</h1>
+      </div>
       <div className="container">
         <button className="button"
             type="button"

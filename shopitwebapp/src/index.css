@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap');
+
 body {
   background-color: #91E78C;
   margin: 0;
@@ -16,17 +18,42 @@ code {
 .container {
   margin: auto;
   margin-top: 18%;
-  width: 300px;
   height: 300px;
+  width: 300px;
   border-radius: 10px;
   background-color: #FFFEE3;
 }
 
+.minicontainer {
+  margin: auto;
+  margin-top: 1%;
+  height: 75px;
+  width: 300px;
+  border-radius: 10px;
+  background-color: #FFFEE3;
+}
+
+.header {
+  text-align: center;
+  font-family: 'Comic Neue';
+}
+
+.input {
+  margin-top: 5%;
+  margin-left: 5%;
+  padding: 10px;
+  height: 30px;
+  width: 250px;
+  border-width: 0px;
+  border-radius: 10px;
+  background-color: #FFF;
+}
+
 .button {
-  margin-top: 200px;
+  margin-top: 10%;
   margin-left: 25%;
-  height: 20%;
-  width: 50%;
+  height: 50px;
+  width: 150px;
   border-width: 0px;
   border-radius: 8px;
   background-color: #D8FDD6;
