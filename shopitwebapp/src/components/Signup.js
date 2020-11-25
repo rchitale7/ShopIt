@@ -5,14 +5,22 @@ function Signup() {
   return (
     <>
       <div> sign up page! </div>
+      <form>
+        <input type="text" id="username" placeholder="username..."/>
+      </form>
+      <form>
+        <input type="text" id="password" placeholder="password..."/>
+      </form>
       <div className="container">
         <button className="button"
             type="button"
             onClick={(e) => {
                 e.preventDefault();
+                var user = document.getElementById('username').value
+                var pass = document.getElementById('password').value
                 window.location.href='/';
                 }}
-        >Log In</button>
+        >Sign Up</button>
       </div>
     </>
   );
