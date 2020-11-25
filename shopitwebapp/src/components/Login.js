@@ -4,12 +4,20 @@ function Login() {
   return (
     <>
       <div> login page! </div>
-      <li>
-        <Link to="/signup">Sign up</Link>
-      </li>
-      <li>
-        <Link to="/adddata">Add Data</Link>
-      </li>
+      <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.href='/signup';
+            }}
+      >Sign up</button>
+      <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.href='/adddata';
+            }}
+      >Log in</button>
     </>
   );
 }

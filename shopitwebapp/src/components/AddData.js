@@ -4,9 +4,13 @@ function AddData() {
   return (
     <>
       <div> add data page! </div>
-      <li>
-        <Link to="/success">Success</Link>
-      </li>
+      <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.href='/success';
+            }}
+      >Add data</button>
     </>
   );
 }
