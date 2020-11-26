@@ -3,14 +3,16 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const multer  = require('multer');
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({origin: ["http://localhost:3000"], credentials: true}));
 app.use(express.json());
+app.use(cookieParser());
 app.use(multer({
     dest: 'uploads/' }).
     fields([{ name: 'floorPlan', maxCount: 1 }, { name: 'items', maxCount: 1 }])

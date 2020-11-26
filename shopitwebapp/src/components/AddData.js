@@ -18,11 +18,11 @@ function AddData() {
         </form>
         <div className="innertext">Inventory</div>
         <form>
-          <input className="input" type="file" id="items" />
+          <input className="input" type="file" id="items" name="items"/>
         </form>
         <div className="innertext">Floor Plan</div>
         <form>
-          <input className="input" type="file" id="floorPlan" />
+          <input className="input" type="file" id="floorPlan" name="floorPlan"/>
         </form>
         <button className="button"
           type="button"
@@ -30,22 +30,21 @@ function AddData() {
             e.preventDefault();
             const data  = new FormData();
             data.append('name', document.getElementById('name').value)
-            data.append('latitude', document.getElementById('latitude').value)
-            data.append('longitude', document.getElementById('longitude').value)
-            data.append('items', document.getElementById('items').value)
-            data.append('floorPlan', document.getElementById('floorPlan').value)
-            fetch('http://localhost:5000/'+window.localStorage.getItem("user"), {
+            data.append('lat', document.getElementById('latitude').value)
+            data.append('long', document.getElementById('longitude').value)
+            data.append('items', document.getElementById('items').files[0])
+            data.append('floorPlan', document.getElementById('floorPlan').files[0])
+            fetch('http://localhost:5000/stores/'+window.localStorage.getItem("user"), {
+              credentials: 'include',
               method: 'POST',
+              body: data, 
               headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data',
-              },
-              body: data
+                'Accept': 'application/json'
+              }
             }).then((response) => response.json())
             .then((responseData) => {
-              console.log(responseData);
+              alert(responseData)
               window.location.href='/success';
-              //return responseData;
             })
             .catch(error => console.warn(error));
             }}

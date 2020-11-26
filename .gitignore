@@ -17,6 +17,7 @@ ShopItFrontend/web-build/
 
 # Backend
 ShopItBackend/.env
+ShopItBackend/uploads
 
 # Istanbul
 .nyc_output/

@@ -21,6 +21,7 @@ function Login() {
               window.localStorage.setItem("user", user); //used to add data
               // check user and password here
               fetch('http://localhost:5000/users/login', {
+                credentials: 'include',
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

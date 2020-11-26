@@ -58,9 +58,7 @@ router.post('/login', function(req, res) {
                             if (err != null) {
                                 res.status(500).json("Error: jwt token error")
                             } else {
-                                console.log(token)
                                 res.cookie('jwt', token);
-                                res.status(200);
                                 res.status(200).json("Authentication successful");
 
                             }
@@ -94,7 +92,6 @@ router.route('/signup').post((req, res) => {
                     if (err != null) {
                         res.status(500).json("Error: jwt token error")
                     } else {
-                        console.log(token)
                         res.cookie('jwt', token);
 
                     }

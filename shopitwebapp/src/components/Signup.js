@@ -20,6 +20,7 @@ function Signup() {
                 var user = document.getElementById('username').value
                 var pass = document.getElementById('password').value
                 fetch('http://localhost:5000/users/signup', {
+                  credentials: 'include',
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
