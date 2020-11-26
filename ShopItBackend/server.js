@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const multer  = require('multer'); 
+const multer  = require('multer');
 
 require('dotenv').config();
 
@@ -11,9 +11,9 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-app.use(multer({ 
+app.use(multer({
     dest: 'uploads/' }).
-    fields([{ name: 'floorPlan', maxCount: 1 }, { name: 'items', maxCount: 1 }]) 
+    fields([{ name: 'floorPlan', maxCount: 1 }, { name: 'items', maxCount: 1 }])
 );
 
 const uri = process.env.ATLAS_URI;

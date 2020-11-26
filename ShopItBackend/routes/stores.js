@@ -5,10 +5,6 @@ let Store = require('../models/store.model');
 const csv = require("csvtojson");
 const fs = require('fs')
 
-
-const csv = require("csvtojson");
-const fs = require('fs')
-
 var jwt = require('jsonwebtoken');
 var secret_key = "C-UFRaksvPKhx1txJYFcut3QGxsafPmwCY6SCly3G6c"
 
@@ -36,7 +32,7 @@ router.route('/at').get((req, res) => {
 router.use('/:username', function (req, res, next) {
 
     let token = req.cookies.jwt;
-  
+
     if (token == null) {
       res.status(401).json('401 error: Could not authenticate');
     } else {
@@ -64,7 +60,7 @@ router.route('/:username').post( async (req,res) => {
     req.jwt_usr = username
 
     if (req.jwt_usr != username) {
-        res.status(401).json('Error: User is not authenticated'); 
+        res.status(401).json('Error: User is not authenticated');
         fs.unlink(csvFilePath, (err) => {
             if (err) {
             console.error(err)
@@ -92,7 +88,7 @@ router.route('/:username').post( async (req,res) => {
             const newStore = new Store({
                 name: name,
                 long: long,
-                lat: lat, 
+                lat: lat,
                 items: jsonArray
             });
 
@@ -116,7 +112,7 @@ router.route('/:username').post( async (req,res) => {
             })
         })
     }
- 
+
 })
 
 // Delete grocery store
@@ -126,10 +122,10 @@ router.route('/:username').delete(async (req, res) => {
     req.jwt_usr = username
 
     if(req.jwt_usr != username) {
-        res.status(401).json('Error: User is not authenticated'); 
+        res.status(401).json('Error: User is not authenticated');
     } else {
         const storeId = req.body.storeId;
-    
+
         Store.findByIdAndDelete(storeId)
             .then(store => res.json(`Store (${store._id}) has been deleted!`))
             .catch(err => res.status(404).json(err));

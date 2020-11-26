@@ -1,9 +1,7 @@
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-
 function AddData() {
   return (
     <>
-      <div> add data page! </div>
+      <div> {window.localStorage.getItem("user")}'s adding data. </div>
       <form>
         <input type="text" id="name" placeholder="name..."/>
       </form>
@@ -23,12 +21,26 @@ function AddData() {
           type="button"
           onClick={(e) => {
             e.preventDefault();
-            var name = document.getElementById('name').value
-            var latitude = document.getElementById('latitude').value
-            var longitude = document.getElementById('longitude').value
-            var items = document.getElementById('items').value
-            var floorPlan = document.getElementById('floorPlan').value
-            window.location.href='/success';
+            const data  = new FormData();
+            data.append('name', document.getElementById('name').value)
+            data.append('latitude', document.getElementById('latitude').value)
+            data.append('longitude', document.getElementById('longitude').value)
+            data.append('items', document.getElementById('items').value)
+            data.append('floorPlan', document.getElementById('floorPlan').value)
+            fetch('http://localhost:5000/'+window.localStorage.getItem("user"), {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data',
+              },
+              body: data
+            }).then((response) => response.json())
+            .then((responseData) => {
+              console.log(responseData);
+              window.location.href='/success';
+              //return responseData;
+            })
+            .catch(error => console.warn(error));
             }}
       >Add data</button>
     </>

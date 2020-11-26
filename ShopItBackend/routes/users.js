@@ -30,8 +30,8 @@ router.post('/login', function(req, res) {
 
     let username = req.body.username;
     let pwd = req.body.password;
-  
-  
+
+
     // callback order is user, err i think? this conflicts with the mongoose docs
     User.findOne({ username: { $eq : username } })
     .then(function(user, err) {
@@ -48,12 +48,12 @@ router.post('/login', function(req, res) {
                     if (!result) {
                         res.status(401).json("Error: password didn't match");
                     } else {
-        
+
                         let payload = {
                             "exp": Date.now()/1000 + 3600*2,
                             "usr": username
                         };
-            
+
                         jwt.sign(payload, secret_key, {header: header}, function(err, token) {
                             if (err != null) {
                                 res.status(500).json("Error: jwt token error")
@@ -71,24 +71,25 @@ router.post('/login', function(req, res) {
         }
     })
 });
-    
+
 
 // Sign up user to database
 router.route('/signup').post((req, res) => {
+    console.log("sign up post call")
     const { username, password } = req.body;
 
-    
+
 
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(password, salt, function(err, hash) {
             if (err != null) {
-                res.status(500).json("Error: Could not hash password"); 
+                res.status(500).json("Error: Could not hash password");
             } else {
                 let payload = {
                     "exp": Date.now()/1000 + 3600*2,
                     "usr": username
                 };
-    
+
                 jwt.sign(payload, secret_key, {header: header}, function(err, token) {
                     if (err != null) {
                         res.status(500).json("Error: jwt token error")
