@@ -26,7 +26,8 @@ function Login() {
         >Log in</button>
         </div>
         <div className="minicontainer">
-          <button className="button"
+          <div className='innertext'>New grocery store?</div>
+          <button className="signupbutton"
               type="button"
               onClick={(e) => {
                 e.preventDefault();
