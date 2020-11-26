@@ -19,6 +19,10 @@ const storeSchema = new schema({
     items: {
         type: [item.schema],
         default: []
+    }, 
+    floorPlan: {
+        type: String, 
+        default: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/floorplan-images/sample_map.png'
     }
 }, {
     timestamps: true

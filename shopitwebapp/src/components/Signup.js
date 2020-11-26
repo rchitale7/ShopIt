@@ -19,7 +19,19 @@ function Signup() {
                 e.preventDefault();
                 var user = document.getElementById('username').value
                 var pass = document.getElementById('password').value
-                window.location.href='/';
+                fetch('http://localhost:5000/users/signup', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({username: user, password: pass}),
+                }).then((response) => response.json())
+                .then((responseData) => {
+                  console.log(responseData);
+                  window.location.href='/';
+                  //return responseData;
+                })
+                .catch(error => console.warn(error));
                 }}
         >Sign Up</button>
       </div>

@@ -3,7 +3,6 @@ import success from './success.png';
 
 function Success() {
   return (
-    // <div className="success"></div>
     <img src={success} className="success"></img>
   );
 }

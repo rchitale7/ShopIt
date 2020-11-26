@@ -9,6 +9,11 @@ const userSchema = new schema({
         unique: true,
         trim: true,
         minlength: 5
+    }, 
+    password: {
+        type: String,
+        required: true,
+        trim: true
     },
     admin: {
         type: Boolean,

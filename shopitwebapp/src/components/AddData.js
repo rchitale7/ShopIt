@@ -25,17 +25,31 @@ function AddData() {
           <input className="input" type="file" id="floorPlan" />
         </form>
         <button className="button"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              var name = document.getElementById('name').value
-              var latitude = document.getElementById('latitude').value
-              var longitude = document.getElementById('longitude').value
-              var items = document.getElementById('items').value
-              var floorPlan = document.getElementById('floorPlan').value
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            const data  = new FormData();
+            data.append('name', document.getElementById('name').value)
+            data.append('latitude', document.getElementById('latitude').value)
+            data.append('longitude', document.getElementById('longitude').value)
+            data.append('items', document.getElementById('items').value)
+            data.append('floorPlan', document.getElementById('floorPlan').value)
+            fetch('http://localhost:5000/'+window.localStorage.getItem("user"), {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data',
+              },
+              body: data
+            }).then((response) => response.json())
+            .then((responseData) => {
+              console.log(responseData);
               window.location.href='/success';
-              }}
-        >Add data</button>
+              //return responseData;
+            })
+            .catch(error => console.warn(error));
+            }}
+      >Add data</button>
       </div>
     </>
   );

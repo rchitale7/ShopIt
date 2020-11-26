@@ -1,4 +1,3 @@
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import logo from './logo_filled.png';
 
 function Login() {
@@ -10,18 +9,30 @@ function Login() {
         <form>
           <input className="input" type="text" id="username" placeholder="username..."/>
         </form>
-        <form> 
+        <form>
           <input className="input" type="text" id="password" placeholder="password..."/>
         </form>
         <button className="button"
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              var user = document.getElementById('username').value
-              var pass = document.getElementById('password').value
+              var user = document.getElementById('username').value;
+              var pass = document.getElementById('password').value;
+              window.localStorage.setItem("user", user); //used to add data
               // check user and password here
-              console.log(user + " " + pass);
-              window.location.href='/adddata';
+              fetch('http://localhost:5000/users/login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({username: user, password: pass}),
+              }).then((response) => response.json())
+              .then((responseData) => {
+                console.log(responseData);
+                window.location.href='/adddata';
+                //return responseData;
+              })
+              .catch(error => console.warn(error));
               }}
         >Log in</button>
         </div>
