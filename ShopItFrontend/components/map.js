@@ -14,9 +14,7 @@ import { useFonts, ComicNeue_400Regular, ComicNeue_700Bold  } from '@expo-google
 // Other
 import { clusterItems, removeItemFromClusters, scaleItemPositions } from './utils';
 
-function Map(props) {
-    const { pinSize = 20 } = props;
-    const clusterRadius = pinSize;
+function Map() {
     const zoomableRegionHeight = 0.6 * Dimensions.get('window').height;
 
     const groceryStore = {
@@ -29,7 +27,7 @@ function Map(props) {
     const rawData = [
         {
             _id: '5fb91ef4a75df917718cd3ff',
-            xPos: 390,
+            xPos: 395,
             yPos: 220,
             name: "Big Peach",
             brand: "Sunkist",
@@ -39,7 +37,7 @@ function Map(props) {
         },
         {
             _id: '5fb91ef4a75df917718cd3fz',
-            xPos: 391,
+            xPos: 396,
             yPos: 220,
             name: "Good Apple",
             brand: "Garden of Eden",
@@ -49,7 +47,7 @@ function Map(props) {
         },
         {
             _id: '5fb91ef4a75df917718cd3fq',
-            xPos: 387,
+            xPos: 392,
             yPos: 230,
             name: "Thicc Peach",
             brand: "Homegrown",
@@ -59,7 +57,7 @@ function Map(props) {
         },
         {
             _id: '5fb91efe6697712645c5ca8f',
-            xPos: 282,
+            xPos: 287,
             yPos: 607,
             name: "Small Peach",
             brand: "Trader Joe's",
@@ -69,7 +67,7 @@ function Map(props) {
         },
         {
             _id: '5fb91f1727849d4eb446c8fe',
-            xPos: 608,
+            xPos: 613,
             yPos: 239,
             name: "Juicy Peach",
             brand: "Minute Maid",
@@ -79,7 +77,7 @@ function Map(props) {
         },
         {
             _id: '5fb91f214b8c5dd70ce5b57e',
-            xPos: 153,
+            xPos: 158,
             yPos: 813,
             name: "Healthy Apple",
             brand: "Signature",
@@ -89,7 +87,7 @@ function Map(props) {
         },
         {
             _id: '5fb91f28301528be1054d9b1',
-            xPos: 605,
+            xPos: 610,
             yPos: 1133,
             name: "Rotten Peach",
             brand: "No Name",
@@ -106,7 +104,9 @@ function Map(props) {
 
     // Specific hooks that involve image scaling
     const [mapDimensions, setMapDimensions] = useState({ width: 500, height: 500 });
-    const [actualMapDimensions, setActualMapDimensions] = useState({width: 0, height: 0});
+    const [actualMapDimensions, setActualMapDimensions] = useState({width: 0, height: 0}); // used only for reset
+    const [pinSize, setPinSize] = useState(20);
+    const [clusterRadius, setClusterRadius] = useState(20);
     const [mapLoaded, setMapLoaded] = useState(false);
     const [items, setItems] = useState([]);
 
@@ -119,15 +119,21 @@ function Map(props) {
         Image.getSize('https://shopit-item-images.s3-us-west-2.amazonaws.com/floorplan-images/sample_map.png', 
             (width, height) => {
                 let imgRatio = width/height;
+                let newWidth = imgRatio * zoomableRegionHeight;
+                let newHeight = zoomableRegionHeight;
+                let newPinSize = Math.min(newWidth, newHeight)/20;
+                console.log(newPinSize);
 
                 setActualMapDimensions({
                     width: width,
                     height: height
                 });
                 setMapDimensions({
-                    width: imgRatio * zoomableRegionHeight,
-                    height: zoomableRegionHeight
+                    width: newWidth,
+                    height: newHeight
                 });
+                setPinSize(newPinSize);
+                setClusterRadius(newPinSize);
                 setItems(clusterItems(scaleItemPositions(rawData, zoomableRegionHeight, height), clusterRadius));
             })
     }
