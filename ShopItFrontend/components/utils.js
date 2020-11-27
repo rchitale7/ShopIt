@@ -81,6 +81,26 @@ const removeItemFromClusters = (clusters, item) => {
     return res;
 }
 
+/**
+ * Scale the x and y positional values by the ratio mobile map height to actual
+ * image height ratio
+ * 
+ * @param {Array} items Array of items
+ * @param {Number} mapHeight Desired height of pinchable map region
+ * @param {Number} imageHeight Actual height of image
+ */
+const scaleItemPositions = (items, mapHeight, imageHeight) => {
+    let ratio = mapHeight/imageHeight;
+
+    for (let i = 0; i < items.length; i++) {
+        items[i].xPos = items[i].xPos * ratio;
+        items[i].yPos = items[i].yPos * ratio
+    }
+
+    return items;
+}
+
 module.exports.itemDistance = itemDistance;
 module.exports.clusterItems = clusterItems;
 module.exports.removeItemFromClusters = removeItemFromClusters;
+module.exports.scaleItemPositions = scaleItemPositions;
