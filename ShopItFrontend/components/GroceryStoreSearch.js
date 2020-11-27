@@ -71,7 +71,7 @@ const GroceryStoreSearch = () => {
                 }))))
         })
         .then(res => {
-            console.log(stores)
+            //console.log(stores)
             // set top 10 stores
             setStores(stores.slice(0,10));
             setSearch("");
@@ -111,7 +111,7 @@ const GroceryStoreSearch = () => {
         })
         .then(res => {
             var predictions = res.predictions;
-            console.log(predictions)
+            //console.log(predictions)
             setPredictions(predictions);
         })
         .catch(error => {

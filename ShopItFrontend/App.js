@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -11,7 +11,12 @@ import ShoppingCart from './components/ShoppingCart';
 
 // Other
 import { Colors } from './CommonStyles';
-import { retrieveStoreInventory, ItemContext, itemReducer } from './components/GlobalItemStore';
+import { 
+  retrieveStoreData, 
+  ItemContext, 
+  itemReducer, 
+  getGroceryStoreData
+} from './components/GlobalItemStore';
 import { Fontisto } from '@expo/vector-icons';
 import { create } from 'lodash';
 
@@ -21,17 +26,37 @@ export default function App() {
   const [ mode, setMode ] = useState("Search");
   const changeMode = (newMode) => { setMode(newMode) };
 
-  const initialState = {
-    storeInventory: retrieveStoreInventory(),
-    shoppingList: [] 
-  };
+  const [globalState, dispatch] = React.useReducer(itemReducer, null);
+  const [initialState, setInitialState] = useState(null);
 
-  const [itemState, dispatch] = React.useReducer(itemReducer, initialState);
+  useEffect(() => {
+    async function initGlobalState() {
+      try {
+        await retrieveStoreData();
+
+        let selectedStoreData = getGroceryStoreData();
+
+        dispatch({
+          type: 'initState',
+          payload: selectedStoreData
+        });
+        
+        setInitialState(selectedStoreData);
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+    initGlobalState();
+  }, []);
   
-  return (
+  return initialState == null ? <Text>waiting</Text> : // TODO: change this to the logo
+    (
     <ItemContext.Provider 
-      value={{ itemState, dispatch }}
+      value={{ initialState, dispatch }}
     >
+      <TestComp style={styles.navbar}/>
+      {/*
       <NavigationContainer>
         <Tab.Navigator 
           tabBarBadge={true} 
@@ -75,6 +100,7 @@ export default function App() {
           />
         </Tab.Navigator>
       </NavigationContainer>
+          */}
     </ItemContext.Provider>
   );
 }
@@ -93,14 +119,10 @@ const styles = StyleSheet.create({
 // for testing/demonstration purposes
 const TestComp = () => {
 
-  // retrieve itemState (global state) amd dispatch (function to update global state) from context
-  const {itemState, dispatch} = React.useContext(ItemContext);
+  // retrieve globalState (global state) amd dispatch (function to update global state) from context
+  const {initialState, dispatch} = React.useContext(ItemContext);
 
-  // access all of the inventory
-  console.log(itemState.storeInventory);
-
-  // access the groceries on the user's shopping list
-  console.log(itemState.shoppingList);
+  console.log(initialState);
 
   // update the global state by using dispatch to perform an action
   return <Text onPress={() => dispatch({
