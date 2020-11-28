@@ -23,7 +23,7 @@ router.use(express.urlencoded({ extended: true }));
 router.route('/').get((req, res) => {
     User.find()
         .then(users => res.json(users))
-        .catch(err => res.status(400).json('Error: ' + err));
+        .catch(err => res.status(400).json({msg: 'Error: ' + err}));
 });
 
 router.post('/login', function(req, res) {
@@ -36,17 +36,17 @@ router.post('/login', function(req, res) {
     User.findOne({ username: { $eq : username } })
     .then(function(user, err) {
         if (err != null) {
-            res.status(500).json("Error: database error " + err)
+            res.status(500).json({msg: "Error: database error " + err})
         } else if (user == null) {
-            res.status(401).json("Error: could not find user")
+            res.status(401).json({msg: "Error: could not find user"})
         } else {
             let doc_pwd = user.password;
             bcrypt.compare(pwd, doc_pwd, function(err, result) {
                 if (err != null) {
-                    res.status(500).json("Error: database error " + err)
+                    res.status(500).json({msg: "Error: database error " + err})
                 } else {
                     if (!result) {
-                        res.status(401).json("Error: password didn't match");
+                        res.status(401).json({msg: "Error: password didn't match"});
                     } else {
 
                         let payload = {
@@ -56,10 +56,10 @@ router.post('/login', function(req, res) {
 
                         jwt.sign(payload, secret_key, {header: header}, function(err, token) {
                             if (err != null) {
-                                res.status(500).json("Error: jwt token error")
+                                res.status(500).json({msg: "Error: jwt token error"})
                             } else {
                                 res.cookie('jwt', token);
-                                res.status(200).json("Authentication successful");
+                                res.status(200).json({msg: "Authentication successful"});
 
                             }
                         });
@@ -81,7 +81,7 @@ router.route('/signup').post((req, res) => {
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(password, salt, function(err, hash) {
             if (err != null) {
-                res.status(500).json("Error: Could not hash password");
+                res.status(500).json({msg: "Error: Could not hash password"});
             } else {
                 let payload = {
                     "exp": Date.now()/1000 + 3600*2,
@@ -90,7 +90,7 @@ router.route('/signup').post((req, res) => {
 
                 jwt.sign(payload, secret_key, {header: header}, function(err, token) {
                     if (err != null) {
-                        res.status(500).json("Error: jwt token error")
+                        res.status(500).json({msg: "Error: jwt token error"})
                     } else {
                         res.cookie('jwt', token);
 
@@ -98,8 +98,8 @@ router.route('/signup').post((req, res) => {
                 });
                 const newUser = new User( {"username": username, "password": hash} );
                 newUser.save()
-                .then(() => res.json("User " + username + " was signed up!"))
-                .catch(err => res.status(400).json('Error: ' + err));
+                .then(() => res.json({msg: "User " + username + " was signed up!"}))
+                .catch(err => res.status(400).json({msg: 'Error: ' + err}));
             }
         });
     });

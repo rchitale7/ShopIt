@@ -7,12 +7,9 @@ const storeSchema = new schema({
     name: {
         type: String
     },
-    long: {
-        type: Number
+    address: {
+        type: String
     }, 
-    lat: {
-        type: Number
-    },
     items: {
         type: [item.schema],
         default: []
@@ -25,17 +22,15 @@ const storeSchema = new schema({
     timestamps: true
 });
 
-storeSchema.index({lat: 1, long: 1}, {unique: true});
+storeSchema.index({name: 1, address: 1}, {unique: true});
 storeSchema.set('validateBeforeSave', false); 
 storeSchema.path("name").validate(function (value) {
     return value != null
 })
-storeSchema.path("long").validate(function (value) {
+storeSchema.path("address").validate(function (value) {
     return value != null
 })
-storeSchema.path("lat").validate(function (value) {
-    return value != null
-})
+
 
 
 const Store = mongoose.model('Store', storeSchema);
