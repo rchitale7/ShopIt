@@ -28,7 +28,6 @@ function Signup() {
                   body: JSON.stringify({username: user, password: pass}),
                 }).then((response) => {
                   if(!response.ok) {
-                    console.log("ERROR")
                     throw response.json()
                   }
                   return response.json()

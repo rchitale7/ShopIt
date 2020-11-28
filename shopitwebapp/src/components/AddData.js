@@ -46,10 +46,10 @@ class AddData extends React.Component {
         <div className="header">Update store data!</div>
         <div className="datacontainer">
           <form>
-            <input className="input" type="text" id="name" placeholder="name..."/>
+            <input className="input" type="text" id="name" placeholder="name..." defaultValue={window.localStorage.getItem("name")}/>
           </form>
           <form>
-            <input className="input" type="text" id="address" placeholder="address..." value={this.state.value} onInput={this.onChangeDestination}/>
+            <input className="input" type="text" id="address" placeholder="address..." defaultValue={window.localStorage.getItem("address")} onInput={this.onChangeDestination}/>
           </form>
           <div className="autocomplete" id="autocomplete">{suggestionsList}</div>
           <div className="innertext">Inventory</div>
