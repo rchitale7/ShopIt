@@ -45,20 +45,29 @@ class AddData extends React.Component {
         <img src={logo} className="img" />
         <div className="header">Update store data!</div>
         <div className="datacontainer">
+          <div className="innertext">Name</div>
           <form>
             <input className="input" type="text" id="name" placeholder="name..."/>
           </form>
+          <div className="innertext">Address</div>
           <form>
             <input className="input" type="text" id="address" placeholder="address..." value={this.state.value} onInput={this.onChangeDestination}/>
           </form>
           <div className="autocomplete" id="autocomplete">{suggestionsList}</div>
           <div className="innertext">Inventory</div>
           <form>
-            <input className="input" type="file" id="items" name="items"/>
+            <input className="input" type="file" id="items" name="items" accept=".csv"/>
+            <div className="filetext">Accepted file types: .csv</div>
           </form>
           <div className="innertext">Floor Plan</div>
           <form>
-            <input className="input" type="file" id="floorPlan" name="floorPlan"/>
+            <input className="input" type="file" id="floorPlan" name="floorPlan" accept=".png, .jpg, .jpeg"/>
+            <div className="filetext">Accepted file types: .jpg, .jpeg, .png</div>
+          </form>
+          <div className="innertext">Images</div>
+          <form>
+            <input className="input" type="file" id="images" name="images" accept=".zip"/>
+            <div className="filetext">Accepted file types: .zip</div>
           </form>
           <button className="button"
             type="button"
@@ -68,6 +77,7 @@ class AddData extends React.Component {
               var addr = document.getElementById('address').value
               var items = document.getElementById('items').value
               var floorPlan = document.getElementById('floorPlan').value
+              var images = document.getElementById('images').value
               if(name === null || name === "") {
                 alert("Please input name.")
                 return
@@ -82,6 +92,10 @@ class AddData extends React.Component {
               }
               if(floorPlan === null || floorPlan === "") {
                 alert("Please input floor plan.")
+                return
+              }
+              if(images === null || images === "") {
+                alert("Please input images.")
                 return
               }
               const data  = new FormData();
