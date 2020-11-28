@@ -10,8 +10,8 @@ const _ = require('lodash');
  */
 const itemDistance = (item1, item2) => {
     return Math.sqrt(
-        Math.pow(Math.abs(item1.xPos - item2.xPos), 2) + 
-        Math.pow(Math.abs(item1.yPos - item2.yPos), 2));
+        Math.pow(Math.abs(item1.posX - item2.posX), 2) + 
+        Math.pow(Math.abs(item1.posY - item2.posY), 2));
 }
 
 /**
@@ -21,7 +21,7 @@ const itemDistance = (item1, item2) => {
  * @param {Number} clusterRadius Radius within which all items will be clustered
  * 
  * @returns {Array} Array of item clusters, each cluster with its own central
- *                  xPos and yPos
+ *                  posX and posY
  */
 const clusterItems = (items, clusterRadius) => {
     let included = new Set(); // Keeps track of items that have been used
@@ -31,7 +31,7 @@ const clusterItems = (items, clusterRadius) => {
         if (!included.has(i)) {
             included.add(i);
             let currCluster = [items[i]];
-            let { _id, xPos, yPos } = items[i]
+            let { _id, posX, posY } = items[i]
 
             for (let j = i + 1; j < items.length; j++) {
                 if (!included.has(j)) {
@@ -45,8 +45,8 @@ const clusterItems = (items, clusterRadius) => {
             // We add _id to because apparently React uses keys to track changes
             res.push({
                 "_id": _id,
-                "xPos": xPos,
-                "yPos": yPos,
+                "posX": posX,
+                "posY": posY,
                 "cluster": currCluster
             });
         }
@@ -93,8 +93,8 @@ const scaleItemPositions = (items, mapHeight, imageHeight) => {
     let ratio = mapHeight/imageHeight;
 
     for (let i = 0; i < items.length; i++) {
-        items[i].xPos = items[i].xPos * ratio;
-        items[i].yPos = items[i].yPos * ratio
+        items[i].posX = items[i].posX * ratio;
+        items[i].posY = items[i].posY * ratio
     }
 
     return items;
