@@ -4,12 +4,13 @@ import AddData from './components/AddData';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Success from './components/Success';
+import DragAndDrop from './components/DragAndDrop';
 
 function App() {
   return (
     <Router>
     <div>
-      <Route exact path="/" component={Login} />
+      <Route exact path="/" component={DragAndDrop} />
       <Route path="/signup" component={Signup} />
       <Route path="/adddata" component={AddData} />
       <Route path="/success" component={Success} />
