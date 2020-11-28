@@ -24,10 +24,8 @@ function autoAuthenticate() {
     window.location.href='/adddata';
   })
   .catch(error => {
-    error.then(errorMsg => {
-    alert(errorMsg.msg)
     window.location.href='/';
-  })})
+  })
 }
 
 function AutoLogin() {

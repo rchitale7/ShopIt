@@ -2,9 +2,6 @@ import logo from './logo_filled.png';
 // import autoAuthenticate from './AutoLogin'
 
 function Login() {
-  // useEffect(() => {
-  //   autoAuthenticate();
-  // }, []);
   return (
     <>
       <img src={logo} className="img" />
@@ -61,10 +58,8 @@ function Login() {
                   window.location.href='/adddata';
                 })
                 .catch(error => {
-                  error.then(errorMsg => {
-                  alert(errorMsg.msg)
                   window.location.href='/';
-                })})
+                })
               })
               .catch(error => {error.then(errorMsg => alert(errorMsg.msg))});
               }}
