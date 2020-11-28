@@ -29,7 +29,7 @@ const itemSchema = new schema({
     },
     imageURL: {
         type: String,
-        default: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
+        default: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/peach.png'
     },
     posX: {
         type: Number,
