@@ -17,9 +17,9 @@ function autoAuthenticate() {
 }
 
 function Login() {
-  useEffect(() => {
-    autoAuthenticate();
-  }, []);
+  // useEffect(() => {
+  //   autoAuthenticate();
+  // }, []);
   return (
     <>
       <img src={logo} className="img" />
@@ -56,7 +56,7 @@ function Login() {
               .then((responseData) => {
                 window.location.href='/adddata';
               })
-              .catch(error => error.then(errorMsg => alert(errorMsg)));
+              .catch(error => error.then(errorMsg => alert(errorMsg.msg)));
               }}
         >Log in</button>
         </div>

@@ -105,7 +105,7 @@ class AddData extends React.Component {
               .then((responseData) => {
                 window.location.href='/success';
               })
-              .catch(error => error.then(errorMsg => alert(errorMsg)));
+              .catch(error => error.then(errorMsg => alert(errorMsg.msg)));
               }}
         >Add data</button>
         </div>

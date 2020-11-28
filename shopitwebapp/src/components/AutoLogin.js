@@ -16,10 +16,10 @@ function autoAuthenticate() {
     window.location.href='/adddata';
   })
   .catch(error => {
-    alert(error); //for debugging
+    error.then(errorMsg => {
+    alert(errorMsg.msg)
     window.location.href='/';
-    }
-  )
+  })})
 }
 
 function AutoLogin() {

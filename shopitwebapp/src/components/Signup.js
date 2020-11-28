@@ -28,6 +28,7 @@ function Signup() {
                   body: JSON.stringify({username: user, password: pass}),
                 }).then((response) => {
                   if(!response.ok) {
+                    console.log("ERROR")
                     throw response.json()
                   }
                   return response.json()
@@ -35,7 +36,7 @@ function Signup() {
                 .then((responseData) => {
                   window.location.href='/';
                 })
-                .catch(error => error.then(errorMsg => alert(errorMsg)));
+                .catch(error => error.then(errorMsg => alert(errorMsg.msg)));
                 }}
         >Sign Up</button>
       </div>
