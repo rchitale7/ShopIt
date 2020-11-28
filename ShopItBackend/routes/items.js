@@ -55,6 +55,37 @@ router.route('/add').post((req, res) => {
 });
 
 /**
+ * itemIds: array of item _id's
+ * itemLocation: array of { posX: n, posY: n } objects corresponding to the _id's
+ */
+router.route('/locations').put(async (req, res) => {
+    const { storeId, itemIds, itemLocations } = req.body;
+
+    // Maps itemId to itemLocation because store.items order is not guaranteed
+    let idToLocation = new Map();
+    for (let i = 0; i < itemIds.length; i++) {
+        idToLocation.set(itemIds[i], itemLocations[i]);
+    }
+
+    try {
+        let store = await Store.findById(storeId);
+        let items = store.items.filter((item) => itemIds.includes(item._id.toString()));
+
+        for (let i = 0; i < items.length; i++) {
+            items[i].posX = idToLocation.get(items[i]._id.toString()).posX;
+            items[i].posY = idToLocation.get(items[i]._id.toString()).posY;
+        }
+
+        await store.save();
+        console.log("Updated locations for items with _id in", itemIds);
+        res.json("Succesfully updated all item locations!");
+    } 
+    catch (e) {
+        res.status(400).json(e);
+    }
+});
+
+/**
  * Delete an item from a store
  */
 router.route('/delete').delete((req, res) => {
