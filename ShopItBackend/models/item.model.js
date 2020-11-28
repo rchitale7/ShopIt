@@ -33,11 +33,11 @@ const itemSchema = new schema({
     },
     posX: {
         type: Number,
-        required: true
+        default: 0
     },
     posY: {
         type: Number,
-        required: true
+        default: 0
     }
 }, {
     timestamps: true

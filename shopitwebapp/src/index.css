@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap');
+
 body {
+  background-color: #91E78C;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -11,3 +14,130 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.container {
+  margin: auto;
+  margin-top: 20px;
+  padding-top: 15px;
+  height: 250px;
+  width: 325px;
+  border-radius: 10px;
+  background-color: #FFFEE3;
+}
+
+.minicontainer {
+  margin: auto;
+  margin-top: 1%;
+  height: 120px;
+  width: 325px;
+  border-radius: 10px;
+  background-color: #FFFEE3;
+}
+
+.datacontainer {
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  padding-top: 10px;
+  height: 750px;
+  width: 325px;
+  border-radius: 10px;
+  background-color: #FFFEE3;
+}
+
+.img {
+  margin-left: 46%;
+  height: 150px;
+  width: 150px;
+  alt: "";
+}
+
+.header {
+  text-align: center;
+  font-size: 36px;
+  font-family: 'Comic Neue';
+}
+
+.input {
+  margin-top: 5%;
+  margin-left: 5%;
+  padding: 10px;
+  height: 30px;
+  width: 270px;
+  border-width: 0px;
+  border-radius: 10px;
+  background-color: #FFF;
+  font-size: 18px;
+  font-family: 'Comic Neue';
+}
+
+.button {
+  margin-top: 10%;
+  margin-left: 25%;
+  height: 50px;
+  width: 150px;
+  border-width: 0px;
+  border-radius: 8px;
+  background-color: #D8FDD6;
+  font-size: 18px;
+  font-family: 'Comic Neue';
+}
+
+.signupbutton {
+  margin-top: 13px;
+  margin-left: 35%;
+  height: 50px;
+  width: 100px;
+  border-width: 0px;
+  border-radius: 8px;
+  background-color: #D8FDD6;
+  font-size: 18px;
+  font-family: 'Comic Neue';
+}
+
+.innertext {
+  padding-top: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-family: 'Comic Neue';
+}
+
+.filetext {
+  margin-left: 7%;
+  font-family: 'Comic Neue';
+}
+
+.suggestion {
+  height: 40px;
+  width: 290px;
+  margin-top: -1px;
+  padding: 3px;
+  border: 1px solid #ddd;
+  overflow: hidden;
+  background-color: #FFF;
+  text-align: left;
+  font-size: 16px;
+  font-family: 'Comic Neue';
+  display: block;
+  z-index: 9999;
+}
+
+.autocomplete {
+  position: absolute;
+  left: 502px;
+  height: 100%;
+  margin-top: 0px;
+  margin-left: 5%;
+  padding: 0px;
+  border-radius: 15px;
+  list-style-type: none;
+  z-index: 9999;
+}
+
+.success {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
