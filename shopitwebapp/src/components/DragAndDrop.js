@@ -1,69 +1,29 @@
 import { useState } from 'react';
+import { useHistory } from "react-router-dom";
 
 import Draggable from 'react-draggable';
 import WebFont from 'webfontloader';
+import Axios from 'axios';
+import { Button } from '@material-ui/core';
 
+import { getRemoteImageDimensions } from '../utils/utils.js';
 import Loading from './Loading.js';
 import LocationPin from '../assets/location_pin.png';
 
-function getMeta(url) {
-    return new Promise((resolve, reject) => {
-        let img = new Image();
+const axios = Axios.create({
+    baseURL: 'http://localhost:5000/'
+  });
 
-        img.onload = () => resolve(img);
-        img.onerror = () => reject();
-        img.src = url;
-    });
-}
-
-function getImageDimensions(uri) {
-    return getMeta(uri)
-        .then((img) => {
-            let w = img.width;
-            let h = img.height; 
-
-            return { 'width': w, 'height': h };
-        })
-        .catch(() => {
-            throw new Error('Could not load map');
-        })
-}
+WebFont.load({
+    google: {
+        families: ['Comic Neue']
+    }
+});
 
 function DragAndDrop() {
     // Replace with context variables later
+    const storeId = '5fc0478754df22a3ccf10c0c';
     const groceryStoreMap = 'https://shopit-item-images.s3-us-west-2.amazonaws.com/floorplan-images/sample_map.png';
-    const rawItems = [
-        {
-            _id: '5fb91f1727849d4eb446c8f5',
-            xPos: 0,
-            yPos: 0,
-            name: "Healthy Apple",
-            brand: "GMO Farm",
-            category: "Fruit",
-            price: 1.29,
-            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/apple.png'
-        },
-        {
-            _id: '5fb91ef4a75df917718cd3fz',
-            xPos: 0,
-            yPos: 0,
-            name: "Garden Peach",
-            brand: "Garden of Eden",
-            category: "Fruit",
-            price: 6.99,
-            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/peach.png'
-        },
-        {
-            _id: '5fb91ef4a75df917718cd3fq',
-            xPos: 0,
-            yPos: 0,
-            name: "Thicc Peach",
-            brand: "Homegrown",
-            category: "Fruit",
-            price: 3.99,
-            imageURL: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/peach.png'
-        }
-    ]
 
     // Dimensions of the grocery store map
     const [dimensions, setDimensions] = useState({ width: 500, height: 500 });
@@ -71,56 +31,118 @@ function DragAndDrop() {
     const [asyncStarted, setAsyncStarted] = useState(false);
     const [componentLoaded, setComponentLoaded] = useState(false);
     const [pinSize, setPinSize] = useState(50);
-    // Contains the id of the popup to show
-    const [displayPopup, setDisplayPopup] = useState(null);
-    const [items, setItems] = useState(rawItems);
+    // Contains the item _id of the popup to show
+    const [itemOnDrag, setItemOnDrag] = useState(null);
+    const [items, setItems] = useState([]);
+    // Routing
+    const history = useHistory();
 
-    WebFont.load({
-        google: {
-          families: ['Comic Neue']
+    function sendUpdate(storeId, items) {
+        let itemIds = [];
+        let itemLocations = [];
+    
+        for (let i = 0; i < items.length; i++) {
+            let item = items[i];
+            if (item.moved) {
+                itemIds.push(item._id);
+                itemLocations.push({ 'posX': item.posX, 'posY': item.posY });
+            }
         }
-    });
+    
+        axios.put('/items/locations', {
+            storeId: storeId,
+            itemIds: itemIds,
+            itemLocations: itemLocations
+        })
+        .then(() => history.push("/"))
+        .catch(() => alert("Could not update locations"));
+    }
+
+    let handleDrag = (e, ui) => {
+        // Use a small hack - displayPopup contains the _id of the item being dragged
+        setItems(prevItems => 
+            prevItems.map((item, index) => {
+                return item._id === itemOnDrag ?
+                    {
+                        ...item,
+                        posX: ui.x,
+                        posY: ui.y,
+                        moved: true
+                    } 
+                    : item
+            })
+        );
+    };
 
     if (!asyncStarted) {
         setAsyncStarted(true);
 
-        getImageDimensions(groceryStoreMap)
-            .then((dim) => {
-                setDimensions(dim);
-                let newPinSize = Math.min(dim.height, dim.width)/20
-                setPinSize(newPinSize);
-                return newPinSize;
-            })
-            /** 
-             * Add POST-SCALING item image dimensions to help center the popup box over the item pins -
-             * remember that images are scaled according to twice the pin size
-             */
-            .then(async (pinSize) => {
-                for (let i = 0; i < items.length; i++) {
-                    await getImageDimensions(items[i].imageURL)
-                        .then((dim) => {
-                            setItems(prevItems => 
-                                prevItems.map((item, index) => {
-                                    let imageHeight = 2*pinSize;
-                                    let imageWidth = imageHeight/dim.height * dim.width;
-                                    return i === index ? {...item, imageHeight: imageHeight, imageWidth: imageWidth} : item
-                                })
-                            )
-                        })
-                }
-            })
-            .then(() => {
-                setComponentLoaded(true);
-            })
+        // Change color 
+        document.body.style.backgroundColor = '#FFFEE3';
+
+        axios.get('/items', {
+            params: {
+                storeId: storeId
+            }
+        })
+        .then((res) => {
+            let resItems = res.data;
+            setItems(resItems);
+
+            getRemoteImageDimensions(groceryStoreMap)
+                .then((dim) => {
+                    setDimensions(dim);
+                    let newPinSize = Math.min(dim.height, dim.width)/20
+                    setPinSize(newPinSize);
+                    return newPinSize;
+                })
+                .then((pinSize) => {
+                    setComponentLoaded(true);
+                    return pinSize;
+                })
+                /** 
+                 * Add POST-SCALING item image dimensions to help center the popup box over the item pins -
+                 * remember that images are scaled according to twice the pin size
+                 * 
+                 * Also adds deltaX and deltaY properties to item for tracking pin movement
+                 */
+                .then(async (pinSize) => {
+                    for (let i = 0; i < resItems.length; i++) {
+                        await getRemoteImageDimensions(resItems[i].imageURL)
+                            .then((dim) => {
+                                setItems(prevItems => 
+                                    prevItems.map((item, index) => {
+                                        let imageHeight = 2*pinSize;
+                                        let imageWidth = imageHeight/dim.height * dim.width;
+                                        return i === index ? 
+                                            {
+                                                ...item,
+                                                imageHeight: imageHeight,
+                                                imageWidth: imageWidth,
+                                                moved: false
+                                            } 
+                                            : item
+                                    })
+                                )
+                            })
+                    }
+                })
+                .catch(() => alert("Could not retrieve item images!"));
+        })
+        .catch(() => alert("Could not retrieve items!"));
     }
     
     if (!componentLoaded) {
         return <Loading></Loading>
     } else {
         return (
-            <div>
+            <div style={styles.all}>
                 <div style={{...styles.container, ...styles.heading}}>
-                    Drag and drop your items!
+                    Reposition your items!
+                </div>
+
+                <div style={{...styles.container}}>
+                    Click <Button style={styles.button} variant="outlined" onClick={() => sendUpdate(storeId, items)}>Update</Button> when you are done.
                 </div>
 
                 <div style={styles.container}>
@@ -131,18 +153,26 @@ function DragAndDrop() {
                                 width: `${dimensions.width}px`,
                                 height: `${dimensions.height}px`
                             }} 
-                        draggable="false"
                     >
-                        {items.map((item) => {
+                        {items.map((item, index) => {
                             return (
-                                <Draggable key={item._id} onStart={() => setDisplayPopup(item._id)} onStop={() => setDisplayPopup(null)}>
+                                <Draggable
+                                    key={item._id}
+                                    defaultPosition={{x: item.posX, y: item.posY}}
+                                    onStart={() => setItemOnDrag(item._id)} 
+                                    onStop={() => setItemOnDrag(null)}
+                                    onDrag={handleDrag}
+                                >
                                     <div>
                                         <div 
                                             style={{
                                                 ...styles.popup,
-                                                ...styles.popupText,
-                                                left: pinSize/2 - (2*5 + item.imageWidth)/2, // horizontally centers the popup above the pin
-                                                display: displayPopup === item._id ? 'flex' : 'none'
+                                                /**
+                                                 * Horizontally centers the popup above the pin
+                                                 * Also produces 'Warning: `NaN` is an invalid value...'
+                                                 */ 
+                                                left: pinSize/2 - (2*5 + item.imageWidth)/2,
+                                                display: itemOnDrag === item._id ? 'flex' : 'none'
                                             }}
                                         >
                                             <div style={{ fontWeight: 'bold' }}>{item.name}</div>
@@ -168,19 +198,19 @@ function DragAndDrop() {
 }
 
 const styles = {
+    all: {
+        fontFamily: 'Comic Neue'
+    },
     container: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        margin: 50
+        margin: 20
     },
     heading: {
-        fontFamily: 'Comic Neue',
-        fontWeight: 'bold',
         fontSize: 50
     },
     backgroundImg: {
-        backgroundImage: 'url(https://shopit-item-images.s3-us-west-2.amazonaws.com/floorplan-images/sample_map.png)',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         backgroundSize: 'contain'
@@ -198,11 +228,13 @@ const styles = {
         backgroundColor: 'white',
         border: '1px solid',
         borderRadius: '15px',
-        padding: 5
-    },
-    popupText: {
-        fontFamily: 'Comic Neue',
+        padding: 5,
         fontSize: 10
+    },
+    button: {
+        margin: 10,
+        fontSize: 15,
+        backgroundColor: 'rgba(145, 231, 140, 0.5)'
     }
 };
 

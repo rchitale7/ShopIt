@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo_filled.png';
+import Logo from '../assets/logo_filled.png';
 const API_KEY='AIzaSyB0OBBZB0abirvfDAjbAWbCeGqk-knKvtw';
 
 class AddData extends React.Component {
@@ -42,7 +42,7 @@ class AddData extends React.Component {
       >{prediction.description}</button>);
     return (
       <>
-        <img src={logo} className="img" />
+        <img src={Logo} className="img" />
         <div className="header">Update store data!</div>
         <div className="datacontainer">
           <div className="innertext">Name</div>

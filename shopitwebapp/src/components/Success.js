@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import success from './success.png';
+import success from '../assets/success.png';
 
 function Success() {
   return (

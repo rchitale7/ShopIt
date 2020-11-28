@@ -1,4 +1,4 @@
-import logo from './logo_filled.png';
+import Logo from '../assets/logo_filled.png';
 import React, { useEffect } from 'react';
 
 function autoAuthenticate() {
@@ -34,7 +34,7 @@ function AutoLogin() {
   }, []);
   return (
     <>
-      <img src={logo} className="img" />
+      <img src={Logo} className="img" />
     </>
   );
 }
