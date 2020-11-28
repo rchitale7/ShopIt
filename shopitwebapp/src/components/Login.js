@@ -1,6 +1,25 @@
 import logo from './logo_filled.png';
+import React, { useEffect } from 'react';
+
+function autoAuthenticate() {
+  fetch('http://localhost:5000/stores/'+window.localStorage.getItem("user"), {
+    method: 'GET',
+  }).then((getResponse) => {
+    if(!getResponse.ok) {
+      throw getResponse.json()
+    }
+    return getResponse.json()
+  })
+  .then((getResponseData) => {
+    console.log(getResponseData)
+    window.location.href='/adddata';
+  })
+}
 
 function Login() {
+  useEffect(() => {
+    autoAuthenticate();
+  }, []);
   return (
     <>
       <img src={logo} className="img" />
@@ -10,11 +29,12 @@ function Login() {
           <input className="input" type="text" id="username" placeholder="username..."/>
         </form>
         <form>
-          <input className="input" type="text" id="password" placeholder="password..."/>
+          <input className="input" type="text" id="password" placeholder="password..." type="password"/>
         </form>
         <button className="button"
             type="button"
             onClick={(e) => {
+
               e.preventDefault();
               var user = document.getElementById('username').value;
               var pass = document.getElementById('password').value;
@@ -27,13 +47,16 @@ function Login() {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({username: user, password: pass}),
-              }).then((response) => response.json())
-              .then((responseData) => {
-                console.log(responseData);
-                window.location.href='/adddata';
-                //return responseData;
+              }).then((response) => {
+                if(!response.ok) {
+                  throw response.json()
+                }
+                return response.json()
               })
-              .catch(error => console.warn(error));
+              .then((responseData) => {
+                window.location.href='/adddata';
+              })
+              .catch(error => error.then(errorMsg => alert(errorMsg)));
               }}
         >Log in</button>
         </div>

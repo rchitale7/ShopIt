@@ -11,7 +11,7 @@ function Signup() {
             <input className="input" type="text" id="username" placeholder="username..."/>
         </form>
         <form>
-            <input className="input" type="text" id="password" placeholder="password..."/>
+            <input className="input" type="text" id="password" placeholder="password..." type="password"/>
         </form>
         <button className="button"
             type="button"
@@ -26,18 +26,25 @@ function Signup() {
                     'Content-Type': 'application/json',
                   },
                   body: JSON.stringify({username: user, password: pass}),
-                }).then((response) => response.json())
-                .then((responseData) => {
-                  console.log(responseData);
-                  window.location.href='/';
-                  //return responseData;
+                }).then((response) => {
+                  if(!response.ok) {
+                    throw response.json()
+                  }
+                  return response.json()
                 })
-                .catch(error => console.warn(error));
+                .then((responseData) => {
+                  window.location.href='/';
+                })
+                .catch(error => error.then(errorMsg => alert(errorMsg)));
                 }}
         >Sign Up</button>
       </div>
     </>
   );
+}
+
+function validate() {
+  return alert('All inputs must be filled out')
 }
 
 export default Signup;

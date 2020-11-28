@@ -18,7 +18,7 @@ function AddData() {
         </form>
         <div className="innertext">Inventory</div>
         <form>
-          <input className="input" type="file" id="items" name="items"/>
+          <input className="input" type="file" id="items" name="items" required/>
         </form>
         <div className="innertext">Floor Plan</div>
         <form>
@@ -28,25 +28,54 @@ function AddData() {
           type="button"
           onClick={(e) => {
             e.preventDefault();
+            var name = document.getElementById('name').value
+            var lat = document.getElementById('latitude').value
+            var long = document.getElementById('longitude').value
+            var items = document.getElementById('items').value
+            var floorPlan = document.getElementById('floorPlan').value
+            if(name === null || name === "") {
+              alert("Please input name.")
+              return
+            }
+            if(lat === null || lat === "") {
+              alert("Please input latitude.")
+              return
+            }
+            if(long === null || long === "") {
+              alert("Please input longitude.")
+              return
+            }
+            if(items === null || items === "") {
+              alert("Please input items.")
+              return
+            }
+            if(floorPlan === null || floorPlan === "") {
+              alert("Please input floor plan.")
+              return
+            }
             const data  = new FormData();
-            data.append('name', document.getElementById('name').value)
-            data.append('lat', document.getElementById('latitude').value)
-            data.append('long', document.getElementById('longitude').value)
+            data.append('name', name)
+            data.append('lat', lat)
+            data.append('long', long)
             data.append('items', document.getElementById('items').files[0])
             data.append('floorPlan', document.getElementById('floorPlan').files[0])
             fetch('http://localhost:5000/stores/'+window.localStorage.getItem("user"), {
               credentials: 'include',
               method: 'POST',
-              body: data, 
+              body: data,
               headers: {
                 'Accept': 'application/json'
               }
-            }).then((response) => response.json())
+            }).then((response) => {
+              if(!response.ok) {
+                throw response.json()
+              }
+              return response.json()
+            })
             .then((responseData) => {
-              alert(responseData)
               window.location.href='/success';
             })
-            .catch(error => console.warn(error));
+            .catch(error => error.then(errorMsg => alert(errorMsg)));
             }}
       >Add data</button>
       </div>
