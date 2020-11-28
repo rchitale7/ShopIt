@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 
 function autoAuthenticate() {
   fetch('http://localhost:5000/stores/'+window.localStorage.getItem("user"), {
+    credentials: 'include',
     method: 'GET',
   }).then((getResponse) => {
     if(!getResponse.ok) {
@@ -12,14 +13,19 @@ function autoAuthenticate() {
   })
   .then((getResponseData) => {
     console.log(getResponseData)
-    //get data if possible + populate addData
+    if(getResponseData.exists) {
+      window.localStorage.setItem("name", getResponseData.name)
+      window.localStorage.setItem("address", getResponseData.address)
+    }
+    else {
+      window.localStorage.setItem("name", null)
+      window.localStorage.setItem("address", null)
+    }
     window.location.href='/adddata';
   })
   .catch(error => {
-    error.then(errorMsg => {
-    alert(errorMsg.msg)
     window.location.href='/';
-  })})
+  })
 }
 
 function AutoLogin() {
@@ -28,7 +34,6 @@ function AutoLogin() {
   }, []);
   return (
     <>
-      <h1>{window.localStorage.getItem("user")}</h1>
       <img src={logo} className="img" />
     </>
   );
