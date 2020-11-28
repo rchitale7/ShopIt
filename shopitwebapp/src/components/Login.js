@@ -1,10 +1,10 @@
-import logo from './logo_filled.png';
+import Logo from '../assets/logo_filled.png';
 // import autoAuthenticate from './AutoLogin'
 
 function Login() {
   return (
     <>
-      <img src={logo} className="img" />
+      <img src={Logo} className="img" />
       <div className="header">Are you a grocery store?</div>
       <div className="container">
         <form>

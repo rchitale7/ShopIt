@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import logo from './logo_filled.png';
+import Logo from '../assets/logo_filled.png';
 
 function Signup() {
   return (
     <>
-      <img src={logo} className="img" />
+      <img src={Logo} className="img" />
       <div className="header">Welcome to ShopIt!</div>
       <div className="container">
         <form>
