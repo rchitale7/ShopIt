@@ -3,6 +3,7 @@ const router = express.Router();
 
 let Store = require('../models/store.model');
 let Item = require('../models/item.model');
+let User = require('../models/user.model');
 
 const csv = require("csvtojson");
 const fs = require('fs')
@@ -14,7 +15,7 @@ var secret_key = "C-UFRaksvPKhx1txJYFcut3QGxsafPmwCY6SCly3G6c"
 router.route('/').get((req, res) => {
     Store.find()
         .then(stores => res.json(stores))
-        .catch(err => res.status(400).json(err));
+        .catch(err => res.status(400).json({msg: err}));
 });
 
 // Returns grocery store given lat and long
@@ -36,12 +37,12 @@ router.use('/:username', function (req, res, next) {
     let token = req.cookies.jwt;
 
     if (token == null) {
-      res.status(401).json('401 error: Could not authenticate');
+      res.status(401).json({msg: '401 error: Could not authenticate'});
     } else {
         jwt.verify(token, secret_key, function(err, decoded) {
           if(err != null || decoded == null)
           {
-            res.status(401).json('401 error: Could not authenticate');
+            res.status(401).json({msg: '401 error: Could not authenticate'});
           } else {
             req.jwt_usr = decoded.usr
             console.log("authenticated!")
@@ -49,6 +50,30 @@ router.use('/:username', function (req, res, next) {
           }
       });
     }
+})
+
+
+// get grocery store
+
+router.route('/:username').get((req, res) => {
+    let username = req.params.username;
+    if (req.jwt_usr != username) {
+        res.status(401).json({msg: '401 error: Could not authenticate'})
+    } else {
+        User.findOne({username: username})
+        .then(user => {
+            if (user.store == null) {
+                res.status(200).json({exists: false, msg: "Store does not exist (yet)"})
+            } else {
+                Store.findById(user.store) 
+                    .then(store => res.status(200).json({exists: true, name: store.name, address: store.address, msg: "Found store!"}))
+                    .catch(err => res.status(400).json({msg: 'Error: could not find store: ' + err}))
+            }
+        })
+        .catch(err => res.status(400).json({msg: 'Error:' + err}))
+    }
+    
+
 })
 
 // add grocery store
@@ -62,9 +87,9 @@ router.route('/:username').post( async (req,res) => {
         let username = req.params.username;
         csvFilePath = req.files['items'][0].path
         floorPlanPath = req.files['floorPlan'][0].path
-        req.jwt_usr = username
         if (req.jwt_usr != username) {
-            res.status(401).json('Error: User is not authenticated');
+            console.log("incorrect user")
+            res.status(401).json({msg: '401 error: Could not authenticate'});
             fs.unlink(csvFilePath, (err) => {
                 if (err) {
                     console.error(err)
@@ -86,7 +111,7 @@ router.route('/:username').post( async (req,res) => {
             })
 
             asyncUpdate.then(function(jsonArray) {
-                const { name, long, lat } = req.body;
+                const { name, address  } = req.body;
 
                 validItems = []
                 invalidItems = []
@@ -103,17 +128,28 @@ router.route('/:username').post( async (req,res) => {
 
                 const newStore = new Store({
                     name: name,
-                    long: long,
-                    lat: lat,
+                    address: address,
                     items: validItems
                 });
 
                 newStore.save()
-                .then(store => res.json(`Store (${store._id}) has been added! Items added: ${store.items}. Items that could not be added: ${invalidItems}`))
-                .catch(err => res.status(400).json("Error: could not save store: " + err));
+                .then(store => {
+                    User.findOne({username: username})
+                    .then(user => {
+                        user.store = store
+                        user.save()
+                            .then(user => {
+                                res.status(200).json({validItems: store.items, invalidItems: invalidItems, msg: "Added store to db!"})
+                            })
+                            .catch(err => res.status(400).json({msg: "Error: could not save store to user account" + err}))
+                    })
+                    .catch(err => res.status(400).json({msg: "Error: could not find user account: " + err}))
+                })
+                .catch(err => res.status(400).json({msg: "Error: could not save store: " + err}));
+ 
             })
             .catch(function(val) {
-                res.status(400).json("Error: Could not create store because: " + val);
+                res.status(400).json({msg: "Error: Could not create store: " + val});
             })
             .finally(function() {
                 fs.unlink(csvFilePath, (err) => {
@@ -129,7 +165,7 @@ router.route('/:username').post( async (req,res) => {
             })
         }
     } catch(error) {
-        res.status(500).json("Internal Server Error: Could not open files")
+        res.status(500).json({msg: "Internal Server Error: Could not open files"})
         fs.unlink(csvFilePath, (err) => {
             if (err) {
                 console.error(err)
@@ -147,16 +183,23 @@ router.route('/:username').post( async (req,res) => {
 router.route('/:username').delete(async (req, res) => {
 
     let username = req.params.username;
-    req.jwt_usr = username
 
     if(req.jwt_usr != username) {
-        res.status(401).json('Error: User is not authenticated');
+        res.status(401).json({msg: 'Error: User is not authenticated'});
     } else {
-        const storeId = req.body.storeId;
-
-        Store.findByIdAndDelete(storeId)
-            .then(store => res.json(`Store (${store._id}) has been deleted!`))
-            .catch(err => res.status(404).json(err));
+        User.findOne({username: username})
+            .then(user => {
+                storeId = user.store
+                Store.findByIdAndDelete(storeId)
+                .then(store => {
+                    user.store = null;
+                    user.save()
+                        .then(user => res.status(200).json({user: user.name, name: store.name, msg: "Deleted store!"}))
+                        .catch(err => res.status(400).json({msg: 'Error could not delete store: ' + err}) )
+                })
+                .catch(err => res.status(400).json({msg: 'Error could not delete store: ' + err}));
+            })
+            .catch(err => res.status(400).json({msg: 'Error could not find user: ' + err}))
     }
 });
 

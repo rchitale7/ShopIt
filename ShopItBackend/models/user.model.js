@@ -18,6 +18,11 @@ const userSchema = new schema({
     admin: {
         type: Boolean,
         default: false
+    }, 
+    store: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Store',
+        default: null
     }
 }, {
     timestamps: true
