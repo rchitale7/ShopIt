@@ -2,7 +2,8 @@ import { StyleSheet } from 'react-native';
 
 // Theme color definitions
 const themeColors = {
-  'green': '#a5e495'
+  'green': '#a5e495',
+  'beige': '#FFFEE3'
 }
 
 // Central stylesheet

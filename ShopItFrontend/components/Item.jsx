@@ -34,13 +34,13 @@ strikeThrough: boolean value to determine whether we display a strikethrough.
 
 */
 const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) => {
-    const {title, description:{brand, quantity}} = item;
+    const { _id, title, description:{brand, quantity}} = item;
     const [selected, setCheckBox] = useState(false);
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
 
-    if(!fontsLoaded){
+    if (!fontsLoaded){
         return <Text>Fonts haven't loaded just yet!</Text>;
-    }else{
+    } else {
         return (
             <View style={mainViewStyle}>
                 <>
@@ -50,7 +50,7 @@ const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) =>
                                 ? <Text style={styles.selectedItem}>{title}</Text>
                                 :<Text style={styles.unselectedItem}> {title}</Text>
                             }
-                            <Text style={{marginLeft:8}}>{brand} {quantity}</Text>
+                            <Text style={[styles.unselectedItem, { marginLeft: 8, fontSize: 15 }]}>{brand} {quantity}</Text>
                         </>
                     </View>
                     {isCheckBox

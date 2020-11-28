@@ -5,13 +5,9 @@ import { View,
          StyleSheet,
          Dimensions,
          Text,
-         Font,
-         StatusBar,
-         Button } from 'react-native';
-import { useFonts,
-         ComicNeue_400Regular,
-} from '@expo-google-fonts/comic-neue';
-import { AppLoading } from 'expo';
+         Font } from 'react-native';
+
+import { Colors } from '../CommonStyles';
 
 class ShoppingCart extends React.Component {
   state = {
@@ -27,16 +23,16 @@ class ShoppingCart extends React.Component {
 
   constructor(props){
     const data = [
-      { title: 'bagel', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'donut', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'guava juice', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'lemonade', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'peanut m&ms', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'whoppers', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'brie', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'celery', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'zucchini', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { title: 'bleach', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '1', title: 'bagel', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '2', title: 'donut', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '3', title: 'guava juice', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '4', title: 'lemonade', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '5', title: 'peanut m&ms', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '6', title: 'whoppers', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '7', title: 'brie', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '8', title: 'celery', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '9', title: 'zucchini', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
+      { _id: '10', title: 'bleach', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
     ];
     super(props);
     this.state = {
@@ -67,13 +63,13 @@ class ShoppingCart extends React.Component {
   render() {      
       return (
         <View style={styles.container}>
-          <View style={{marginTop: 10}}>
+          <View style={{marginTop: 30}}>
             <Text style={styles.title}>Your Cart</Text>
           </View>
           <FlatList style={styles.section}
             data={this.state.data}
             renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false} strikeThrough={false} mainViewStyle={{flexDirection:"row", width:275}}/>}
-            keyExtractor={({ item, index }) => index}
+            keyExtractor={(item) => item._id}
             ItemSeparatorComponent={this.renderSeparatorView}
           />
         </View>
@@ -87,11 +83,11 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height,
     width: Dimensions.get('window').width,
     flex: 1,
-    backgroundColor: '#FFFEE3',
+    backgroundColor: Colors.beige,
   },
   title: {
     'textAlign': 'center',
-    fontFamily:"ComicNeue_400Regular",
+    fontFamily: "ComicNeue_400Regular",
     fontSize: 32,
     padding: 10,
   },
@@ -99,7 +95,7 @@ const styles = StyleSheet.create({
     'borderStyle': 'solid',
     'borderWidth': 1,
     backgroundColor: '#FFFFFF',
-    marginBottom: 130,
+    marginBottom: 90,
     marginLeft: 30,
     marginRight: 30,
     borderRadius: 10,
