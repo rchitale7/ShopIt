@@ -54,7 +54,7 @@ function DragAndDrop() {
             itemIds: itemIds,
             itemLocations: itemLocations
         })
-        .then(() => history.push("/"))
+        .then(() => history.push("/adddata"))
         .catch(() => alert("Could not update locations"));
     }
 
