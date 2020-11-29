@@ -110,10 +110,10 @@ router.use(multer({ storage: storage }).
     fields([{ name: 'floorPlan', maxCount: 1 }, { name: 'items', maxCount: 1 }, {name: 'images', maxCount: 1}])
 );
 
-router.route('/:username').put( async (req,res) => {
+router.route('/:username').post( async (req,res) => {
 
     let images = req.files['images']
-    let items = req.files['items']
+    let itemfile = req.files['items']
     let floorPlan= req.files['floorPlan']
     let username = req.params.username 
     let status_code = 200; 
@@ -143,13 +143,19 @@ router.route('/:username').put( async (req,res) => {
             store.address = address
             store = await store.save()
         }
+        let items = store.items;
 
-        if (items != null) {
+        let item_map = {}
+        for (let i = 0; i < items.length; i++) {
+            item_map[items[i].name] = i
+        }
 
-            if (items[0].mimetype != 'text/csv') {
+        if (itemfile != null) {
+
+            if (itemfile[0].mimetype != 'text/csv') {
                 throw "Error: items must be uploaded in csv format"
             }
-            let csvFilePath = items[0].path
+            let csvFilePath = itemfile[0].path
             let asyncUpdate = new Promise(async function(resolve, reject){
                 try {
                     let jsonArray = await csv().fromFile(csvFilePath);
@@ -167,7 +173,17 @@ router.route('/:username').put( async (req,res) => {
                 let item = new Item(jsonArray[i]); 
                 let error = item.validateSync(); 
                 if(error == null) {
-                    validItems.push(item)
+                    pos = item_map[item.name]
+                    if (pos == null) {
+                        validItems.push(item)
+                    } else {
+                        store.items[pos].name = item.name 
+                        store.items[pos].brand = item.brand
+                        store.items[pos].size = item.size
+                        store.items[pos].category = item.category
+                        store.items[pos].price = item.price
+                    }
+                    
                 } else {
                     throw "Item: " + item.name + " could not be added to the database because of invalid formatting. Please upload your csv again"
                 }
@@ -201,12 +217,6 @@ router.route('/:username').put( async (req,res) => {
         }
 
         if (images != null) {
-            let items = store.items;
-
-            let item_map = {}
-            for (let i = 0; i < items.length; i++) {
-                item_map[items[i].name] = i
-            }
             let zip = new AdmZip(images[0].path);
             let zipEntries = zip.getEntries(); 
             const re = RegExp('^images\/.*\.(png|jpeg|jpg)')
