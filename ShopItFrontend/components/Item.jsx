@@ -5,7 +5,9 @@ import {
     useFonts,
     ComicNeue_400Regular,
   } from '@expo-google-fonts/comic-neue';
-import erase_icon from '../assets/erase.png'
+import erase_icon from '../assets/erase.png';
+
+import { useGlobalDispatch } from './GlobalItemStore';
 
 /*
 This component is used to display a single item and a button to the side.
@@ -35,6 +37,38 @@ const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) =>
     const { title, brand, size} = item;
     const [selected, setCheckBox] = useState(false);
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
+    const dispatch = useGlobalDispatch();
+
+    const checkBoxPressed = () => {
+        if (selected) {
+            // the user unselected - remove item from cart
+            dispatch({
+                type: 'removeFromCart',
+                payload: item._id
+            });
+        }
+        else {
+            // the user selected - add item to cart
+            dispatch({
+                type: 'addToCart',
+                payload: {
+                    ...item,
+                    retrieved: false
+                }
+            });
+        }
+        
+        setCheckBox(!selected);
+    };
+
+    const deleteButtonPressed = () => {
+        dispatch({
+            type: 'removeFromCart',
+            payload: item._id
+        });
+
+        handleDelete(title);
+    };
 
     if (!fontsLoaded){
         // TODO: change to a loading wheel or something else
@@ -53,8 +87,8 @@ const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) =>
                         </>
                     </View>
                     {isCheckBox
-                    ? <CheckBox checked={selected} onPress={ () => setCheckBox(!selected)} style={{flexGrow:1}}/>
-                    : <TouchableOpacity onPress={() => handleDelete(title)} style={styles.addButton}>
+                    ? <CheckBox checked={selected} onPress={ () => checkBoxPressed() } style={{flexGrow:1}}/>
+                    : <TouchableOpacity onPress={() => /*handleDelete(title)*/ deleteButtonPressed() } style={styles.addButton}>
                         <Image style={styles.erase} source={erase_icon}/>
                     </TouchableOpacity>
                     }

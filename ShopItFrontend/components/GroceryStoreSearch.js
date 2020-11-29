@@ -11,6 +11,12 @@ import { Fontisto } from '@expo/vector-icons';
 
 const API_KEY='AIzaSyB0OBBZB0abirvfDAjbAWbCeGqk-knKvtw';
 
+import { 
+    retrieveStoreData, 
+    getGroceryStoreData,
+    useGlobalDispatch
+  } from './GlobalItemStore';
+
 const GroceryStoreSearch = () => {
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
     const [latitude, setLatitude] = useState(null);
@@ -19,6 +25,8 @@ const GroceryStoreSearch = () => {
     const [stores, setStores] = useState([]);
     const [predictions, setPredictions] = useState([]);
     const [errorMsg, setErrorMsg] = useState(null);
+
+    const dispatch = useGlobalDispatch();
 
     useEffect(() => {
         getLocation();
@@ -132,12 +140,34 @@ const GroceryStoreSearch = () => {
         }
     }
 
+    const locationPressed = async (item) => {
+        try {
+            console.log("a specific location was pressed");
+            // get location data
+
+            await retrieveStoreData();
+
+            dispatch({
+              type: 'initState',
+              payload: {
+                selectedStoreData: getGroceryStoreData(),
+                groceryList: []
+              }
+            });
+            
+            console.log("finished fetching that location's data");
+        }      
+        catch (err) {
+            console.log(err);
+        }
+    }
+
     const renderButton = ({item}) => {
         return (
             <View>
                 <TouchableOpacity style={styles.button} 
                 activeOpacity={0.7}
-                onPress={() => console.log("button pressed")}>
+                onPress={async () => await locationPressed(item) }>
                     <Text style={styles.title}>{item.name}</Text>
                     <Text style={styles.description}>{item.address}</Text>
                 </TouchableOpacity>

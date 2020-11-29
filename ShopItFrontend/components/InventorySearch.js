@@ -20,85 +20,13 @@ import collapse_icon from '../assets/collapse.png'
 import { Colors } from '../CommonStyles';
 import { useFonts, ComicNeue_400Regular } from '@expo-google-fonts/comic-neue';
 
-import { ItemContext } from './GlobalItemStore';
+import { useGlobalState } from './GlobalItemStore';
 
 const InventorySearch = () => {
   const [searchKey, setSearchKey] = useState('');
   const [expanderSource, setExpanderSource] = useState(collapse_icon);
 
-  // TODO: change from hardcoded data to result from backend API query
-  // assuming that a grocery is an object with a name and description field
-  //All data format should be similar for consistency.
-  /*
-  const hardcodedInventory = [
-    { type: "Alcohol",
-      data: [
-        { _id: "1", title: 'bacardi', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "2", title: 'svedka', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      ],
-    },
-    { type: "Bakery",
-      data: [
-        { _id: "3", title: 'bagel', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "4", title: 'whole wheat bread', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "5", title: 'donut', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      ],
-    },
-    { type: "Beverages",
-      data: [
-        { _id: "6", title: 'guava juice', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "7", title: 'lemonade', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      ],
-    },
-    { type: "Candy",
-      data: [
-        { _id: "8", title: 'peanut m&ms', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "9", title: 'twix', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "10", title: 'whoppers', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      ],
-    },
-    { type: "Dairy & Substitutes",
-      data: [
-        { _id: "11", title: 'brie', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "12", title: 'goat cheese', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "13", title: 'oat milk', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      ],
-    },
-    { type: "Frozen Foods",
-      data: [
-        { _id: "14", title: 'bleach', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      ],
-    },
-    { type: "Meat",
-      data: [
-        { _id: "15", title: 'chicken', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "16", title: 'beef', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      ],
-    },
-    { type: "Pantry",
-      data: [
-        { _id: "17", title: 'baking soda', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "18", title: 'wheat flour', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "19", title: 'vanilla extract', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      ],
-    },
-    { type: "Produce",
-      data: [
-        { _id: "20", title: 'carrots', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "21", title: 'celery', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "22", title: 'chinese eggplant', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "23", title: 'zucchini', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      ],
-    },
-    { type: "Snacks",
-      data: [
-        { _id: "24", title: 'bacardi', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-        { _id: "25", title: 'goat milk', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      ],
-    }, ];
-  */
-
-  const {globalState, dispatch} = React.useContext(ItemContext);
+  const globalState = useGlobalState();
 
   // group items  by category
   // TODO: make categories consistent, possibly update backend to return categorized data
@@ -112,7 +40,7 @@ const InventorySearch = () => {
     };
   });
 
-  globalState.items.forEach(item => {
+  globalState.selectedStoreData.items.forEach(item => {
     categoryToItems[item.category].data.push({
       ...item,
       title: item.name

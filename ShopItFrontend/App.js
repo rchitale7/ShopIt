@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -11,12 +11,7 @@ import ShoppingCart from './components/ShoppingCart';
 
 // Other
 import { Colors } from './CommonStyles';
-import { 
-  retrieveStoreData, 
-  ItemContext, 
-  itemReducer, 
-  getGroceryStoreData
-} from './components/GlobalItemStore';
+import { GroceryProvider } from './components/GlobalItemStore';
 import { Fontisto } from '@expo/vector-icons';
 import { create } from 'lodash';
 
@@ -26,22 +21,14 @@ export default function App() {
   const [ mode, setMode ] = useState("Search");
   const changeMode = (newMode) => { setMode(newMode) };
 
-  const [globalState, dispatch] = React.useReducer(itemReducer, null);
-  const [initialState, setInitialState] = useState(null);
-
+  /*
   useEffect(() => {
     async function initGlobalState() {
       try {
         await retrieveStoreData();
 
-        let selectedStoreData = getGroceryStoreData();
 
-        dispatch({
-          type: 'initState',
-          payload: selectedStoreData
-        });
-        
-        setInitialState(selectedStoreData);
+        setSelectedStoreData(getGroceryStoreData());
       }
       catch (err) {
         console.log(err);
@@ -49,59 +36,55 @@ export default function App() {
     }
     initGlobalState();
   }, []);
+  */
   
-  return initialState == null ? <Text>waiting</Text> : // TODO: change this to the logo
-    (
-    <ItemContext.Provider 
-      value={{ globalState: initialState, dispatch }}
-    >
-      {/* <TestComp style={styles.navbar}/> */}
-      
-      <NavigationContainer>
-        <Tab.Navigator 
-          tabBarBadge={true} 
-          barStyle={styles.navbar} 
-          shifting={false}
-          labeled={false}
-          activeColor={Colors.green}
-          inactiveColor='white'
-        >
-          <Tab.Screen name="Stores" component={GroceryStoreSearch}
-            options={{
-              tabBarLabel: 'Stores',
-              tabBarIcon: ({ color }) => (
-                <Fontisto name="map" color={color} size={18} />
-              )
-            }}
-          />
-          <Tab.Screen name="Search" component={InventorySearch}
-            options={{
-              tabBarLabel: 'Search',
-              tabBarIcon: ({ color }) => (
-                <Fontisto name="search" color={color} size={18} />
-              )
-            }}
-          />
-          <Tab.Screen name="Cart" component={ShoppingCart}
-            options={{
-              tabBarLabel: 'Cart',
-              tabBarIcon: ({ color }) => (
-                <Fontisto name="shopping-basket" color={color} size={18} />
-              )
-            }}
-          />
-          <Tab.Screen name="Map" component={Map}
-            options={{
-              tabBarLabel: 'Map',
-              tabBarIcon: ({ color }) => (
-                <Fontisto name="map-marker-alt" color={color} size={18} />
-              )
-            }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
-          
-    </ItemContext.Provider>
+  //return selectedStoreData == null ? <Text>waiting</Text> : // TODO: change this to a loading screen
+  return (
+      <GroceryProvider>
+        <NavigationContainer>
+          <Tab.Navigator 
+            tabBarBadge={true} 
+            barStyle={styles.navbar} 
+            shifting={false}
+            labeled={false}
+            activeColor={Colors.green}
+            inactiveColor='white'
+          >
+            <Tab.Screen name="Stores" component={GroceryStoreSearch}
+              options={{
+                tabBarLabel: 'Stores',
+                tabBarIcon: ({ color }) => (
+                  <Fontisto name="map" color={color} size={18} />
+                )
+              }}
+            />
+            <Tab.Screen name="Search" component={InventorySearch}
+              options={{
+                tabBarLabel: 'Search',
+                tabBarIcon: ({ color }) => (
+                  <Fontisto name="search" color={color} size={18} />
+                )
+              }}
+            />
+            <Tab.Screen name="Cart" component={ShoppingCart}
+              options={{
+                tabBarLabel: 'Cart',
+                tabBarIcon: ({ color }) => (
+                  <Fontisto name="shopping-basket" color={color} size={18} />
+                )
+              }}
+            />
+            <Tab.Screen name="Map" component={Map}
+              options={{
+                tabBarLabel: 'Map',
+                tabBarIcon: ({ color }) => (
+                  <Fontisto name="map-marker-alt" color={color} size={18} />
+                )
+              }}
+            />
+          </Tab.Navigator>
+        </NavigationContainer>
+    </GroceryProvider>
   );
 }
 
@@ -117,10 +100,11 @@ const styles = StyleSheet.create({
 });
 
 // for testing/demonstration purposes
+/*
 const TestComp = () => {
 
   // retrieve globalState (global state) amd dispatch (function to update global state) from context
-  const {globalState, dispatch} = React.useContext(ItemContext);
+  const {globalState, dispatch} = React.useContext(GroceryContext);
 
   //console.log(globalState);
 
@@ -136,3 +120,4 @@ const TestComp = () => {
     test
   </Text>;
 }
+*/
