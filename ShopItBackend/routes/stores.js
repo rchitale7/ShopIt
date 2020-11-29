@@ -108,9 +108,9 @@ router.route('/:username').put( async (req,res) => {
     let items = req.files['items']
     let floorPlan= req.files['floorPlan']
     let username = req.params.username 
-    status_code = 200; 
+    let status_code = 200; 
     let msg = "Success!"
-    response_map = {}
+    let response_map = {}
     response_map['validImages'] = []
     response_map['invalidImages'] = []
     response_map['validItems'] = [] 
@@ -141,7 +141,7 @@ router.route('/:username').put( async (req,res) => {
             if (items[0].mimetype != 'text/csv') {
                 throw "Error: items must be uploaded in csv format"
             }
-            csvFilePath = items[0].path
+            let csvFilePath = items[0].path
             let asyncUpdate = new Promise(async function(resolve, reject){
                 try {
                     let jsonArray = await csv().fromFile(csvFilePath);
@@ -153,8 +153,7 @@ router.route('/:username').put( async (req,res) => {
 
             let jsonArray = await asyncUpdate; 
         
-            validItems = []
-            invalidItems = []
+            let validItems = []
 
             for(let i = 0; i < jsonArray.length; i++) {
                 let item = new Item(jsonArray[i]); 
@@ -164,7 +163,7 @@ router.route('/:username').put( async (req,res) => {
                 } else {
                     throw "Item: " + item.name + " could not be added to the database because of invalid formatting. Please upload your csv again"
                 }
-            };
+            }
 
             store.items = (store.items).concat(validItems)
 
@@ -185,7 +184,7 @@ router.route('/:username').put( async (req,res) => {
                 Key: 'shopit-item-images/floorplan-images/' + username + "/" + floorPlan[0].originalname, 
                 Body: filedata
             };
-            data = await s3.upload(params).promise()
+            let data = await s3.upload(params).promise()
             let location = data.Location
             console.log(`Floor plan uploaded successfully. ${location}`);
             store.floorPlan = location
@@ -196,7 +195,7 @@ router.route('/:username').put( async (req,res) => {
         if (images != null) {
             let items = store.items;
 
-            item_map = {}
+            let item_map = {}
             for (let i = 0; i < items.length; i++) {
                 item_map[items[i].name] = i
             }
@@ -260,7 +259,7 @@ router.route('/:username').delete(async (req, res) => {
     } else {
         User.findOne({username: username})
             .then(user => {
-                storeId = user.store
+                let storeId = user.store
                 Store.findByIdAndDelete(storeId)
                 .then(store => {
                     user.store = null;
