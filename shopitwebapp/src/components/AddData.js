@@ -86,26 +86,27 @@ class AddData extends React.Component {
                 alert("Please input address.")
                 return
               }
-              if(items === null || items === "") {
-                alert("Please input items.")
-                return
-              }
-              if(floorPlan === null || floorPlan === "") {
-                alert("Please input floor plan.")
-                return
-              }
-              if(images === null || images === "") {
-                alert("Please input images.")
-                return
-              }
+              // if(items === null || items === "") {
+              //   alert("Please input items.")
+              //   return
+              // }
+              // if(floorPlan === null || floorPlan === "") {
+              //   alert("Please input floor plan.")
+              //   return
+              // }
+              // if(images === null || images === "") {
+              //   alert("Please input images.")
+              //   return
+              // }
               const data  = new FormData();
               data.append('name', name)
               data.append('address', addr)
               data.append('items', document.getElementById('items').files[0])
               data.append('floorPlan', document.getElementById('floorPlan').files[0])
+              data.append('images', document.getElementById('images').files[0])
               fetch('http://localhost:5000/stores/'+window.localStorage.getItem("user"), {
                 credentials: 'include',
-                method: 'POST',
+                method: 'PUT',
                 body: data,
                 headers: {
                   'Accept': 'application/json'
