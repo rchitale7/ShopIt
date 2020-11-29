@@ -106,7 +106,7 @@ class AddData extends React.Component {
               data.append('images', document.getElementById('images').files[0])
               fetch('http://localhost:5000/stores/'+window.localStorage.getItem("user"), {
                 credentials: 'include',
-                method: 'PUT',
+                method: 'POST',
                 body: data,
                 headers: {
                   'Accept': 'application/json'
