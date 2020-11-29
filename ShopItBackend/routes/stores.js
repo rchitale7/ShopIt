@@ -85,8 +85,16 @@ router.route('/:username').get((req, res) => {
             if (user.store == null) {
                 res.status(200).json({exists: false, msg: "Store does not exist (yet)"})
             } else {
+                console.log("hello")
                 Store.findById(user.store) 
-                    .then(store => res.status(200).json({exists: true, name: store.name, address: store.address, msg: "Found store!"}))
+                    .then(store => {
+                        if (store == null) {
+                            res.status(200).json({exists: false, msg: "Store was deleted"})
+                        } else {
+                            res.status(200).json({exists: true, name: store.name, address: store.address, msg: "Found store!"})
+                        }
+                        
+                    })
                     .catch(err => res.status(400).json({msg: 'Error: could not find store: ' + err}))
             }
         })
