@@ -2,6 +2,7 @@ import React from 'react';
 import Constants from "expo-constants";
 const { manifest } = Constants;
 
+/*
 const hardcodedGroceryStoreData = {
     _id: "5fc0478754df22a3ccf10c0c",
     floorPlan: "https://shopit-item-images.s3-us-west-2.amazonaws.com/floorplan-images/sample_map.png",
@@ -164,6 +165,7 @@ const hardcodedGroceryStoreData = {
     updatedAt: "2020-11-27T00:25:43.252Z",
     __v: 0
 };
+*/
 
 let groceryStoreData = null;
 

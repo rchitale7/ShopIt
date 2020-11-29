@@ -6,8 +6,9 @@ import { FlatList,
          Dimensions,
          Image,
          StyleSheet,
-         StatusBar } from 'react-native';
-import { AppLoading } from 'expo';
+         StatusBar,
+         Text
+} from 'react-native';
 
 import Item from './Item';
 import InventorySearchSection from './InventorySearchSection';
@@ -19,6 +20,8 @@ import collapse_icon from '../assets/collapse.png'
 import { Colors } from '../CommonStyles';
 import { useFonts, ComicNeue_400Regular } from '@expo-google-fonts/comic-neue';
 
+import { ItemContext } from './GlobalItemStore';
+
 const InventorySearch = () => {
   const [searchKey, setSearchKey] = useState('');
   const [expanderSource, setExpanderSource] = useState(collapse_icon);
@@ -26,7 +29,8 @@ const InventorySearch = () => {
   // TODO: change from hardcoded data to result from backend API query
   // assuming that a grocery is an object with a name and description field
   //All data format should be similar for consistency.
-  const inventory = [
+  /*
+  const hardcodedInventory = [
     { type: "Alcohol",
       data: [
         { _id: "1", title: 'bacardi', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
@@ -92,6 +96,30 @@ const InventorySearch = () => {
         { _id: "25", title: 'goat milk', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
       ],
     }, ];
+  */
+
+  const {globalState, dispatch} = React.useContext(ItemContext);
+
+  // group items  by category
+  // TODO: make categories consistent, possibly update backend to return categorized data
+  const categories = ["Alcohol", "Bakery", "Beverages", "Candy", "Dairy", "Frozen Foods", "Fruit", "Meat", "Pantry", "Produce", "Snacks", "Wheat"];
+  let categoryToItems = {};
+
+  categories.forEach(category => {
+    categoryToItems[category] = {
+      type: category,
+      data: []
+    };
+  });
+
+  globalState.items.forEach(item => {
+    categoryToItems[item.category].data.push({
+      ...item,
+      title: item.name
+    });
+  });
+
+  const inventory = Array.from(Object.values(categoryToItems));
 
   const renderSeparatorView = () => {
     return (
@@ -109,7 +137,6 @@ const InventorySearch = () => {
   // if the user has typed in the search bar, we display a filtered list of the inventory, and
   // we no longer separate by category
   let inventoryList;
-
 
   if (!searchKey) {
     inventoryList =
@@ -141,7 +168,8 @@ const InventorySearch = () => {
   }
 
   if (!fontsLoaded){
-      return <AppLoading/>;
+    // TODO: change to a loading wheel or something else
+    return <Text></Text>;
   } else {
     return (
       <View style={styles.container}>

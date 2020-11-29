@@ -18,10 +18,8 @@ item: the json containing all the information about the object.
 Below is the assumed json data format.
     {
         title: 'lime yogurt',
-        description: {
-          brand: "Trader Joe's",
-          quantity: "1 lb",
-        }
+        brand: "Trader Joe's",
+        size: "1 lb"
      }
 
 handleDelete: The event handler fcn for handling deletes in shopping cart.
@@ -34,12 +32,13 @@ strikeThrough: boolean value to determine whether we display a strikethrough.
 
 */
 const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) => {
-    const { _id, title, description:{brand, quantity}} = item;
+    const { title, brand, size} = item;
     const [selected, setCheckBox] = useState(false);
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
 
     if (!fontsLoaded){
-        return <Text>Fonts haven't loaded just yet!</Text>;
+        // TODO: change to a loading wheel or something else
+        return <Text></Text>;
     } else {
         return (
             <View style={mainViewStyle}>
@@ -50,7 +49,7 @@ const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) =>
                                 ? <Text style={styles.selectedItem}>{title}</Text>
                                 :<Text style={styles.unselectedItem}> {title}</Text>
                             }
-                            <Text style={[styles.unselectedItem, { marginLeft: 8, fontSize: 15 }]}>{brand} {quantity}</Text>
+                            <Text style={[styles.unselectedItem, { marginLeft: 8, fontSize: 15 }]}>{brand} {size}</Text>
                         </>
                     </View>
                     {isCheckBox

@@ -53,10 +53,10 @@ export default function App() {
   return initialState == null ? <Text>waiting</Text> : // TODO: change this to the logo
     (
     <ItemContext.Provider 
-      value={{ initialState, dispatch }}
+      value={{ globalState: initialState, dispatch }}
     >
-      <TestComp style={styles.navbar}/>
-      {/*
+      {/* <TestComp style={styles.navbar}/> */}
+      
       <NavigationContainer>
         <Tab.Navigator 
           tabBarBadge={true} 
@@ -100,7 +100,7 @@ export default function App() {
           />
         </Tab.Navigator>
       </NavigationContainer>
-          */}
+          
     </ItemContext.Provider>
   );
 }
@@ -120,15 +120,15 @@ const styles = StyleSheet.create({
 const TestComp = () => {
 
   // retrieve globalState (global state) amd dispatch (function to update global state) from context
-  const {initialState, dispatch} = React.useContext(ItemContext);
+  const {globalState, dispatch} = React.useContext(ItemContext);
 
-  console.log(initialState);
+  //console.log(globalState);
 
   // update the global state by using dispatch to perform an action
   return <Text onPress={() => dispatch({
     type: 'addToCart',
     payload: {
-      name: 'test', 
+      name: 'test',
       description: 'test item', 
       retrieved: false
     }
