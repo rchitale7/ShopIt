@@ -4,7 +4,6 @@ import { Icon } from 'react-native-elements'
 import ImageZoom from 'react-native-image-pan-zoom';
 
 // Non react
-import { AppLoading } from 'expo';
 import Axios from 'axios';
 
 // Static assets
@@ -162,7 +161,7 @@ function Map() {
 
     // TODO: AppLoading doesn't work for some reason
     if (!componentLoaded) {
-        return <AppLoading />
+        return null;
     } else {
         return (
             <View style={{ backgroundColor: Colors.beige }}>
