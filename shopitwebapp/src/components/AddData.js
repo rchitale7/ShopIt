@@ -86,18 +86,6 @@ class AddData extends React.Component {
                   alert("Please input address.")
                   return
                 }
-                // if(items === null || items === "") {
-                //   alert("Please input items.")
-                //   return
-                // }
-                // if(floorPlan === null || floorPlan === "") {
-                //   alert("Please input floor plan.")
-                //   return
-                // }
-                // if(images === null || images === "") {
-                //   alert("Please input images.")
-                //   return
-                // }
                 const data  = new FormData();
                 data.append('name', name)
                 data.append('address', addr)
@@ -118,7 +106,34 @@ class AddData extends React.Component {
                   return response.json()
                 })
                 .then((responseData) => {
-                  window.location.href='/dragAndDrop';
+                  fetch('http://localhost:5000/stores/'+window.localStorage.getItem("user"), {
+                    credentials: 'include',
+                    method: 'GET',
+                  }).then((getResponse) => {
+                    if(!getResponse.ok) {
+                      throw getResponse.json()
+                    }
+                    return getResponse.json()
+                  })
+                  .then((getResponseData) => {
+                    console.log(getResponseData)
+                    if(getResponseData.exists) {
+                      window.localStorage.setItem("name", getResponseData.name)
+                      window.localStorage.setItem("address", getResponseData.address)
+                      window.localStorage.setItem("items", getResponseData.items)
+                      window.localStorage.setItem("floorPlan", getResponseData.floorPlan)
+                      window.localStorage.setItem("storeId", getResponseData.storeId)
+                    }
+                    else {
+                      window.localStorage.setItem("name", null)
+                      window.localStorage.setItem("address", null)
+                      window.localStorage.setItem("items", [])
+                      window.localStorage.setItem("storeId", getResponseData.storeId)
+                    }
+                    window.location.href='/dragAndDrop';
+                  })
+                  .catch(error => {
+                  })
                 })
                 .catch(error => error.then(errorMsg => alert(errorMsg.msg)));
                 }}
@@ -140,18 +155,6 @@ class AddData extends React.Component {
                 alert("Please input address.")
                 return
               }
-              // if(items === null || items === "") {
-              //   alert("Please input items.")
-              //   return
-              // }
-              // if(floorPlan === null || floorPlan === "") {
-              //   alert("Please input floor plan.")
-              //   return
-              // }
-              // if(images === null || images === "") {
-              //   alert("Please input images.")
-              //   return
-              // }
               const data  = new FormData();
               data.append('name', name)
               data.append('address', addr)

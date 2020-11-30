@@ -21,38 +21,41 @@ WebFont.load({
     }
 });
 
-function getMapData() {
-  fetch('http://localhost:5000/stores/'+window.localStorage.getItem("user"), {
-    credentials: 'include',
-    method: 'GET',
-  }).then((getResponse) => {
-    if(!getResponse.ok) {
-      throw getResponse.json()
-    }
-    return getResponse.json()
-  })
-  .then((getResponseData) => {
-    console.log(getResponseData)
-    if(getResponseData.exists) {
-      window.localStorage.setItem("name", getResponseData.name)
-      window.localStorage.setItem("address", getResponseData.address)
-      window.localStorage.setItem("items", getResponseData.items)
-      window.localStorage.setItem("floorPlan", getResponseData.floorPlan)
-      window.localStorage.setItem("storeId", getResponseData.storeId)
-    }
-    else {
-      window.localStorage.setItem("name", null)
-      window.localStorage.setItem("address", null)
-    }
-  })
-  .catch(error => {
-  })
-}
+// function getMapData() {
+//   fetch('http://localhost:5000/stores/'+window.localStorage.getItem("user"), {
+//     credentials: 'include',
+//     method: 'GET',
+//   }).then((getResponse) => {
+//     if(!getResponse.ok) {
+//       throw getResponse.json()
+//     }
+//     return getResponse.json()
+//   })
+//   .then((getResponseData) => {
+//     console.log(getResponseData)
+//     if(getResponseData.exists) {
+//       window.localStorage.setItem("name", getResponseData.name)
+//       window.localStorage.setItem("address", getResponseData.address)
+//       window.localStorage.setItem("items", getResponseData.items)
+//       console.log(window.localStorage.getItem("items"))
+//       window.localStorage.setItem("floorPlan", getResponseData.floorPlan)
+//       window.localStorage.setItem("storeId", getResponseData.storeId)
+//     }
+//     else {
+//       window.localStorage.setItem("name", null)
+//       window.localStorage.setItem("address", null)
+//       window.localStorage.setItem("items", [])
+//       window.localStorage.setItem("storeId", getResponseData.storeId)
+//     }
+//   })
+//   .catch(error => {
+//   })
+// }
 
 function DragAndDrop() {
-    useEffect(() => {
-      getMapData();
-    }, []);
+    // useEffect(() => {
+    //   getMapData();
+    // }, []);
     // Replace with context variables later
     const storeId = window.localStorage.getItem("storeId")
     const groceryStoreMap = window.localStorage.getItem("floorPlan");
