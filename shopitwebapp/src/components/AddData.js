@@ -70,6 +70,60 @@ class AddData extends React.Component {
             <div className="filetext">Accepted file types: .zip</div>
           </form>
           <button className="button"
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                var name = document.getElementById('name').value
+                var addr = document.getElementById('address').value
+                var items = document.getElementById('items').value
+                var floorPlan = document.getElementById('floorPlan').value
+                var images = document.getElementById('images').value
+                if(name === null || name === "") {
+                  alert("Please input name.")
+                  return
+                }
+                if(addr === null || addr === "") {
+                  alert("Please input address.")
+                  return
+                }
+                // if(items === null || items === "") {
+                //   alert("Please input items.")
+                //   return
+                // }
+                // if(floorPlan === null || floorPlan === "") {
+                //   alert("Please input floor plan.")
+                //   return
+                // }
+                // if(images === null || images === "") {
+                //   alert("Please input images.")
+                //   return
+                // }
+                const data  = new FormData();
+                data.append('name', name)
+                data.append('address', addr)
+                data.append('items', document.getElementById('items').files[0])
+                data.append('floorPlan', document.getElementById('floorPlan').files[0])
+                data.append('images', document.getElementById('images').files[0])
+                fetch('http://localhost:5000/stores/'+window.localStorage.getItem("user"), {
+                  credentials: 'include',
+                  method: 'POST',
+                  body: data,
+                  headers: {
+                    'Accept': 'application/json'
+                  }
+                }).then((response) => {
+                  if(!response.ok) {
+                    throw response.json()
+                  }
+                  return response.json()
+                })
+                .then((responseData) => {
+                  window.location.href='/dragAndDrop';
+                })
+                .catch(error => error.then(errorMsg => alert(errorMsg.msg)));
+                }}
+          >Edit Map</button>
+          <button className="button"
             type="button"
             onClick={(e) => {
               e.preventDefault();
@@ -122,13 +176,7 @@ class AddData extends React.Component {
               })
               .catch(error => error.then(errorMsg => alert(errorMsg.msg)));
               }}
-        >Add data</button>
-        <button className="button"
-            type="button"
-            onClick={(e) => {
-              window.location.href='/dragAndDrop';
-              }}
-        >Edit Map</button>
+        >Done!</button>
         </div>
       </>
     );
