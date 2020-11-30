@@ -10,6 +10,9 @@ const fs = require('fs')
 const AdmZip = require('adm-zip')
 const multer  = require('multer');
 const AWS = require('aws-sdk');
+const util = require('util')
+
+AWS.config.update({region: 'us-west-2'});
 
 AWS.config.update({region: 'us-west-2'});
 
@@ -201,12 +204,14 @@ router.route('/:username').post( async (req,res) => {
                 throw new ApiError("Floor plan must be uploaded in jpeg, png, or jpg format", 400)
             }
 
-            let filedata = await fs.promises.readFile(floorPlan[0].path, "binary")
+            let filedata = await fs.promises.readFile(floorPlan[0].path)
             console.log("read file")
             const params = {
                 Bucket: BUCKET_NAME,
-                Key: 'shopit-item-images/floorplan-images/' + username + "/" + floorPlan[0].originalname, 
-                Body: filedata
+                ACL: 'public-read',
+                Key: 'floorplan-images/' + username + "/" + floorPlan[0].originalname, 
+                Body: filedata, 
+                ContentType: floorPlan[0].mimetype
             };
             let data = await s3.upload(params).promise()
             let location = data.Location
@@ -229,7 +234,7 @@ router.route('/:username').post( async (req,res) => {
                     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
                     let name = zipEntry.entryName + '-' + uniqueSuffix
                     zip.extractEntryTo(zipEntry.entryName, '/tmp/cs130', false, true, name)
-                    let filedata = await fs.promises.readFile('/tmp/cs130/' + name, "binary")
+                    let filedata = await fs.promises.readFile('/tmp/cs130/' + name)
                     let start = zipEntry.entryName.indexOf('/')
                     let end = zipEntry.entryName.indexOf('.')
                     let item_name = zipEntry.entryName.substring(start+1, end)
@@ -238,8 +243,10 @@ router.route('/:username').post( async (req,res) => {
                     if (position != null) {
                         const params = {
                             Bucket: BUCKET_NAME,
-                            Key: 'shopit-item-images/item-images/' + username + "/" + zipEntry.entryName, 
-                            Body: filedata
+                            ACL: 'public-read',
+                            Key: 'item-images/' + username + "/" + zipEntry.entryName, 
+                            Body: filedata, 
+                            ContentType: 'image/' + zipEntry.entryName.substring(end+1)
                         };
                         let data = await s3.upload(params).promise()
                         let location = data.Location

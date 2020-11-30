@@ -20,7 +20,7 @@ const itemSchema = new schema({
     },
     category: {
         type: String,
-        enum: ['Meat', 'Dairy', 'Vegetables', 'Fruit', 'Wheat', 'Candy', 'Alcohol', 'Beverages'],
+        enum: ["Alcohol", "Bakery", "Beverages", "Candy", "Dairy", "Frozen Foods", "Fruit", "Grains", "Meat", "Pantry", "Produce", "Snacks"],
         required: true
     },
     price: {
