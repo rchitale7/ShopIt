@@ -98,21 +98,23 @@ router.route('/:username').get((req, res) => {
             if (user.store == null) {
                 res.status(200).json({exists: false, msg: "Store does not exist (yet)"})
             } else {
-                Store.findById(user.store) 
+                Store.findById(user.store)
                     .then(store => {
                         if (store == null) {
                             res.status(200).json({exists: false, msg: "Store was deleted"})
                         } else {
-                            res.status(200).json({exists: true, name: store.name, address: store.address, msg: "Found store!"})
+                            res.status(200).json({exists: true, storeId: store._id, name: store.name, address: store.address,
+                                                  items: store.items, floorPlan: store.floorPlan,
+                                                  msg: "Found store!"})
                         }
-                        
+
                     })
                     .catch(err => res.status(400).json({msg: 'Error: could not find store: ' + err}))
             }
         })
         .catch(err => res.status(400).json({msg: 'Error:' + err}))
     }
-    
+
 
 })
 
@@ -127,10 +129,10 @@ router.route('/:username').post( async (req,res) => {
     let images = req.files['images']
     let itemfile = req.files['items']
     let floorPlan= req.files['floorPlan']
-    let username = req.params.username 
-    let status_code = 200; 
+    let username = req.params.username
+    let status_code = 200;
     let msg = "Success!"
-    let response_map = {} 
+    let response_map = {}
     console.log(req.files)
 
     try {
@@ -138,7 +140,7 @@ router.route('/:username').post( async (req,res) => {
             throw new ApiError("Could not authenticate user", 401)
         }
         const { name, address  } = req.body;
-        let user = await User.findOne({username: username}); 
+        let user = await User.findOne({username: username});
         let store = await Store.findById(user.store)
         if (store == null) {
             const newStore = new Store({
@@ -168,25 +170,25 @@ router.route('/:username').post( async (req,res) => {
             }
             let csvFilePath = itemfile[0].path
 
-            let jsonArray = await csv().fromFile(csvFilePath); 
-        
+            let jsonArray = await csv().fromFile(csvFilePath);
+
             let validItems = []
 
             for(let i = 0; i < jsonArray.length; i++) {
-                let item = new Item(jsonArray[i]); 
-                let error = item.validateSync(); 
+                let item = new Item(jsonArray[i]);
+                let error = item.validateSync();
                 if(error == null) {
                     let pos = item_map[item.name]
                     if (pos == null) {
                         validItems.push(item)
                     } else {
-                        store.items[pos].name = item.name 
+                        store.items[pos].name = item.name
                         store.items[pos].brand = item.brand
                         store.items[pos].size = item.size
                         store.items[pos].category = item.category
                         store.items[pos].price = item.price
                     }
-                    
+
                 } else {
                     throw new ApiError("Item: " + item.name + " could not be added to the database because of invalid formatting. Please upload your csv again", 400)
                 }
@@ -209,8 +211,8 @@ router.route('/:username').post( async (req,res) => {
             const params = {
                 Bucket: BUCKET_NAME,
                 ACL: 'public-read',
-                Key: 'floorplan-images/' + username + "/" + floorPlan[0].originalname, 
-                Body: filedata, 
+                Key: 'floorplan-images/' + username + "/" + floorPlan[0].originalname,
+                Body: filedata,
                 ContentType: floorPlan[0].mimetype
             };
             let data = await s3.upload(params).promise()
@@ -218,7 +220,7 @@ router.route('/:username').post( async (req,res) => {
             console.log(`Floor plan uploaded successfully. ${location}`);
             store.floorPlan = location
             await store.save()
- 
+
         }
 
         if (images != null) {
@@ -226,11 +228,11 @@ router.route('/:username').post( async (req,res) => {
                 throw new ApiError("Images must be uploaded in zip format", 400)
             }
             let zip = new AdmZip(images[0].path);
-            let zipEntries = zip.getEntries(); 
+            let zipEntries = zip.getEntries();
             const re = RegExp('^images\/.*\.(png|jpeg|jpg)')
             zipEntries.forEach(async function(zipEntry) {
                 if (re.test(zipEntry.entryName)) {
-                    console.log(zipEntry.entryName); 
+                    console.log(zipEntry.entryName);
                     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
                     let name = zipEntry.entryName + '-' + uniqueSuffix
                     zip.extractEntryTo(zipEntry.entryName, '/tmp/cs130', false, true, name)
@@ -244,8 +246,8 @@ router.route('/:username').post( async (req,res) => {
                         const params = {
                             Bucket: BUCKET_NAME,
                             ACL: 'public-read',
-                            Key: 'item-images/' + username + "/" + zipEntry.entryName, 
-                            Body: filedata, 
+                            Key: 'item-images/' + username + "/" + zipEntry.entryName,
+                            Body: filedata,
                             ContentType: 'image/' + zipEntry.entryName.substring(end+1)
                         };
                         let data = await s3.upload(params).promise()
@@ -259,7 +261,7 @@ router.route('/:username').post( async (req,res) => {
                     }
                 }
             })
- 
+
         }
     } catch (error) {
         if (error instanceof ApiError) {
@@ -277,10 +279,10 @@ router.route('/:username').post( async (req,res) => {
         console.log("bad response")
         res.status(status_code).json({'msg': msg})
     } else {
-        response_map['msg'] = msg 
+        response_map['msg'] = msg
         res.status(200).json(response_map)
     }
-        
+
 
 })
 
