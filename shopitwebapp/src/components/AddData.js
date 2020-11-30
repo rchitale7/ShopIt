@@ -123,6 +123,12 @@ class AddData extends React.Component {
               .catch(error => error.then(errorMsg => alert(errorMsg.msg)));
               }}
         >Add data</button>
+        <button className="button"
+            type="button"
+            onClick={(e) => {
+              window.location.href='/dragAndDrop';
+              }}
+        >Edit Map</button>
         </div>
       </>
     );

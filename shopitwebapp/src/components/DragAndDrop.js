@@ -86,7 +86,10 @@ function DragAndDrop() {
             itemIds: itemIds,
             itemLocations: itemLocations
         })
-        .then(() => history.push("/adddata"))
+        .then(() => {
+          history.push("/adddata")
+          document.body.style.backgroundColor = '#91E78C';
+        })
         .catch(() => alert("Could not update locations"));
     }
 
