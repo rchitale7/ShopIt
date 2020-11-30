@@ -30,10 +30,6 @@ const ShoppingCart = () => {
     );
   };
 
-  removeItem = (title) => {
-    console.log("Removing " + title);
-  }
-
   if (!fontsLoaded) {
     // TODO: change to a loading wheel or something else
     return <Text>testtttttttttttt</Text>;
@@ -46,7 +42,7 @@ const ShoppingCart = () => {
       </View>
       <FlatList style={styles.section}
         data={globalState.groceryList}
-        renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false} strikeThrough={false} mainViewStyle={{flexDirection:"row", width:275}}/>}
+        renderItem={({ item }) => <Item item={item} isCheckBox={false} strikeThrough={false} mainViewStyle={{flexDirection:"row", width:275}}/>}
         keyExtractor={(item) => item._id}
         ItemSeparatorComponent={this.renderSeparatorView}
       />

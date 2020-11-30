@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, Button, TouchableOpacity, Image} from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import {
@@ -7,14 +7,14 @@ import {
   } from '@expo-google-fonts/comic-neue';
 import erase_icon from '../assets/erase.png';
 
-import { useGlobalDispatch } from './GlobalItemStore';
+import { useGlobalState, useGlobalDispatch } from './GlobalItemStore';
 
 /*
 This component is used to display a single item and a button to the side.
 This button can be either a checkmark or an X mark.
 
 Sample Usage:
-<Item item={...} handleDelete={...} isCheckBox={...} mainViewStyle={...} strikeThrough={...}/>
+<Item item={...} isCheckBox={...} mainViewStyle={...} strikeThrough={...}/>
 
 item: the json containing all the information about the object. 
 Below is the assumed json data format.
@@ -24,8 +24,6 @@ Below is the assumed json data format.
         size: "1 lb"
      }
 
-handleDelete: The event handler fcn for handling deletes in shopping cart.
-
 isCheckBox: The boolean value to determine which button to display.
 
 mainViewStyle: The associated style for the main view of the item component.
@@ -33,11 +31,16 @@ mainViewStyle: The associated style for the main view of the item component.
 strikeThrough: boolean value to determine whether we display a strikethrough.
 
 */
-const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) => {
+const Item = ({item, isCheckBox, mainViewStyle, strikeThrough}) => {
     const { title, brand, size} = item;
-    const [selected, setCheckBox] = useState(false);
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
     const dispatch = useGlobalDispatch();
+    const globalState = useGlobalState();
+
+    let selected = false;
+    if (globalState.groceryList.find(groceryItem => groceryItem._id == item._id)) {
+        selected = true;
+    }
 
     const checkBoxPressed = () => {
         if (selected) {
@@ -57,8 +60,6 @@ const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) =>
                 }
             });
         }
-        
-        setCheckBox(!selected);
     };
 
     const deleteButtonPressed = () => {
@@ -66,8 +67,6 @@ const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) =>
             type: 'removeFromCart',
             payload: item._id
         });
-
-        handleDelete(title);
     };
 
     if (!fontsLoaded){
@@ -88,7 +87,7 @@ const Item = ({item, handleDelete, isCheckBox, mainViewStyle, strikeThrough}) =>
                     </View>
                     {isCheckBox
                     ? <CheckBox checked={selected} onPress={ () => checkBoxPressed() } style={{flexGrow:1}}/>
-                    : <TouchableOpacity onPress={() => /*handleDelete(title)*/ deleteButtonPressed() } style={styles.addButton}>
+                    : <TouchableOpacity onPress={() => deleteButtonPressed() } style={styles.addButton}>
                         <Image style={styles.erase} source={erase_icon}/>
                     </TouchableOpacity>
                     }
