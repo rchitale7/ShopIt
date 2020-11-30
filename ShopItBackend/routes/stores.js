@@ -14,6 +14,8 @@ const util = require('util')
 
 AWS.config.update({region: 'us-west-2'});
 
+AWS.config.update({region: 'us-west-2'});
+
 const ID = process.env.ACCESS_KEY;
 const SECRET = process.env.SECRET_KEY;
 const BUCKET_NAME = process.env.BUCKET;
