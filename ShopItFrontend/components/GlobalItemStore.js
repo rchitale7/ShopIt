@@ -46,18 +46,13 @@ const groceryReducer = (state, action) => {
                 groceryList: state.groceryList.filter(item => item._id != action.payload)
             };
 
-
-        // TODO: implement this case correctly
-
         /*
         Toggles whether an item is marked as retrieved or not
         type = 'toggleItemRetrievedStatus'
-        payload = item object to have its retrieved status toggled
+        payload = _id for item object to have its retrieved status toggled
         */
         case 'toggleItemRetrievedStatus':
-            const retrievedItemIndex = state.groceryList.findIndex(item => {
-                return item.name == action.payload.name && item.description == action.payload.description;
-            });
+            const retrievedItemIndex = state.groceryList.findIndex(item => item._id == action.payload);
 
             if (retrievedItemIndex == -1) {
                 console.log("Trying to toggle the retrieved status of an item that does not exist");
