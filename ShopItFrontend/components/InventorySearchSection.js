@@ -6,7 +6,6 @@ import { FlatList,
          Image,
          StyleSheet,
          StatusBar } from 'react-native';
-import { AppLoading } from 'expo';
 
 import Item from './Item';
 import CollapsibleList from "react-native-collapsible-list";
@@ -37,7 +36,7 @@ const InventorySearchSection = ({item}) => {
     }
 
     if(!fontsLoaded){
-      return <AppLoading/>;
+      return null;
     } else{
         return (
           <CollapsibleList style={styles.container}
