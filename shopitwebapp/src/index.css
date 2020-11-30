@@ -46,10 +46,11 @@ code {
 }
 
 .img {
-  margin-left: 46%;
+  margin: auto;
   height: 150px;
   width: 150px;
   alt: "";
+  display: block;
 }
 
 .header {
@@ -81,6 +82,7 @@ code {
   background-color: #D8FDD6;
   font-size: 18px;
   font-family: 'Comic Neue';
+  cursor: pointer;
 }
 
 .signupbutton {
@@ -93,6 +95,7 @@ code {
   background-color: #D8FDD6;
   font-size: 18px;
   font-family: 'Comic Neue';
+  cursor: pointer;
 }
 
 .innertext {
@@ -108,9 +111,11 @@ code {
 }
 
 .suggestion {
+  position: relative;
   height: 40px;
   width: 290px;
   margin-top: -1px;
+  margin-left: 5%;
   padding: 3px;
   border: 1px solid #ddd;
   overflow: hidden;
@@ -124,14 +129,7 @@ code {
 
 .autocomplete {
   position: absolute;
-  left: 502px;
   height: 100%;
-  margin-top: 0px;
-  margin-left: 5%;
-  padding: 0px;
-  border-radius: 15px;
-  list-style-type: none;
-  z-index: 9999;
 }
 
 .success {
