@@ -11,13 +11,15 @@ import { Fontisto } from '@expo/vector-icons';
 
 const API_KEY='AIzaSyB0OBBZB0abirvfDAjbAWbCeGqk-knKvtw';
 
+import { NavigationContainer } from '@react-navigation/native';
+
 import { 
     retrieveStoreData, 
     getGroceryStoreData,
     useGlobalDispatch
   } from './GlobalItemStore';
 
-const GroceryStoreSearch = () => {
+const GroceryStoreSearch = ({ navigation }) => {
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
@@ -146,14 +148,13 @@ const GroceryStoreSearch = () => {
             await retrieveStoreData();
 
             dispatch({
-              type: 'initState',
-              payload: {
-                selectedStoreData: getGroceryStoreData(),
-                groceryList: []
-              }
+                type: 'addStoreData',
+                payload: getGroceryStoreData()
             });
             
             console.log("finished fetching that location's data");
+
+            navigation.navigate('Search');
         }      
         catch (err) {
             console.log(err);

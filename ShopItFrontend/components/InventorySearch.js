@@ -30,7 +30,7 @@ const InventorySearch = () => {
 
   // group items  by category
   // TODO: make categories consistent, possibly update backend to return categorized data
-  const categories = ["Alcohol", "Bakery", "Beverages", "Candy", "Dairy", "Frozen Foods", "Fruit", "Meat", "Pantry", "Produce", "Snacks", "Wheat"];
+  const categories = ["Alcohol", "Bakery", "Beverages", "Candy", "Dairy", "Frozen Foods", "Fruit", "Grains", "Meat", "Pantry", "Produce", "Snacks"];
   let categoryToItems = {};
 
   categories.forEach(category => {

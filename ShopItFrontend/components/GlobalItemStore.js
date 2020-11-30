@@ -1,5 +1,6 @@
 import React from 'react';
 import Constants from "expo-constants";
+import Axios from 'axios';
 const { manifest } = Constants;
 
 const StateContext = React.createContext();
@@ -7,19 +8,17 @@ const DispatchContext = React.createContext();
 
 const groceryReducer = (state, action) => {
     switch (action.type) {
-
-        // TODO: delete later
-        case 'printstate':
-            console.log(state.groceryList);
-            return state;
-
         /*
-        Initialize the global state
-        type = 'addToCart'
-        payload = initial global state
+        Add the data for the selected store to the global state
+        type = 'addStoreData'
+        payload = data for the selected store
         */
-        case 'initState':
-            return action.payload
+        case 'addStoreData':
+            return {
+                groceryStoreSelected: true,
+                groceryList: [],
+                selectedStoreData: action.payload
+            };
 
         /*
         Add an item to one's shopping cart
@@ -77,14 +76,22 @@ const groceryReducer = (state, action) => {
 };
 
 function GroceryProvider({children}) {
-    const [state, dispatch] = React.useReducer(groceryReducer, {count: 0});
+
+    const initialState = {
+        groceryStoreSelected: false,
+        groceryList: [],
+        selectedStoreData: null
+    };
+
+    const [state, dispatch] = React.useReducer(groceryReducer, initialState);
+
     return (
         <StateContext.Provider value={state}>
           <DispatchContext.Provider value={dispatch}>
             {children}
           </DispatchContext.Provider>
         </StateContext.Provider>
-    )
+    );
 }
 
 function useGlobalState() {
@@ -111,17 +118,24 @@ const getGroceryStoreData = () => {
     return groceryStoreData;
 }
 
+const axios = Axios.create({
+    baseURL: `http://${manifest.debuggerHost.split(':').shift()}:5000/`
+});
+
 const retrieveStoreData = async () => {
     try {
-        const urlPrefix = `http://${manifest.debuggerHost.split(':').shift()}:5000/`;
-    
-        // FOR NOW IM JUST ASSUMING THEY ALWAYS PICK RALPHS WESTWOOD
-        const ralphsLatitude = 34.063055385575225;
-        const ralphsLongitude = -118.44386700035668;
-    
-        // get data for selected grocery store (FOR NOW JUST RALPHS WESTWOOD)
-        let res = await fetch(urlPrefix + `stores/at?lat=${ralphsLatitude}&long=${ralphsLongitude}`);
-        groceryStoreData = await res.json();
+        // FOR NOW ASSUMING THE SAME STORE ALWAYS
+        const hardcodedName = "Lucky's";
+        const hardcodedAddress = "Foothill Expressway, Palo Alto, CA, USA";
+
+        let res = await axios.get('/stores/at', {
+            params: {
+                name: hardcodedName,
+                address: hardcodedAddress
+            }
+        });
+
+        groceryStoreData = res.data;
     }
     catch (err) {
         groceryStoreData = null;
