@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const multer  = require('multer'); 
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 
@@ -11,10 +11,7 @@ const port = process.env.PORT || 5000;
 
 app.use(cors({origin: ["http://localhost:3000"], credentials: true}));
 app.use(express.json());
-app.use(multer({ 
-    dest: 'uploads/' }).
-    fields([{ name: 'floorPlan', maxCount: 1 }, { name: 'items', maxCount: 1 }]) 
-);
+app.use(cookieParser());
 
 const uri = process.env.ATLAS_URI;
 mongoose.set('useFindAndModify', false);

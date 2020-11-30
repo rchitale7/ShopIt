@@ -24,20 +24,20 @@ const itemSchema = new schema({
         required: true
     },
     price: {
-        type: mongoose.Decimal128,
+        type: Number,
         required: true
     },
     imageURL: {
         type: String,
-        default: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/peach.png'
+        default: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/peach.png'
     },
     posX: {
         type: Number,
-        required: true
+        default: 0
     },
     posY: {
         type: Number,
-        required: true
+        default: 0
     }
 }, {
     timestamps: true
