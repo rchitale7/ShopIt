@@ -31,7 +31,6 @@ router.post('/login', function(req, res) {
     let username = req.body.username;
     let pwd = req.body.password;
 
-    console.log("logging user in")
     // callback order is user, err i think? this conflicts with the mongoose docs
     User.findOne({ username: { $eq : username } })
     .then(function(user, err) {
@@ -73,10 +72,7 @@ router.post('/login', function(req, res) {
 
 // Sign up user to database
 router.route('/signup').post((req, res) => {
-    console.log("signing user up")
     const { username, password } = req.body;
-
-
 
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(password, salt, function(err, hash) {

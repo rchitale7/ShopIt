@@ -328,6 +328,130 @@ describe('Stores', () => {
                 
         });
 
+        it('Should upload store floor plan from floor_plan.jpg file', async () => {
+
+
+            let filepath = path.resolve(__dirname, "../test_files/floor_plan.jpg")
+
+            let store = new Store(exampleStore1);
+            let saved_store = await store.save();
+            let user = await User.findOne({username: exampleUser.username});
+            user.store = saved_store
+            await user.save()
+
+            return await chai.request(app)
+                .post('/stores/' + exampleUser.username)
+                .set('Cookie', token)
+                .set('Content-Type', 'multipart/form-data')
+                .field('name', saved_store.name)
+                .field('address', saved_store.address)
+                .attach('floorPlan', 
+                    fs.readFileSync(filepath), 
+                    'floor_plan.jpg'
+                )
+                .then((res) => {
+                        assert.strictEqual(res.status, 200);
+                        return User.findOne({username: exampleUser.username});
+                }).then((user) => {
+                    return Store.findById(user.store);
+                }).then((store) => {
+                    assert.notStrictEqual(null, store); 
+                    assert.notStrictEqual(undefined, store);
+                    assert.strictEqual("https://shopit-item-images.s3.us-west-2.amazonaws.com/floorplan-images/" + user.username + "/floor_plan.jpg", store.floorPlan)
+
+                }); 
+                
+        });
+
+        it('Should reject POST request because floor plan is not a valid image (floor plan must be in jpeg, png, or jpg form', async () => {
+
+
+            let filepath = path.resolve(__dirname, "../test_files/items_valid.csv")
+
+            let name = "Trader Joe's";
+            let address = "Westwood, CA";
+
+            return await chai.request(app)
+                .post('/stores/' + exampleUser.username)
+                .set('Cookie', token)
+                .set('Content-Type', 'multipart/form-data')
+                .field('name', name)
+                .field('address', address)
+                .attach('floorPlan', 
+                    fs.readFileSync(filepath), 
+                    'items_valid.csv'
+                )
+                .then((res) => {
+                    assert.strictEqual(res.status, 400);
+                });
+                
+        });
+
+        it('Should match items in store to images in zip file', async () => {
+
+
+            let filepath = path.resolve(__dirname, "../test_files/images1.zip")
+
+            let store = new Store(exampleStore1); 
+            store.items = [{name: "pizza", brand: "Tasty Pizza", category: "Frozen Foods", size: "10 oz", price: 3.99}];
+            store.items.push({name: "pudding", brand: "some brand", category: "Dairy", size: "6 oz", price: 5.99});
+            let saved_store = await store.save();
+            let user = await User.findOne({username: exampleUser.username});
+            user.store = saved_store
+            user = await user.save()
+
+            return await chai.request(app)
+                .post('/stores/' + exampleUser.username)
+                .set('Cookie', token)
+                .set('Content-Type', 'multipart/form-data')
+                .field('name', saved_store.name)
+                .field('address', saved_store.address)
+                .attach('images', 
+                    fs.readFileSync(filepath), 
+                    'images1.zip'
+                )
+                .then((res) => {
+                        assert.strictEqual(res.status, 200);
+                        return User.findOne({username: exampleUser.username});
+                }).then((user) => {
+                    return Store.findById(user.store);
+                }).then((store) => {
+                    assert.notStrictEqual(null, store); 
+                    assert.notStrictEqual(undefined, store);
+
+                    assert.strictEqual("https://shopit-item-images.s3.us-west-2.amazonaws.com/item-images/" + user.username + "/images/pizza.jpeg", store.items[0].imageURL)
+                    assert.strictEqual("https://shopit-item-images.s3.us-west-2.amazonaws.com/item-images/default.png", store.items[1].imageURL)
+
+                    // also compare pudding image (not equal)
+
+                }); 
+                
+        });
+
+        it('Should reject POST request because images is not valid (images must be in zip form)', async () => {
+
+
+            let filepath = path.resolve(__dirname, "../test_files/floor_plan.jpg")
+
+            let name = "Trader Joe's";
+            let address = "Westwood, CA";
+
+            return await chai.request(app)
+                .post('/stores/' + exampleUser.username)
+                .set('Cookie', token)
+                .set('Content-Type', 'multipart/form-data')
+                .field('name', name)
+                .field('address', address)
+                .attach('images', 
+                    fs.readFileSync(filepath), 
+                    'floor_plan.jpg'
+                )
+                .then((res) => {
+                    assert.strictEqual(res.status, 400);
+                });
+                
+        });
+
         
 
 
