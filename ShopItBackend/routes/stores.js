@@ -44,13 +44,6 @@ var storage = multer.diskStorage({
     }
 })
 
-// Returns all grocery stores
-router.route('/').get((req, res) => {
-    Store.find()
-        .then(stores => res.json(stores))
-        .catch(err => res.status(400).json({msg: err}));
-});
-
 // Returns grocery store given lat and long
 router.route('/at').get((req, res) => {
     const { name, address }  = req.query;
@@ -78,7 +71,6 @@ router.use('/:username', function (req, res, next) {
             res.status(401).json({msg: '401 error: Could not authenticate'});
           } else {
             res.locals.user = decoded.usr
-            console.log("authenticated!")
             next()
           }
       });
@@ -133,7 +125,6 @@ router.route('/:username').post( async (req,res) => {
     let status_code = 200;
     let msg = "Success!"
     let response_map = {}
-    console.log(req.files)
 
     try {
         if (res.locals.user != username) {
@@ -207,7 +198,6 @@ router.route('/:username').post( async (req,res) => {
             }
 
             let filedata = await fs.promises.readFile(floorPlan[0].path)
-            console.log("read file")
             const params = {
                 Bucket: BUCKET_NAME,
                 ACL: 'public-read',
@@ -229,24 +219,23 @@ router.route('/:username').post( async (req,res) => {
             }
             let zip = new AdmZip(images[0].path);
             let zipEntries = zip.getEntries();
-            const re = RegExp('^images\/.*\.(png|jpeg|jpg)')
-            zipEntries.forEach(async function(zipEntry) {
+
+            const re = RegExp('\/.*\.(png|jpeg|jpg)')
+            await Promise.all(zipEntries.map(async (zipEntry) => {
                 if (re.test(zipEntry.entryName)) {
-                    console.log(zipEntry.entryName);
                     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
                     let name = zipEntry.entryName + '-' + uniqueSuffix
                     zip.extractEntryTo(zipEntry.entryName, '/tmp/cs130', false, true, name)
                     let filedata = await fs.promises.readFile('/tmp/cs130/' + name)
-                    let start = zipEntry.entryName.indexOf('/')
-                    let end = zipEntry.entryName.indexOf('.')
+                    let start = zipEntry.entryName.lastIndexOf('/')
+                    let end = zipEntry.entryName.lastIndexOf('.')
                     let item_name = zipEntry.entryName.substring(start+1, end)
-                    console.log(item_name)
                     let position = item_map[item_name]
                     if (position != null) {
                         const params = {
                             Bucket: BUCKET_NAME,
                             ACL: 'public-read',
-                            Key: 'item-images/' + username + "/" + zipEntry.entryName,
+                            Key: 'item-images/' + username + "/images/" + item_name + zipEntry.entryName.substring(end),
                             Body: filedata,
                             ContentType: 'image/' + zipEntry.entryName.substring(end+1)
                         };
@@ -260,7 +249,7 @@ router.route('/:username').post( async (req,res) => {
 
                     }
                 }
-            })
+            }))
 
         }
     } catch (error) {
