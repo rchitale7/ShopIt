@@ -14,7 +14,7 @@ This component is used to display a single item and a button to the side.
 This button can be either a checkmark or an X mark.
 
 Sample Usage:
-<Item item={...} isCheckBox={...} mainViewStyle={...} strikeThrough={...}/>
+<Item item={...} isCheckBox={...} mainViewStyle={...} />
 
 item: the json containing all the information about the object. 
 Below is the assumed json data format.
@@ -28,18 +28,20 @@ isCheckBox: The boolean value to determine which button to display.
 
 mainViewStyle: The associated style for the main view of the item component.
 
-strikeThrough: boolean value to determine whether we display a strikethrough.
-
 */
-const Item = ({item, isCheckBox, mainViewStyle, strikeThrough}) => {
+const Item = ({item, isCheckBox, mainViewStyle}) => {
     const { title, brand, size} = item;
     let [fontsLoaded] = useFonts({ComicNeue_400Regular});
     const dispatch = useGlobalDispatch();
     const globalState = useGlobalState();
 
     let selected = false;
-    if (globalState.groceryList.find(groceryItem => groceryItem._id == item._id)) {
+    let strikeThrough = false;
+
+    let groceryItem = globalState.groceryList.find(groceryItem => groceryItem._id == item._id);
+    if (groceryItem) {
         selected = true;
+        strikeThrough = groceryItem.retrieved && !isCheckBox;
     }
 
     const checkBoxPressed = () => {

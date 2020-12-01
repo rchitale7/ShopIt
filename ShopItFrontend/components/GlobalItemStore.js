@@ -125,7 +125,7 @@ const axios = Axios.create({
 const retrieveStoreData = async () => {
     try {
         // FOR NOW ASSUMING THE SAME STORE ALWAYS
-        const hardcodedName = "Lucky's";
+        const hardcodedName = "lucky's";
         const hardcodedAddress = "Foothill Expressway, Palo Alto, CA, USA";
 
         let res = await axios.get('/stores/at', {
