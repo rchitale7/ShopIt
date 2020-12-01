@@ -221,7 +221,7 @@ router.route('/:username').post( async (req,res) => {
             let zipEntries = zip.getEntries();
 
             const re = RegExp('\/.*\.(png|jpeg|jpg)')
-            for(const zipEntry of zipEntries) {
+            await Promise.all(zipEntries.map(async (zipEntry) => {
                 if (re.test(zipEntry.entryName)) {
                     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
                     let name = zipEntry.entryName + '-' + uniqueSuffix
@@ -231,7 +231,6 @@ router.route('/:username').post( async (req,res) => {
                     let end = zipEntry.entryName.lastIndexOf('.')
                     let item_name = zipEntry.entryName.substring(start+1, end)
                     let position = item_map[item_name]
-                    console.log(item_name)
                     if (position != null) {
                         const params = {
                             Bucket: BUCKET_NAME,
@@ -250,7 +249,7 @@ router.route('/:username').post( async (req,res) => {
 
                     }
                 }
-            }
+            }))
 
         }
     } catch (error) {
