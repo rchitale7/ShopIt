@@ -44,13 +44,6 @@ var storage = multer.diskStorage({
     }
 })
 
-// Returns all grocery stores
-router.route('/').get((req, res) => {
-    Store.find()
-        .then(stores => res.json(stores))
-        .catch(err => res.status(400).json({msg: err}));
-});
-
 // Returns grocery store given lat and long
 router.route('/at').get((req, res) => {
     const { name, address }  = req.query;
@@ -132,7 +125,6 @@ router.route('/:username').post( async (req,res) => {
     let status_code = 200;
     let msg = "Success!"
     let response_map = {}
-    console.log(req.files)
 
     try {
         if (res.locals.user != username) {

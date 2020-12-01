@@ -18,7 +18,7 @@ const exampleStore1 = {
 
 const exampleStore2 = {
     "name": "Trader Joe's",
-    "long": "Glendon Ave, Los Angeles, CA"
+    "address": "Glendon Ave, Los Angeles, CA"
 }
 
 const exampleUser = {
@@ -33,81 +33,52 @@ before((done) => {
 });
 
 describe('Stores', () => {
-    // beforeEach(async () => { //Before each test we empty the database
-    //     await Store.deleteMany({});
-    // });
 
-    // describe('GET', () => {
-    //     describe('Find all stores', () => {
-    //         it('Should return list of all stores', async () => {
-    //             let newStore1 = new Store(exampleStore);
-    //             let newStore2 = new Store(exampleStore2);
+    describe('GET /stores/at', () => {
+        afterEach(async() => {
+            await Store.findOneAndDelete({name: exampleStore1.name, address: exampleStore1.address})
+            await Store.findOneAndDelete({name: exampleStore2.name, address: exampleStore2.address})
+        }); 
 
-    //             await newStore1.save();
-    //             await newStore2.save();
+        it('Should return store at name and location', async () => {
+            let newStore1 = new Store(exampleStore1);
+            let newStore2 = new Store(exampleStore2);
 
-    //             return await chai.request(app)
-    //                 .get('/stores')
-    //                 .then((res) => {
-    //                     assert.strictEqual(res.status, 200);
-    //                     assert.ok(Array.isArray(res.body));
-    //                     assert.strictEqual(res.body.length, 2);
-    //                 })
-    //         });
+            await newStore1.save();
+            await newStore2.save();
 
-    //         it('Should return empty list if no stores exist', async () => {
-    //             return await chai.request(app)
-    //                 .get('/stores')
-    //                 .then((res) => {
-    //                     assert.strictEqual(res.status, 200);
-    //                     assert.ok(Array.isArray(res.body));
-    //                     assert.strictEqual(res.body.length, 0);
-    //                 })
-    //         });
-    //     });
+            return await chai.request(app)
+                .get('/stores/at')
+                .query({ name: newStore1.name, address: newStore1.address })
+                .then((res) => {
+                    assert.strictEqual(res.status, 200);
+                    assert.strictEqual(res.body.name, newStore1.name);
+                })
+        });
 
-    //     describe('Find store at specified name and address', () => {
-    //         it('Should return store at location', async () => {
-    //             let newStore1 = new Store(exampleStore);
-    //             let newStore2 = new Store(exampleStore2);
+        it('Should return an error if store not found', async () => {
+            let newStore1 = new Store(exampleStore1);
+            let newStore2 = new Store(exampleStore2);
 
-    //             await newStore1.save();
-    //             await newStore2.save();
+            await newStore1.save();
+            await newStore2.save();
 
-    //             return await chai.request(app)
-    //                 .get('/stores/at')
-    //                 .query({ name: newStore1.name, address: newStore1.address })
-    //                 .then((res) => {
-    //                     assert.strictEqual(res.status, 200);
-    //                     assert.strictEqual(res.body.name, newStore1.name);
-    //                 })
-    //         });
+            return await chai.request(app)
+                .get('/stores/at')
+                .query({ name: newStore1.name, address: newStore2.address })
+                .then((res) => {
+                    assert.strictEqual(res.status, 404);
+                })
+        });
 
-    //         it('Should return an error if store not found', async () => {
-    //             let newStore1 = new Store(exampleStore);
-    //             let newStore2 = new Store(exampleStore2);
-
-    //             await newStore1.save();
-    //             await newStore2.save();
-
-    //             return await chai.request(app)
-    //                 .get('/stores/at')
-    //                 .query({ name: newStore1.name, address: newStore2.address })
-    //                 .then((res) => {
-    //                     assert.strictEqual(res.status, 404);
-    //                 })
-    //         });
-
-    //         it('Should return an error if name or address not given', async () => {
-    //             return await chai.request(app)
-    //                 .get('/stores/at')
-    //                 .then((res) => {
-    //                     assert.strictEqual(res.status, 400);
-    //                 })
-    //         });
-    //     });
-
-    // });
+        it('Should return an error if name or address not given', async () => {
+            return await chai.request(app)
+                .get('/stores/at')
+                .then((res) => {
+                    assert.strictEqual(res.status, 400);
+                })
+        });
+    });
 
     describe('GET /stores/:username', () => {
         beforeEach(async() => {
@@ -411,8 +382,8 @@ describe('Stores', () => {
                     'images1.zip'
                 )
                 .then((res) => {
-                        assert.strictEqual(res.status, 200);
-                        return User.findOne({username: exampleUser.username});
+                    assert.strictEqual(res.status, 200);
+                    return User.findOne({username: exampleUser.username});
                 }).then((user) => {
                     return Store.findById(user.store);
                 }).then((store) => {
@@ -457,75 +428,108 @@ describe('Stores', () => {
 
     }); 
     
-    // describe('POST', () => {
-    //     describe('Add a store', () => {
-    //         it('Should add a store', async () => {
-    //             return await chai.request(app)
-    //                 .post('/stores/add')
-    //                 .send(exampleStore)
-    //                 .then(async (res) => {
-    //                     assert.strictEqual(res.status, 200);
-    //                     let stores = await Store.find();
-    //                     assert.strictEqual(stores.length, 1);
-    //                 })
-    //         });
 
-    //         it('Should return return an error if not all required parameters' 
-    //             + ' are given', async () => {
-    //             return await chai.request(app)
-    //                 .post('/stores/add')
-    //                 .send({
-    //                     "long": 100,
-    //                     "lat": 100
-    //                 })
-    //                 .then(async (res) => {
-    //                     assert.strictEqual(res.status, 400);
-    //                 })
-    //         });
+    describe('DELETE /stores/username', () => {
 
-    //         it('Should return return an error if store with same (lat, long) already'
-    //             + ' exists in the database', async () => {
-    //             let newStore = new Store(exampleStore);
-    //             await newStore.save();
+        beforeEach(async() => {
+            await chai.request(app)
+              .post("/users/signup")
+              .send(exampleUser)
+              .then((res) => {
+                assert.strictEqual(res.status, 200);
+              });
+        });
 
-    //             return await chai.request(app)
-    //                 .post('/stores/add')
-    //                 .send(exampleStore)
-    //                 .then(async (res) => {
-    //                     assert.strictEqual(res.status, 400);
-    //                 })
-    //         });
-    //     });
-    // });
+        beforeEach(async() => {
+            await chai.request(app)
+              .post("/users/login")
+              .send(exampleUser)
+              .then((res) => {
+                token = res.headers['set-cookie'][0]
+                assert.strictEqual(res.status, 200);
+              });
+        });
 
-    // describe('DELETE', () => {
-    //     describe('Remove a store', () => {
-    //         it('Should delete a store', async () => {
-    //             let newStore = new Store(exampleStore);
-    //             let dbNewStore = await newStore.save();
+        afterEach(async() => {
+            user = await User.findOne({username: exampleUser.username}); 
+            await Store.findByIdAndDelete(user.store); 
+            await User.findOneAndDelete({username: exampleUser.username}); 
+        }); 
 
-    //             return await chai.request(app)
-    //                 .delete('/stores/delete')
-    //                 .send({
-    //                     "storeId": dbNewStore._id
-    //                 })
-    //                 .then(async (res) => {
-    //                     assert.strictEqual(res.status, 200);
-    //                     let stores = await Store.find();
-    //                     assert.strictEqual(stores.length, 0);
-    //                 })
-    //         });
+        it('Should delete a store', async () => {
+            let newStore = new Store(exampleStore1);
+            let saved_store = await newStore.save();
+            let user = await User.findOne({username: exampleUser.username});
+            user.store = saved_store
+            user = await user.save()
 
-    //         it('Should return an error if store not found', async () => {
-    //             return await chai.request(app)
-    //                 .delete('/stores/delete')
-    //                 .send({
-    //                     "storeId": 'wrongId'
-    //                 })
-    //                 .then(async (res) => {
-    //                     assert.strictEqual(res.status, 404);
-    //                 })
-    //         });
-    //     });
-    // });
+            return await chai.request(app)
+                .delete('/stores/' + exampleUser.username)
+                .set('Cookie', token)
+                .then(async (res) => {
+                    assert.strictEqual(res.status, 200);
+                    let store = await Store.findById(user.store);
+                    assert.strictEqual(store, null);
+                })
+        });
+
+        it('Should return an error if store not found', async () => {
+            return await chai.request(app)
+            .delete('/stores/' + exampleUser.username)
+            .set('Cookie', token)
+            .then(async (res) => {
+                assert.strictEqual(res.status, 400);
+            })
+        });
+    });
+
+    describe('Authentication tests', () => {
+
+        afterEach(async() => {
+            await Store.findOneAndDelete({name: exampleStore1.name, address: exampleStore1.address})
+            await User.findOneAndDelete({username: exampleUser.username}); 
+        }); 
+
+        it('Should reject GET /stores/username because user is not authenticated', async () => {
+
+            let user = new User(exampleUser)
+            let saved_user = await user.save()
+            return await chai.request(app)
+                .get('/stores/' + saved_user.username)
+                .then((res) => {
+                    assert.strictEqual(res.status, 401);
+                })
+        });
+
+        it('Should reject POST /stores/username because user is not authenticated', async () => {
+
+            let newStore = new Store(exampleStore1);
+            let saved_store = await newStore.save();
+            let user = new User(exampleUser)
+            user = await user.save()
+            user.store = saved_store
+            user = await user.save()
+
+            return await chai.request(app)
+                .post('/stores/' + user.username)
+                .set('Content-Type', 'multipart/form-data')
+                .field('name', "Test")
+                .field('address', saved_store.address)
+                .then((res) => {
+                    assert.strictEqual(res.status, 401);
+                })
+        });
+
+        it('Should reject DELETE /stores/username because user is not authenticated', async () => {
+
+            let user = new User(exampleUser)
+            let saved_user = await user.save()
+            return await chai.request(app)
+                .delete('/stores/' + saved_user.username)
+                .then((res) => {
+                    assert.strictEqual(res.status, 401);
+                })
+        });
+
+    });
 });
