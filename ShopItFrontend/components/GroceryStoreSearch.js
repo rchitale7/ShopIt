@@ -142,17 +142,12 @@ const GroceryStoreSearch = ({ navigation }) => {
 
     const locationPressed = async (item) => {
         try {
-            console.log("a specific location was pressed");
-            // get location data
-
-            await retrieveStoreData();
+            await retrieveStoreData(item);
 
             dispatch({
                 type: 'addStoreData',
                 payload: getGroceryStoreData()
             });
-            
-            console.log("finished fetching that location's data");
 
             navigation.navigate('Search');
         }      
@@ -295,6 +290,5 @@ const styles = StyleSheet.create({
         fontFamily:"ComicNeue_400Regular"
     },
 });
-
 
 export default GroceryStoreSearch;

@@ -46,11 +46,11 @@ const groceryReducer = (state, action) => {
             };
 
         /*
-        Toggles whether an item is marked as retrieved or not
-        type = 'toggleItemRetrievedStatus'
-        payload = _id for item object to have its retrieved status toggled
+        Mark an item as retrieved
+        type = 'markAsRetrieved'
+        payload = _id for retrieved item
         */
-        case 'toggleItemRetrievedStatus':
+        case 'markAsRetrieved':
             const retrievedItemIndex = state.groceryList.findIndex(item => item._id == action.payload);
 
             if (retrievedItemIndex == -1) {
@@ -62,7 +62,7 @@ const groceryReducer = (state, action) => {
 
             newGroceryList[retrievedItemIndex] = {
                 ...newGroceryList[retrievedItemIndex],
-                retrieved: !newGroceryList[retrievedItemIndex].retrieved
+                retrieved: true
             };
 
             return {
@@ -122,16 +122,12 @@ const axios = Axios.create({
     baseURL: `http://${manifest.debuggerHost.split(':').shift()}:5000/`
 });
 
-const retrieveStoreData = async () => {
+const retrieveStoreData = async (item) => {
     try {
-        // FOR NOW ASSUMING THE SAME STORE ALWAYS
-        const hardcodedName = "lucky's";
-        const hardcodedAddress = "Foothill Expressway, Palo Alto, CA, USA";
-
         let res = await axios.get('/stores/at', {
             params: {
-                name: hardcodedName,
-                address: hardcodedAddress
+                name: item.name,
+                address: item.address
             }
         });
 
