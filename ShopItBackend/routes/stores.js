@@ -217,6 +217,14 @@ router.route('/:username').post( async (req,res) => {
             if (images[0].mimetype != 'application/zip') {
                 throw new ApiError("Images must be uploaded in zip format", 400)
             }
+
+            let items = store.items;
+
+            let item_map = {}
+            for (let i = 0; i < items.length; i++) {
+                item_map[items[i].name] = i
+            }
+            
             let zip = new AdmZip(images[0].path);
             let zipEntries = zip.getEntries();
 
