@@ -7,7 +7,6 @@ import { FlatList,
          Image,
          StyleSheet,
          StatusBar } from 'react-native';
-import { AppLoading } from 'expo';
 
 import Item from './Item';
 import InventorySearchSection from './InventorySearchSection';
@@ -141,7 +140,7 @@ const InventorySearch = () => {
   }
 
   if (!fontsLoaded){
-      return <AppLoading/>;
+      return null;
   } else {
     return (
       <View style={styles.container}>

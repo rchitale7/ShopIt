@@ -5,7 +5,7 @@ function Login() {
   return (
     <>
       <img src={Logo} className="img" />
-      <div className="header">Are you a grocery store?</div>
+      <div className="header">Welcome to ShopIt!</div>
       <div className="container">
         <form>
           <input className="input" type="text" id="username" placeholder="username..."/>
