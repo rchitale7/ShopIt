@@ -4,8 +4,8 @@ const utils = require('../components/utils');
 const rawData = [
   {
       _id: '5fb91ef4a75df917718cd3ff',
-      xPos: 110,
-      yPos: 100,
+      posX: 110,
+      posY: 100,
       name: "Big Peach",
       brand: "Sunkist",
       category: "Fruit",
@@ -14,8 +14,8 @@ const rawData = [
   },
   {
       _id: '5fb91ef4a75df917718cd3fz',
-      xPos: 110,
-      yPos: 110,
+      posX: 110,
+      posY: 110,
       name: "Garden Peach",
       brand: "Garden of Eden",
       category: "Fruit",
@@ -24,8 +24,8 @@ const rawData = [
   },
   {
       _id: '5fb91ef4a75df917718cd3fq',
-      xPos: 110,
-      yPos: 90,
+      posX: 110,
+      posY: 90,
       name: "Thicc Peach",
       brand: "Homegrown",
       category: "Fruit",
@@ -34,8 +34,8 @@ const rawData = [
   },
   {
       _id: '5fb91efe6697712645c5ca8f',
-      xPos: 110,
-      yPos: 124,
+      posX: 110,
+      posY: 124,
       name: "Small Peach",
       brand: "Trader Joe's",
       category: "Fruit",
@@ -44,8 +44,8 @@ const rawData = [
   },
   {
       _id: '5fb91f1727849d4eb446c8fe',
-      xPos: 110,
-      yPos: 148,
+      posX: 110,
+      posY: 148,
       name: "Juicy Peach",
       brand: "Minute Maid",
       category: "Fruit",
@@ -54,8 +54,8 @@ const rawData = [
   },
   {
       _id: '5fb91f214b8c5dd70ce5b57e',
-      xPos: 300,
-      yPos: 105,
+      posX: 300,
+      posY: 105,
       name: "Healthy Apple",
       brand: "Signature",
       category: "Fruit",
@@ -64,8 +64,8 @@ const rawData = [
   },
   {
       _id: '5fb91f28301528be1054d9b1',
-      xPos: 197,
-      yPos: 400,
+      posX: 197,
+      posY: 400,
       name: "Rotten Peach",
       brand: "No Name",
       category: "Fruit",
@@ -81,7 +81,8 @@ Feasible jest testing could testing all the methods in utils.js
 
 describe('Utils tests', () => {
   test('itemDistance - euclidean distance between 2 items', () => {
-    expect(utils.itemDistance(rawData[0],rawData[1])).toBe(10);
+    const result = utils.itemDistance(rawData[0], rawData[1]);
+    expect(result).toBe(10);
   });
   
   test('clusterItems - no items to cluster', () =>{
@@ -142,5 +143,23 @@ describe('Utils tests', () => {
 
   });
 
+  test('scaleItemPositions', () => {
+    const mapHeight = 100;
+    const imageHeight = 50;
+    let rawDataCopy = JSON.parse(JSON.stringify(rawData));
+    const scaled  = utils.scaleItemPositions(rawDataCopy, mapHeight, imageHeight);
+    let results = []
+    let inputFiltered = []
+    for(let i = 0; i < scaled.length; i++){
+      results.push({posX: scaled[i].posX, posY: scaled[i].posY});
+    }
+    const multiplier = mapHeight / imageHeight;
+    for(let i =0; i < rawData.length; i++){
+      inputFiltered.push({posX: rawData[i].posX * multiplier, posY: rawData[i].posY * multiplier})
+    } 
+
+    expect(inputFiltered).toEqual(results);
+
+  });
 
 });

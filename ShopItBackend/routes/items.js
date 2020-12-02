@@ -45,7 +45,7 @@ router.route('/add').post((req, res) => {
             return store.save();
         })
         .then(store => {
-            console.log('Created item and added to store: ' + store);
+            //console.log('Created item and added to store: ' + store);
             res.json(`Successfully created ${name}!`);
         })
         .catch(err => {
@@ -55,6 +55,8 @@ router.route('/add').post((req, res) => {
 });
 
 /**
+ * effectively, given a request, update the locations of the items in the database.
+ * 
  * itemIds: array of item _id's
  * itemLocation: array of { posX: n, posY: n } objects corresponding to the _id's
  */
@@ -77,7 +79,7 @@ router.route('/locations').put(async (req, res) => {
         }
 
         await store.save();
-        console.log("Updated locations for items with _id in", itemIds);
+        //console.log("Updated locations for items with _id in", itemIds);
         res.json("Succesfully updated all item locations!");
     } 
     catch (e) {
@@ -85,19 +87,21 @@ router.route('/locations').put(async (req, res) => {
     }
 });
 
-/**
+
+/* For future usage.
  * Delete an item from a store
- */
+ 
 router.route('/delete').delete((req, res) => {
     const storeId = req.body.storeId;
     const itemId = req.body.itemId;
 
     Store.findByIdAndUpdate(storeId, { $pull: { items: { _id: itemId } } })
         .then(store => {
-            console.log(`Deleted item ${itemId} from store ${storeId}: ` + store);
+            //console.log(`Deleted item ${itemId} from store ${storeId}: ` + store);
             res.json(`Successfully deleted item ${itemId}`);
         })
 });
+*/
 
 /**
  * Add items in bulk
@@ -114,9 +118,9 @@ router.route('/addMany').post((req, res) => {
         }); 
 });   
 
-/**
- * Remove items in bulk
- */
+/* For future usage.
+ * Remove items in bulk 
+
 router.route('/deleteMany').delete((req, res) => {
     const storeId = req.body.storeId;
     const docs = req.body.data
@@ -129,6 +133,6 @@ router.route('/deleteMany').delete((req, res) => {
         }
     });
 });
-
+ */
 
 module.exports = router;
