@@ -1,19 +1,25 @@
 import React from 'react';
+import Constants from "expo-constants";
+import Axios from 'axios';
+const { manifest } = Constants;
 
-// TODO: change this function to query backend API
-const retrieveStoreInventory = () => {
-    const storeInventory = [{name: 'bacardi', description: 'alc'}];
-    return storeInventory;
-};
+const StateContext = React.createContext();
+const DispatchContext = React.createContext();
 
-// assume an item in the shopping cart is an object with the following fields: name, description, retrieved
-
-const ItemContext = React.createContext();
-
-// state: {storeInventory, shoppingCart}
-
-const itemReducer = (state, action) => {
+const groceryReducer = (state, action) => {
     switch (action.type) {
+        /*
+        Add the data for the selected store to the global state
+        type = 'addStoreData'
+        payload = data for the selected store
+        */
+        case 'addStoreData':
+            return {
+                groceryStoreSelected: true,
+                groceryList: [],
+                selectedStoreData: action.payload
+            };
+
         /*
         Add an item to one's shopping cart
         type = 'addToCart'
@@ -22,8 +28,8 @@ const itemReducer = (state, action) => {
         case 'addToCart':
             return {
                 ...state,
-                shoppingList: [
-                    ...state.shoppingList,
+                groceryList: [
+                    ...state.groceryList,
                     action.payload
                 ]
             };
@@ -31,43 +37,37 @@ const itemReducer = (state, action) => {
         /*
         Remove an item from one's shopping cart
         type = 'removeFromCart'
-        payload = item object to be removed from shopping cart
+        payload = _id for object to be removed from shopping cart
         */
         case 'removeFromCart':
             return {
                 ...state,
-                shoppingList: state.shoppingList.filter(item => {
-                    return item.name != action.payload.name &&
-                        item.description != action.payload.description &&
-                        item.retrieved != action.payload.retrieved;
-                })
+                groceryList: state.groceryList.filter(item => item._id != action.payload)
             };
 
         /*
-        Toggles whether an item is marked as retrieved or not
-        type = 'toggleItemRetrievedStatus'
-        payload = item object to have its retrieved status toggled
+        Mark an item as retrieved
+        type = 'markAsRetrieved'
+        payload = _id for retrieved item
         */
-        case 'toggleItemRetrievedStatus':
-            const retrievedItemIndex = state.shoppingList.findIndex(item => {
-                return item.name == action.payload.name && item.description == action.payload.description;
-            });
+        case 'markAsRetrieved':
+            const retrievedItemIndex = state.groceryList.findIndex(item => item._id == action.payload);
 
             if (retrievedItemIndex == -1) {
                 console.log("Trying to toggle the retrieved status of an item that does not exist");
                 return state;
             }
 
-            let newShoppingList = [...state.shoppingList];
+            let newGroceryList = [...state.groceryList];
 
-            newShoppingList[retrievedItemIndex] = {
-                ...newShoppingList[retrievedItemIndex],
-                retrieved: !newShoppingList[retrievedItemIndex].retrieved
+            newGroceryList[retrievedItemIndex] = {
+                ...newGroceryList[retrievedItemIndex],
+                retrieved: true
             };
 
             return {
                 ...state,
-                shoppingList: newShoppingList
+                groceryList: newGroceryList
             };
 
         default:
@@ -75,9 +75,74 @@ const itemReducer = (state, action) => {
     }
 };
 
-export { 
-    retrieveStoreInventory, 
-    ItemContext,
-    itemReducer
+function GroceryProvider({children}) {
+
+    const initialState = {
+        groceryStoreSelected: false,
+        groceryList: [],
+        selectedStoreData: null
+    };
+
+    const [state, dispatch] = React.useReducer(groceryReducer, initialState);
+
+    return (
+        <StateContext.Provider value={state}>
+          <DispatchContext.Provider value={dispatch}>
+            {children}
+          </DispatchContext.Provider>
+        </StateContext.Provider>
+    );
+}
+
+function useGlobalState() {
+    const context = React.useContext(StateContext)
+    if (context === undefined) {
+      throw new Error('useCountState must be used within a CountProvider')
+    }
+    return context
+}
+  
+function useGlobalDispatch() {
+    const context = React.useContext(DispatchContext)
+    if (context === undefined) {
+        throw new Error('useCountDispatch must be used within a CountProvider')
+    }
+    return context
+}
+
+// for querying backend API:
+
+let groceryStoreData = null;
+
+const getGroceryStoreData = () => {
+    return groceryStoreData;
+}
+
+const axios = Axios.create({
+    baseURL: `http://${manifest.debuggerHost.split(':').shift()}:5000/`
+});
+
+const retrieveStoreData = async (item) => {
+    try {
+        let res = await axios.get('/stores/at', {
+            params: {
+                name: item.name,
+                address: item.address
+            }
+        });
+
+        groceryStoreData = res.data;
+    }
+    catch (err) {
+        groceryStoreData = null;
+        console.log(err);
+    }
 };
 
+export { 
+    retrieveStoreData,
+    getGroceryStoreData,
+    GroceryProvider,
+    useGlobalState,
+    useGlobalDispatch
+};

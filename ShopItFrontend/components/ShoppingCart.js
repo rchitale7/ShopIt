@@ -4,42 +4,19 @@ import { View,
          FlatList,
          StyleSheet,
          Dimensions,
-         Text,
-         Font } from 'react-native';
+         Text
+} from 'react-native';
 
 import { Colors } from '../CommonStyles';
+import { useFonts, ComicNeue_400Regular } from '@expo-google-fonts/comic-neue';
 
-class ShoppingCart extends React.Component {
-  state = {
-        data:[],
-        assetsLoaded: false,
-  };
+import { useGlobalState } from './GlobalItemStore';
 
-  async componentDidMount() {
-        await Font.loadAsync({
-            'ComicNeue_400Regular': require('@expo-google-fonts/comic-neue')
-        }).then(() => {this.setState({ assetsLoaded: true })});
-    }
+const ShoppingCart = () => {
 
-  constructor(props){
-    const data = [
-      { _id: '1', title: 'bagel', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: '2', title: 'donut', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: '3', title: 'guava juice', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: '4', title: 'lemonade', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: '5', title: 'peanut m&ms', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: '6', title: 'whoppers', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: '7', title: 'brie', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: '8', title: 'celery', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: '9', title: 'zucchini', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-      { _id: '10', title: 'bleach', description: { brand: "Trader Joe's", quantity: "1 lb", }, },
-    ];
-    super(props);
-    this.state = {
-      data: data,
-    }
+  const globalState = useGlobalState();
 
-  }
+  let [fontsLoaded] = useFonts({ComicNeue_400Regular});
 
   renderSeparatorView = () => {
     return (
@@ -53,29 +30,24 @@ class ShoppingCart extends React.Component {
     );
   };
 
-  removeItem = (title) => {
-    console.log("Removing " + title);
-    this.setState({
-       data: this.state.data.filter((_item) => _item.title !== title)
-    });
+  if (!fontsLoaded) {
+    // TODO: change to a loading wheel or something else
+    return <Text>testtttttttttttt</Text>;
   }
-
-  render() {      
-      return (
-        <View style={styles.container}>
-          <View style={{marginTop: 30}}>
-            <Text style={styles.title}>Your Cart</Text>
-          </View>
-          <FlatList style={styles.section}
-            data={this.state.data}
-            renderItem={({ item }) => <Item item={item} handleDelete={this.removeItem} isCheckBox={false} strikeThrough={false} mainViewStyle={{flexDirection:"row", width:275}}/>}
-            keyExtractor={(item) => item._id}
-            ItemSeparatorComponent={this.renderSeparatorView}
-          />
-        </View>
-      );
-    // }
-  }
+  
+  return (
+    <View style={styles.container}>
+      <View style={{marginTop: 30}}>
+        <Text style={styles.title}>Your Cart</Text>
+      </View>
+      <FlatList style={styles.section}
+        data={globalState.groceryList}
+        renderItem={({ item }) => <Item item={item} isCheckBox={false} mainViewStyle={{flexDirection:"row", width:275}}/>}
+        keyExtractor={(item) => item._id}
+        ItemSeparatorComponent={this.renderSeparatorView}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
