@@ -36,8 +36,7 @@ const InventorySearchSection = ({item}) => {
     }
 
     if(!fontsLoaded){
-      // TODO: change to a loading wheel or something else
-      return <Text></Text>;
+      return null;
     } else{
         return (
           <CollapsibleList style={styles.container}

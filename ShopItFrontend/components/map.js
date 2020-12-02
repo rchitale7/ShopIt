@@ -64,7 +64,7 @@ function Map() {
     if (!fontsLoaded) return null;
 
     if (!componentLoaded) {
-        return <Text>Loading</Text>
+        return null
     } else {
         return (
             <View style={{ backgroundColor: Colors.beige }}>

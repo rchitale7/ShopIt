@@ -6,9 +6,7 @@ import { FlatList,
          Dimensions,
          Image,
          StyleSheet,
-         StatusBar,
-         Text
-} from 'react-native';
+         StatusBar } from 'react-native';
 
 import Item from './Item';
 import InventorySearchSection from './InventorySearchSection';
@@ -95,8 +93,7 @@ const InventorySearch = () => {
   }
 
   if (!fontsLoaded){
-    // TODO: change to a loading wheel or something else
-    return <Text></Text>;
+      return null;
   } else {
     return (
       <View style={styles.container}>

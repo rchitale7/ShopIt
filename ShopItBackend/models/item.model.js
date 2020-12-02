@@ -20,7 +20,7 @@ const itemSchema = new schema({
     },
     category: {
         type: String,
-        enum: ['Meat', 'Dairy', 'Vegetables', 'Fruit', 'Wheat', 'Candy', 'Alcohol', 'Beverages'],
+        enum: ["Alcohol", "Bakery", "Beverages", "Candy", "Dairy", "Frozen Foods", "Fruit", "Grains", "Meat", "Pantry", "Produce", "Snacks"],
         required: true
     },
     price: {
@@ -29,7 +29,7 @@ const itemSchema = new schema({
     },
     imageURL: {
         type: String,
-        default: 'https://shopit-item-images.s3-us-west-2.amazonaws.com/item-images/peach.png'
+        default: 'https://shopit-item-images.s3.us-west-2.amazonaws.com/item-images/default.png'
     },
     posX: {
         type: Number,
