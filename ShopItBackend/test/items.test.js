@@ -33,7 +33,7 @@ describe('Items', () => {
                         assert.strictEqual(res.body.length, 12);
                     })
             });
-            it('Should have no items if no store specified', async () =>{
+            it('Should have no items if store specified doesnt exist', async () =>{
 
                 return await chai.request(app)
                     .get('/items?storeId=Trash!')
@@ -142,6 +142,14 @@ describe('Items', () => {
                         await  StoreModel.updateOne({ _id : storedID}, {$pull: {items: {name: "Gator Meat"} } });
                     });
         });
+        it('Should not add anything with no items for addMany', () => {
+            return chai.request(app)
+                    .post('/items/addMany')
+                    .send({})
+                    .then(async (res) =>{
+                        assert.strictEqual(res.status, 400);
+                    });
+        });
     }); 
 
     describe('PUT', () => {
@@ -176,6 +184,20 @@ describe('Items', () => {
                         });
                     });
 
+            });
+            it('Should not get locations because bad store id', () =>{
+                const body =
+                {
+                    "itemIds": [],
+                    "itemLocations": [],
+                    "storeId": '71717171717'
+                }
+                return chai.request(app)
+                .put('/items/locations')
+                .send(body)
+                .then(async (res) => {
+                    assert.strictEqual(res.status, 400);
+                });
             });
             it('Should have nothing updated because no data', () =>{
                 const body =
