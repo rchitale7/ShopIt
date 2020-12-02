@@ -142,8 +142,11 @@ describe('Utils tests', () => {
     expect(clusters).toEqual([2,1,1,1,1]);
 
   });
+  test('removeItemFromClusters - nothing to remove', () => {
+    expect(utils.removeItemFromClusters([],{})).toEqual([]);
+  });
 
-  test('scaleItemPositions', () => {
+  test('scaleItemPositions has some elements to scale', () => {
     const mapHeight = 100;
     const imageHeight = 50;
     let rawDataCopy = JSON.parse(JSON.stringify(rawData));
@@ -161,5 +164,7 @@ describe('Utils tests', () => {
     expect(inputFiltered).toEqual(results);
 
   });
-
+  test('scaleItemPositions has nothing to scale', () =>{
+    expect(utils.scaleItemPositions([],100, 50)).toEqual([]);
+  });
 });
