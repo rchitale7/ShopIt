@@ -5,9 +5,31 @@ const router = express.Router();
 let Store = require('../models/store.model.js');
 let Item = require('../models/item.model.js');
 
+var jwt = require('jsonwebtoken');
+var secret_key = "C-UFRaksvPKhx1txJYFcut3QGxsafPmwCY6SCly3G6c"
+
 /**
  * Return items for a specific grocery store
  */
+
+router.use(function (req, res, next) {
+
+    let token = req.cookies.jwt;
+    if (token == null) {
+      res.status(401).json({msg: '401 error: Could not authenticate'});
+    } else {
+        jwt.verify(token, secret_key, function(err, decoded) {
+          if(err != null || decoded == null)
+          {
+            res.status(401).json({msg: '401 error: Could not authenticate'});
+          } else {
+            res.locals.user = decoded.usr
+            next()
+          }
+      });
+    }
+})
+
 router.route('/').get((req, res) => {
     const storeId = req.query.storeId;
 

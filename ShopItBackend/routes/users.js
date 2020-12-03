@@ -78,6 +78,8 @@ router.route('/signup').post((req, res) => {
         bcrypt.hash(password, salt, function(err, hash) {
             if (err != null) {
                 res.status(500).json({msg: "Error: Could not hash password"});
+            } else if (password.length < 5) {
+                res.status(400).json({msg: "Error: password must be greater than 5 characters"})
             } else {
                 let payload = {
                     "exp": Date.now()/1000 + 3600*2,
@@ -95,31 +97,22 @@ router.route('/signup').post((req, res) => {
                 const newUser = new User( {"username": username, "password": hash} );
                 newUser.save()
                 .then(() => res.status(200).json({msg: "User " + username + " was signed up!"}))
-                .catch(err => res.status(400).json({msg: 'Error: ' + err}));
+                .catch(err => {
+                    if (err.name == "MongoError" && err.code == 11000) {
+                        res.status(400).json({msg: 'Error: username already exists. Please choose another username.'})
+                    } else {
+                        res.status(400).json({msg: 'Error: ' + err}) 
+                    }
+                    
+                    
+                });
             }
         });
     });
 });
 
-// might not need this function anymore
-// // Add new user to database
-// router.route('/add').post((req, res) => {
-//     const { username, password, admin } = req.body;
-
-//     const newUser = new User( {"username": username, "admin": admin} );
-
-//     newUser.save()
-//         .then(() => res.json("User " + username + " was added!"))
-//         .catch(err => res.status(400).json('Error: ' + err));
-// });
-
-// Delete user from database
-router.route('/delete').delete((req, res) => {
-    const username = req.body.username;
-
-    User.findOneAndDelete({ username: { $eq : username } })
-        .then(() => res.json(`${username} has been deleted!`))
-        .catch(err => res.status(400).json('Error: ', err));
-});
-
 module.exports = router;
+
+
+
+

@@ -12,7 +12,8 @@ import Loading from './Loading.js';
 import LocationPin from '../assets/location_pin.png';
 
 const axios = Axios.create({
-    baseURL: 'http://localhost:5000/'
+    baseURL: 'http://localhost:5000/', 
+    withCredentials: true
   });
 
 WebFont.load({
