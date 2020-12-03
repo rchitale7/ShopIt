@@ -79,7 +79,7 @@ router.route('/signup').post((req, res) => {
             if (err != null) {
                 res.status(500).json({msg: "Error: Could not hash password"});
             } else if (password.length < 5) {
-                res.status(400).json({msg: "Error: password must be greater than 5 characters"})
+                res.status(400).json({msg: "Error: password must be at least 5 characters"})
             } else {
                 let payload = {
                     "exp": Date.now()/1000 + 3600*2,
@@ -100,6 +100,8 @@ router.route('/signup').post((req, res) => {
                 .catch(err => {
                     if (err.name == "MongoError" && err.code == 11000) {
                         res.status(400).json({msg: 'Error: username already exists. Please choose another username.'})
+                    } else if (username.length < 5) {
+                        res.status(400).json({msg: "Error: username must be at least 5 characters"})
                     } else {
                         res.status(400).json({msg: 'Error: ' + err}) 
                     }
