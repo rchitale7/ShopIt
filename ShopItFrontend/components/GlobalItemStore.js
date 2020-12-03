@@ -55,6 +55,7 @@ const groceryReducer = (state, action) => {
 
             if (retrievedItemIndex == -1) {
                 console.log("Trying to toggle the retrieved status of an item that does not exist");
+                alert("Error: item does not exist");
                 return state;
             }
 

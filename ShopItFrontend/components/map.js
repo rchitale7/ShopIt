@@ -120,7 +120,7 @@ function Map() {
                 </Modal>
                 
                 <ImageZoom cropWidth={Dimensions.get('window').width}
-                            cropHeight={Dimensions.get('window').height}
+                            cropHeight={Dimensions.get('window').height - 150}
                             imageWidth={mapDimensions.width}
                             imageHeight={mapDimensions.height}>
                     <ImageBackground source={{ uri: globalState.selectedStoreData.floorPlan }} style={mapDimensions}>
