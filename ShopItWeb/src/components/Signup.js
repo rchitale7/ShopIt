@@ -1,17 +1,16 @@
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Logo from '../assets/logo_filled.png';
 
 function Signup() {
   return (
     <>
-      <img src={Logo} className="img" />
+      <img src={Logo} className="img" alt="ShopIt" />
       <div className="header">Welcome to ShopIt!</div>
       <div className="container">
         <form>
             <input className="input" type="text" id="username" placeholder="username..."/>
         </form>
         <form>
-            <input className="input" type="text" id="password" placeholder="password..." type="password"/>
+            <input className="input" type="password" id="password" placeholder="password..." />
         </form>
         <button className="button"
             type="button"
@@ -41,10 +40,6 @@ function Signup() {
       </div>
     </>
   );
-}
-
-function validate() {
-  return alert('All inputs must be filled out')
 }
 
 export default Signup;
