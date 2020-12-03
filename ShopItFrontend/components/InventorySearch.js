@@ -37,12 +37,14 @@ const InventorySearch = () => {
     };
   });
 
-  globalState.selectedStoreData.items.forEach(item => {
-    categoryToItems[item.category].data.push({
-      ...item,
-      title: item.name
+  if (globalState.selectedStoreData !== null) {
+    globalState.selectedStoreData.items.forEach(item => {
+      categoryToItems[item.category].data.push({
+        ...item,
+        title: item.name
+      });
     });
-  });
+  }
 
   const inventory = Array.from(Object.values(categoryToItems));
 
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.beige,
     width: Dimensions.get('window').width,
     marginTop: StatusBar.currentHeight || 0,
-    paddingTop: 20,
+    // paddingTop: 20,
     paddingBottom: 40
   },
   subcontainer: {

@@ -1,15 +1,18 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const assert = require('assert');
-const app = require('../server.js');
 const fs = require('fs')
 const csv = require('csvtojson')
 const path = require("path")
+const suppressLogs = require('mocha-suppress-logs');
+let app = require('../app.js');
 
 const Store = require('../models/store.model');
 const User = require('../models/user.model');
 
+const testPort = 8888;
 chai.use(chaiHttp);
+suppressLogs();
 
 const exampleStore1 = {
     "name": "Lucky's",
@@ -28,12 +31,17 @@ const exampleUser = {
 
 let token; 
 
+// Start the node server before running tests.
 before((done) => {
-    app.on("Ready", () => done());
+	app.on('Mongoose ready', () => {
+		app = app.listen(testPort, () => {
+			console.log(`Test server is running on port ${testPort}!\n`);
+			done();
+		});
+	});
 });
 
 describe('Stores', () => {
-
     describe('GET /stores/at', () => {
         afterEach(async() => {
             await Store.findOneAndDelete({name: exampleStore1.name, address: exampleStore1.address})
@@ -157,7 +165,7 @@ describe('Stores', () => {
         });
 
         afterEach(async() => {
-            user = await User.findOne({username: exampleUser.username}); 
+            let user = await User.findOne({username: exampleUser.username}); 
             await Store.findByIdAndDelete(user.store); 
             await User.findOneAndDelete({username: exampleUser.username}); 
         }); 
@@ -451,7 +459,7 @@ describe('Stores', () => {
         });
 
         afterEach(async() => {
-            user = await User.findOne({username: exampleUser.username}); 
+            let user = await User.findOne({username: exampleUser.username}); 
             await Store.findByIdAndDelete(user.store); 
             await User.findOneAndDelete({username: exampleUser.username}); 
         }); 
@@ -532,4 +540,9 @@ describe('Stores', () => {
         });
 
     });
+});
+
+after((done) => {
+    app.close();
+    done();
 });

@@ -1,12 +1,14 @@
-
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const assert = require('assert');
-const app = require('../server.js');
+const suppressLogs = require('mocha-suppress-logs');
+let app = require('../app.js');
 
 const User = require('../models/user.model');
 
+const testPort = 8888;
 chai.use(chaiHttp);
+suppressLogs();
 
 const exampleUser = {
     "username": "testinguser1", 
@@ -29,7 +31,12 @@ const exampleUser4 = {
 }
 
 before((done) => {
-    app.on("Ready", () => done());
+	app.on('Mongoose ready', () => {
+		app = app.listen(testPort, () => {
+			console.log(`Test server is running on port ${testPort}!\n`);
+			done();
+		});
+	});
 });
 
 describe('Users', () => {
@@ -157,4 +164,9 @@ describe('Users', () => {
         });
     });
 
+});
+
+after((done) => {
+    app.close();
+    done();
 });
