@@ -1,9 +1,10 @@
 {
-  "name": "sift-backend",
+  "name": "shopit-backend",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --fix --ext .js",
     "test": "mocha test/items.test.js --timeout 10000 --exit && mocha test/users.test.js --timeout 10000 --exit && mocha test/stores.test.js --timeout 10000 --exit",
