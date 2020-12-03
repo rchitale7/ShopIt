@@ -100,23 +100,28 @@ const Item = ({item, isCheckBox, mainViewStyle}) => {
 }
 
 const styles = StyleSheet.create({
-    unselectedItem :{
-        fontSize:25,
-        lineHeight:28.75,
-        flexGrow:1,
-        fontFamily:'ComicNeue_400Regular'
+    unselectedItem: {
+        fontSize: 25,
+        lineHeight: 28.75,
+        flexGrow: 1,
+        fontFamily: 'ComicNeue_400Regular'
+    },
+    addButton: {
+        position: 'absolute',
+        right: 10,
+        top: 10
     },
     erase:{
       width: 30,
       height: 30,
     },
     selectedItem:{
-        fontSize:25,
-        lineHeight:28.75,
-        flexGrow:1,
-        textDecorationLine:'line-through',
-        fontFamily:'ComicNeue_400Regular',
-        paddingLeft:8 //On selecting checkbox, this prevents the label from moving on the UI.
+        fontSize: 25,
+        lineHeight: 28.75,
+        flexGrow: 1,
+        textDecorationLine: 'line-through',
+        fontFamily: 'ComicNeue_400Regular',
+        paddingLeft: 8 //On selecting checkbox, this prevents the label from moving on the UI.
     }
 })
 

@@ -41,7 +41,7 @@ const ShoppingCart = () => {
       </View>
       <FlatList style={styles.section}
         data={globalState.groceryList}
-        renderItem={({ item }) => <Item item={item} isCheckBox={false} mainViewStyle={{flexDirection:"row", width:275}}/>}
+        renderItem={({ item }) => <Item item={item} isCheckBox={false} mainViewStyle={{flexDirection:"row", width: Dimensions.get('window').width - 60}}/>}
         keyExtractor={(item) => item._id}
         ItemSeparatorComponent={this.renderSeparatorView}
       />

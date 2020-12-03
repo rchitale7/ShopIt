@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    width: 330,
+    width: Dimensions.get('window').width - 40,
     height: 50,
     marginBottom: 5,
     marginLeft: 20,
