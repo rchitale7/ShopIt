@@ -3,14 +3,24 @@ const chaiHttp = require('chai-http');
 const assert = require('assert');
 const app = require('../server.js');
 
-const StoreModel = require('../models/store.model');
+const Store = require('../models/store.model');
+const User = require('../models/user.model');
 
 chai.use(chaiHttp);
 
-//This test suite is dependent on a specific store and specific items within that store.
-const storedID = '5fc5658b9e729a2b5421bcb7';
-const firstItemID = '5fc568c0525eab2dd54eed04';
-const secondItemID = '5fc568c0525eab2dd54eed05';
+
+
+const exampleStore1 = {
+    "name": "teststore",
+    "address": "testaddress"
+};
+
+const exampleUser = {
+    "username": "testinguser1", 
+    "password": "testpassword1"
+}
+
+let token; 
 
 //Start the node server before running tests.
 before((done) => {
@@ -19,24 +29,54 @@ before((done) => {
 
 
 describe('Items', () => {
+
+    beforeEach(async() => {
+        await chai.request(app)
+          .post("/users/signup")
+          .send(exampleUser)
+          .then((res) => {
+            assert.strictEqual(res.status, 200);
+          });
+    });
+
+    beforeEach(async() => {
+        await chai.request(app)
+          .post("/users/login")
+          .send(exampleUser)
+          .then((res) => {
+            token = res.headers['set-cookie'][0]
+            assert.strictEqual(res.status, 200);
+          });
+    });
+
+    afterEach(async() => {
+        await Store.findOneAndDelete({name: exampleStore1.name, address: exampleStore1.address})
+        await User.findOneAndDelete({username: exampleUser.username}); 
+    }); 
+
     describe('GET', () => {
         describe('get all items', () =>{ 
             it('Should return list of all items', async () =>{
                 //grabbing a storeId from the mongodb database.
                 //get request
-                let endpoint = `/items?storeId=${storedID}`
+                let store = new Store(exampleStore1)
+                store.items = [{name: "coca cola", brand: "coke", category: "Beverages", size: "10 oz", price: 3.99}];
+                store = await store.save()
+                let endpoint = `/items?storeId=${store._id}`
                 return await chai.request(app)
                     .get(endpoint)
+                    .set('Cookie', token)
                     .then((res) => {
                         assert.strictEqual(res.status, 200);
                         assert.ok(Array.isArray(res.body));
-                        assert.strictEqual(res.body.length, 12);
+                        assert.strictEqual(res.body.length, 1);
                     })
             });
             it('Should have no items if store specified doesnt exist', async () =>{
 
                 return await chai.request(app)
                     .get('/items?storeId=Trash!')
+                    .set('Cookie', token)
                     .then((res) => {
                         assert.strictEqual(res.status, 400);
                     })
@@ -46,7 +86,9 @@ describe('Items', () => {
     });
     describe('POST', () => {
         describe('adding items', () => {
-            it('Should add an item to a specific grocery store', () => {
+            it('Should add an item to a specific grocery store', async () => {
+                let store = new Store(exampleStore1)
+                store = await store.save()
                 const body =
                     {
                         "data": {
@@ -58,33 +100,33 @@ describe('Items', () => {
                             "posX": 50,
                             "posY": 50
                         },
-                        "storeId": storedID
+                        "storeId": store._id
                     }
 
                 return chai.request(app)
                     .post('/items/add')
+                    .set('Cookie', token)
                     .send(body)
-                    .then(async (res) => {
+                    .then((res) => {
                         //assertions.
                         assert.strictEqual(res.status, 200);
-                        StoreModel.find({'_id':storedID}).then((res) =>{
+                        Store.find({'_id':store._id}).then((res) =>{
                             assert.notStrictEqual(res[0].items.length, 0);
                             const result = res[0].items.find( item => item.name === 'Grinch Toes');
                             assert.notStrictEqual(result, null);
                         });
-                        //delete what we added from db.
-                        await StoreModel.updateOne({ _id : storedID}, {$pull: {items: {name: "Grinch Toes"} } });
                     });
             });
-            it('Should not be able to add if no body', () =>{
+            it('Should not be able to add if no store id', () =>{
                 return chai.request(app)
                     .post('/items/add')
+                    .set('Cookie', token)
                     .send({"data" : {"name":"pog"}})
-                    .then(async (res) =>{
+                    .then((res) =>{
                         assert.strictEqual(res.status, 404);
                     });
             });
-            it('Should not be able to add if no such store exists', () => {
+            it('Should not be able to add if no such store exists', async () => {
                 const body =
                     {
                         "data": {
@@ -100,13 +142,16 @@ describe('Items', () => {
                     }
                 return chai.request(app)
                     .post('/items/add')
+                    .set('Cookie', token)
                     .send(body)
-                    .then(async (res) =>{
+                    .then((res) =>{
                         assert.strictEqual(res.status, 500);
                     });
             });
         });
-        it('Should be able to add 2 items', () => {
+        it('Should be able to add 2 items', async () => {
+            let store = new Store(exampleStore1)
+            store = await store.save()
             const body =
                 {
                     "data": [
@@ -129,24 +174,23 @@ describe('Items', () => {
                             "posY": 50
                         }
                     ],
-                    "storeId": storedID
+                    "storeId": store._id
                 }
 
                 return chai.request(app)
                     .post('/items/addMany')
+                    .set('Cookie', token)
                     .send(body)
-                    .then(async (res) =>{
-                        assert.strictEqual(res.status, 200);
-                        //delete what we added from db.
-                        await  StoreModel.updateOne({ _id : storedID}, {$pull: {items: {name: "Kool Aid Flakes"} } });
-                        await  StoreModel.updateOne({ _id : storedID}, {$pull: {items: {name: "Gator Meat"} } });
+                    .then((res) =>{
+                        assert.strictEqual(res.status, 200);        
                     });
         });
-        it('Should not add anything with no items for addMany', () => {
+        it('Should not add anything with no items for addMany', async () => {
             return chai.request(app)
                     .post('/items/addMany')
+                    .set('Cookie', token)
                     .send({})
-                    .then(async (res) =>{
+                    .then((res) =>{
                         assert.strictEqual(res.status, 400);
                     });
         });
@@ -154,10 +198,14 @@ describe('Items', () => {
 
     describe('PUT', () => {
         describe('updating locations', () => {
-            it('Should be able to update several existing items location', () =>{
+            it('Should be able to update several existing items location', async () =>{
+                let store = new Store(exampleStore1)
+                store.items = [{name: "coca cola", brand: "coke", category: "Beverages", size: "10 oz", price: 3.99}];
+                store.items.push({name: "jolly rancher", brand: "general mills", category: "candy", size: "5 oz", price: 3.99});
+                store = await store.save()
                 const body =
                     {
-                        "itemIds": [firstItemID, secondItemID],
+                        "itemIds": [store.items[0]._id, store.items[1]._id],
                         "itemLocations": [ 
                             {
                                 "posX": 10,
@@ -168,14 +216,15 @@ describe('Items', () => {
                                 "posY":20
                             }
                         ],
-                        "storeId": storedID
+                        "storeId": store._id
                     }
                 return chai.request(app)
                     .put('/items/locations')
+                    .set('Cookie', token)
                     .send(body)
-                    .then(async (res) => {
+                    .then((res) => {
                         assert.strictEqual(res.status, 200);
-                        return StoreModel.find({'_id' : storedID}).then(res => {
+                        Store.find({'_id' : store._id}).then(res => {
                             assert.notStrictEqual(res[0].items.length, 0);
                             const result = res[0].items.find(item => item.name === 'coca cola' && item.posX == 10 && item.posY == 10);
                             const resultTwo = res[0].items.find(item => item.name === 'jolly rancher' && item.posX == 20 && item.posY == 20);
@@ -185,29 +234,33 @@ describe('Items', () => {
                     });
 
             });
-            it('Should not get locations because bad store id', () =>{
+            it('Should not get locations because bad store id', async () =>{
                 const body =
                 {
                     "itemIds": [],
                     "itemLocations": [],
-                    "storeId": '71717171717'
+                    "storeId": 'bad'
                 }
                 return chai.request(app)
                 .put('/items/locations')
+                .set('Cookie', token)
                 .send(body)
-                .then(async (res) => {
+                .then((res) => {
                     assert.strictEqual(res.status, 400);
                 });
             });
-            it('Should have nothing updated because no data', () =>{
+            it('Should have nothing updated because no data', async () =>{
+                let store = new Store(exampleStore1)
+                store = await store.save()
                 const body =
                 {
                     "itemIds": [],
                     "itemLocations": [],
-                    "storeId": storedID
+                    "storeId": store._id
                 }
                 return chai.request(app)
                     .put('/items/locations')
+                    .set('Cookie', token)
                     .send(body)
                     .then(res => {
                         assert.strictEqual(res.status, 200);

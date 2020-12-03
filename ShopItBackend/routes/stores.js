@@ -61,7 +61,6 @@ router.route('/at').get((req, res) => {
 router.use('/:username', function (req, res, next) {
 
     let token = req.cookies.jwt;
-
     if (token == null) {
       res.status(401).json({msg: '401 error: Could not authenticate'});
     } else {
