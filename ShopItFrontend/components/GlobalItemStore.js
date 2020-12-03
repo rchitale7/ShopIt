@@ -123,11 +123,23 @@ const axios = Axios.create({
 });
 
 const retrieveStoreData = async (item) => {
+    let re = RegExp('([^\d]) [0-9]{5,6}([^\d])');
+    let formattedAddress = item.address
+                    .replace(re, '$1$2')
+                    .replace('Rd', 'Road')
+                    .replace('Ave', 'Avenue')
+                    .replace('Dr', 'Drive')
+                    .replace('St', 'Street')
+                    .replace('Stn', 'Station')
+                    .replace('Cres', 'Crescent')
+                    .replace('Bldg', 'Building')
+                    .replace('Sq', 'Square');
+    
     try {
         let res = await axios.get('/stores/at', {
             params: {
                 name: item.name,
-                address: item.address
+                address: formattedAddress
             }
         });
 
