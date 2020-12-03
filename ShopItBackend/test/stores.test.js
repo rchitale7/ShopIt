@@ -157,7 +157,7 @@ describe('Stores', () => {
         });
 
         afterEach(async() => {
-            user = await User.findOne({username: exampleUser.username}); 
+            let user = await User.findOne({username: exampleUser.username}); 
             await Store.findByIdAndDelete(user.store); 
             await User.findOneAndDelete({username: exampleUser.username}); 
         }); 
@@ -451,7 +451,7 @@ describe('Stores', () => {
         });
 
         afterEach(async() => {
-            user = await User.findOne({username: exampleUser.username}); 
+            let user = await User.findOne({username: exampleUser.username}); 
             await Store.findByIdAndDelete(user.store); 
             await User.findOneAndDelete({username: exampleUser.username}); 
         }); 
