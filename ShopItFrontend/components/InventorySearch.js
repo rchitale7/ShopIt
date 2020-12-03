@@ -37,12 +37,14 @@ const InventorySearch = () => {
     };
   });
 
-  globalState.selectedStoreData.items.forEach(item => {
-    categoryToItems[item.category].data.push({
-      ...item,
-      title: item.name
+  if (globalState.selectedStoreData !== null) {
+    globalState.selectedStoreData.items.forEach(item => {
+      categoryToItems[item.category].data.push({
+        ...item,
+        title: item.name
+      });
     });
-  });
+  }
 
   const inventory = Array.from(Object.values(categoryToItems));
 

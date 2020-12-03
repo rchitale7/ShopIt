@@ -37,24 +37,26 @@ function Map() {
      * cluster as needed
      */
     useEffect(() => {
-        // Resize floorplan, pins, and items positions. Then cluster items
-        Image.getSize(globalState.selectedStoreData.floorPlan, 
-        (width, height) => {
-            let imgRatio = width/height;
-            let newWidth = imgRatio * zoomableRegionHeight;
-            let newHeight = zoomableRegionHeight;
-            let newPinSize = Math.min(newWidth, newHeight)/20;
-
-            setMapDimensions({
-                width: newWidth,
-                height: newHeight
-            });
-            setPinSize(newPinSize);
-            setClusterRadius(newPinSize);
-            setItems(clusterItems(scaleItemPositions(globalState.groceryList.filter(item => !item.retrieved), zoomableRegionHeight, height), clusterRadius));
-
-            setComponentLoaded(true);
-        })
+        if (globalState.selectedStoreData !== null) {
+            // Resize floorplan, pins, and items positions. Then cluster items
+            Image.getSize(globalState.selectedStoreData.floorPlan, 
+            (width, height) => {
+                let imgRatio = width/height;
+                let newWidth = imgRatio * zoomableRegionHeight;
+                let newHeight = zoomableRegionHeight;
+                let newPinSize = Math.min(newWidth, newHeight)/20;
+    
+                setMapDimensions({
+                    width: newWidth,
+                    height: newHeight
+                });
+                setPinSize(newPinSize);
+                setClusterRadius(newPinSize);
+                setItems(clusterItems(scaleItemPositions(globalState.groceryList.filter(item => !item.retrieved), zoomableRegionHeight, height), clusterRadius));
+    
+                setComponentLoaded(true);
+            })
+        }
     }, [globalState.groceryList]);
 
     // Pseudo component for bold text
