@@ -212,7 +212,7 @@ describe('Stores', () => {
         it('Should reject POST request because file is not in csv format', async () => {
 
 
-            let filepath = path.resolve(__dirname, "../test_files/floor_plan.jpg")
+            let filepath = path.resolve(__dirname, "../test_files/floor_plan.png")
             let name = "Trader Joe's";
             let address = 'Westwood, CA';
             return await chai.request(app)
@@ -223,7 +223,7 @@ describe('Stores', () => {
                 .field('address', address)
                 .attach('items', 
                     fs.readFileSync(filepath), 
-                    'floor_plan.jpg'
+                    'floor_plan.png'
                 )
                 .then((res) => {
                     assert.strictEqual(res.status, 400);
@@ -307,10 +307,10 @@ describe('Stores', () => {
                 
         });
 
-        it('Should upload store floor plan from floor_plan.jpg file', async () => {
+        it('Should upload store floor plan from floor_plan.png file', async () => {
 
 
-            let filepath = path.resolve(__dirname, "../test_files/floor_plan.jpg")
+            let filepath = path.resolve(__dirname, "../test_files/floor_plan.png")
 
             let store = new Store(exampleStore1);
             let saved_store = await store.save();
@@ -326,7 +326,7 @@ describe('Stores', () => {
                 .field('address', saved_store.address)
                 .attach('floorPlan', 
                     fs.readFileSync(filepath), 
-                    'floor_plan.jpg'
+                    'floor_plan.png'
                 )
                 .then((res) => {
                         assert.strictEqual(res.status, 200);
@@ -336,7 +336,7 @@ describe('Stores', () => {
                 }).then((store) => {
                     assert.notStrictEqual(null, store); 
                     assert.notStrictEqual(undefined, store);
-                    assert.strictEqual("https://shopit-item-images.s3.us-west-2.amazonaws.com/floorplan-images/" + user.username + "/floor_plan.jpg", store.floorPlan)
+                    assert.strictEqual("https://shopit-item-images.s3.us-west-2.amazonaws.com/floorplan-images/" + user.username + "/floor_plan.png", store.floorPlan)
 
                 }); 
                 
@@ -410,7 +410,7 @@ describe('Stores', () => {
         it('Should reject POST request because images is not valid (images must be in zip form)', async () => {
 
 
-            let filepath = path.resolve(__dirname, "../test_files/floor_plan.jpg")
+            let filepath = path.resolve(__dirname, "../test_files/floor_plan.png")
 
             let name = "Trader Joe's";
             let address = "Westwood, CA";
@@ -423,7 +423,7 @@ describe('Stores', () => {
                 .field('address', address)
                 .attach('images', 
                     fs.readFileSync(filepath), 
-                    'floor_plan.jpg'
+                    'floor_plan.png'
                 )
                 .then((res) => {
                     assert.strictEqual(res.status, 400);

@@ -127,6 +127,7 @@ router.route('/:username').post( async (req,res) => {
             throw new ApiError("Could not authenticate user", 401)
         }
         const { name, address  } = req.body;
+        
         let user = await User.findOne({username: username});
         let store = await Store.findById(user.store)
         if (store == null) {
@@ -134,6 +135,10 @@ router.route('/:username').post( async (req,res) => {
                 name: name,
                 address: address
             });
+            let existing_store = await Store.findOne({name: name, address: address})
+            if (existing_store != null) {
+                throw new ApiError("Grocery store with name: " + name + " and address: " + address + " is already in the database, please use another name and/or address", 400)
+            }
 
             store = await newStore.save()
             user.store = store
