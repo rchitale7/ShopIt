@@ -36,7 +36,7 @@ const ShoppingCart = () => {
   
   return (
     <View style={styles.container}>
-      <View style={{marginTop: 30}}>
+      <View>
         <Text style={styles.title}>Your Cart</Text>
       </View>
       <FlatList style={styles.section}
