@@ -7,7 +7,7 @@
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --fix --ext .js",
     "test": "mocha test/items.test.js --timeout 10000 --exit && mocha test/users.test.js --timeout 10000 --exit && mocha test/stores.test.js --timeout 10000 --exit",
-    "coverage": "nyc --check-coverage --reporter=html --reporter=text npm run test"
+    "test:coverage": "nyc --check-coverage --reporter=html --reporter=text npm run test"
   },
   "keywords": [],
   "author": "ShopIt",
