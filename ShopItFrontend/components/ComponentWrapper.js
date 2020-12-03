@@ -20,20 +20,16 @@ const Stack = createStackNavigator();
 export default function ComponentWrapper() {
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator styles={styles.grocery}>
                 <Stack.Screen name="Stores" component={GroceryStoreSearch}
                     options={{
                         headerShown: false,
-                        tabBarLabel: 'Stores',
-                        tabBarIcon: ({ color }) => (
-                        <Fontisto name="map" color={color} size={18} />
-                        )
                     }}
                 ></Stack.Screen>
                 <Stack.Screen name="Search" component={StoreTabs}
                     options={{
                         headerTitle: "",
-                        headerStyle: { backgroundColor: '#FFFEE3' }
+                        headerStyle: { backgroundColor: Colors.beige },
                     }}
                 ></Stack.Screen>
             </Stack.Navigator>
@@ -52,15 +48,6 @@ function StoreTabs() {
             inactiveColor='white'
             
         >
-            {/* <Tab.Screen name="Stores" component={GroceryStoreSearch}
-            options={{
-                tabBarLabel: 'Stores',
-                tabBarIcon: ({ color }) => (
-                <Fontisto name="map" color={color} size={18} />
-                )
-            }}
-            /> */}
-            {/* <Tab.Screen name="Stores" component={GroceryStoreSearch}></Tab.Screen> */}
             <Tab.Screen name="Search" component={InventorySearch}
             options={{
                 tabBarLabel: 'Search',
@@ -97,5 +84,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     position: 'absolute'
+  },
+  grocery: {
+
   }
 });

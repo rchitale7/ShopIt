@@ -58,14 +58,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.beige,
   },
   title: {
-    'textAlign': 'center',
+    textAlign: 'center',
     fontFamily: "ComicNeue_400Regular",
     fontSize: 32,
     padding: 10,
   },
   section: {
-    'borderStyle': 'solid',
-    'borderWidth': 1,
+    borderStyle: 'solid',
+    borderWidth: 1,
     backgroundColor: '#FFFFFF',
     marginBottom: 90,
     marginLeft: 30,

@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.beige,
     width: Dimensions.get('window').width,
     marginTop: StatusBar.currentHeight || 0,
-    paddingTop: 20,
+    // paddingTop: 20,
     paddingBottom: 40
   },
   subcontainer: {
