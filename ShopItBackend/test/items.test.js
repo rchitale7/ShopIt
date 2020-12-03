@@ -1,22 +1,29 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const assert = require('assert');
-const app = require('../server.js');
+const suppressLogs = require('mocha-suppress-logs');
+let app = require('../app.js');
 
 const StoreModel = require('../models/store.model');
 
+const testPort = 8888;
 chai.use(chaiHttp);
+suppressLogs();
 
 //This test suite is dependent on a specific store and specific items within that store.
 const storedID = '5fc5658b9e729a2b5421bcb7';
 const firstItemID = '5fc568c0525eab2dd54eed04';
 const secondItemID = '5fc568c0525eab2dd54eed05';
 
-//Start the node server before running tests.
+// Start the node server before running tests.
 before((done) => {
-    app.on("Ready", () => done());
+	app.on('Mongoose ready', () => {
+		app = app.listen(testPort, () => {
+			console.log(`Test server is running on port ${testPort}!\n`);
+			done();
+		});
+	});
 });
-
 
 describe('Items', () => {
     describe('GET', () => {
@@ -216,4 +223,9 @@ describe('Items', () => {
         });
     });
 
+});
+
+after((done) => {
+    app.close();
+    done();
 });
