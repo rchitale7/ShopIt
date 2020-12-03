@@ -4,6 +4,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --fix --ext .js",
     "test": "mocha test/items.test.js --timeout 10000 --exit && mocha test/users.test.js --timeout 10000 --exit && mocha test/stores.test.js --timeout 10000 --exit",
     "coverage": "nyc --reporter=html --reporter=text npm run test",
     "test:enforce": "nyc --check-coverage --reporter=html --reporter=text mocha --timeout 10000 --exit"

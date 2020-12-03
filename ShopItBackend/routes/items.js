@@ -44,7 +44,7 @@ router.route('/add').post((req, res) => {
             store.items.push(newItem);
             return store.save();
         })
-        .then(store => {
+        .then(() => {
             //console.log('Created item and added to store: ' + store);
             res.json(`Successfully created ${name}!`);
         })

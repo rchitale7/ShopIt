@@ -10,9 +10,6 @@ const fs = require('fs')
 const AdmZip = require('adm-zip')
 const multer  = require('multer');
 const AWS = require('aws-sdk');
-const util = require('util')
-
-AWS.config.update({region: 'us-west-2'});
 
 AWS.config.update({region: 'us-west-2'});
 
@@ -228,7 +225,7 @@ router.route('/:username').post( async (req,res) => {
             let zip = new AdmZip(images[0].path);
             let zipEntries = zip.getEntries();
 
-            const re = RegExp('\/.*\.(png|jpeg|jpg)')
+            const re = RegExp('\/.*\.(png|jpeg|jpg)') //eslint-disable-line
             await Promise.all(zipEntries.map(async (zipEntry) => {
                 if (re.test(zipEntry.entryName)) {
                     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
