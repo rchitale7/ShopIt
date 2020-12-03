@@ -31,8 +31,7 @@ const ShoppingCart = () => {
   };
 
   if (!fontsLoaded) {
-    // TODO: change to a loading wheel or something else
-    return <Text>testtttttttttttt</Text>;
+    return <Text></Text>;
   }
   
   return (

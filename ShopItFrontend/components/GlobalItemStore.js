@@ -133,6 +133,7 @@ const retrieveStoreData = async (item) => {
                     .replace('Stn', 'Station')
                     .replace('Cres', 'Crescent')
                     .replace('Bldg', 'Building')
+                    .replace('Blvd', 'Boulevard')
                     .replace('Sq', 'Square');
     
     try {

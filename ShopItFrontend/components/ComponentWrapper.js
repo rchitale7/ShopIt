@@ -13,11 +13,14 @@ import ShoppingCart from './ShoppingCart';
 // Other
 import { Colors } from '../CommonStyles';
 import { Fontisto } from '@expo/vector-icons';
+import { useFonts, ComicNeue_700Bold } from '@expo-google-fonts/comic-neue';
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function ComponentWrapper() {
+    let [fontsLoaded] = useFonts({ComicNeue_700Bold});
+
     return (
         <NavigationContainer>
             <Stack.Navigator styles={styles.grocery}>
@@ -29,7 +32,13 @@ export default function ComponentWrapper() {
                 <Stack.Screen name="Search" component={StoreTabs}
                     options={{
                         headerTitle: "",
+                        headerTintColor: Colors.green,
                         headerStyle: { backgroundColor: Colors.beige },
+                        headerBackTitleStyle: { 
+                            color: Colors.green, 
+                            fontSize: 28, 
+                            fontFamily: 'ComicNeue_700Bold'
+                        },
                     }}
                 ></Stack.Screen>
             </Stack.Navigator>
