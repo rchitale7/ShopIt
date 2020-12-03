@@ -13,8 +13,8 @@ const API_KEY='AIzaSyB0OBBZB0abirvfDAjbAWbCeGqk-knKvtw';
 
 import { NavigationContainer } from '@react-navigation/native';
 
-import { 
-    retrieveStoreData, 
+import {
+    retrieveStoreData,
     getGroceryStoreData,
     useGlobalDispatch
   } from './GlobalItemStore';
@@ -50,7 +50,7 @@ const GroceryStoreSearch = ({ navigation }) => {
 
     useEffect(() => {
         const placeUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&rankby=distance&keyword=grocery store&key=${API_KEY}`;
-    
+
         const stores = [];
 
         fetch(placeUrl)
@@ -62,9 +62,9 @@ const GroceryStoreSearch = ({ navigation }) => {
                 var store = {};
 
                 var placeId = googlePlace.place_id;
-                
+
                 const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${API_KEY}`;
-                
+
                 store.name = googlePlace.name;
                 store.url = geocodeUrl;
 
@@ -72,7 +72,7 @@ const GroceryStoreSearch = ({ navigation }) => {
             }
         })
         .then(res => {
-            return Promise.all(stores.map((store, i) => 
+            return Promise.all(stores.map((store, i) =>
                 fetch(store.url)
                 .then(res => res.json()
                 .then(res => {
@@ -105,15 +105,15 @@ const GroceryStoreSearch = ({ navigation }) => {
             const latitude = location.lat;
             setLatitude(latitude);
             const longitude = location.lng;
-            setLongitude(longitude); 
-        })      
+            setLongitude(longitude);
+        })
     }
 
     function onChangeDestination(search) {
         setSearch(search);
 
         const autocompleteUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${search}&location=${latitude},${longitude}&radius=50&key=${API_KEY}`;
-    
+
         fetch(autocompleteUrl)
         .then(res => {
             return res.json()
@@ -131,7 +131,7 @@ const GroceryStoreSearch = ({ navigation }) => {
         if (search != "") {
             return (
                 <View>
-                    <TouchableHighlight styles={styles.highlight} 
+                    <TouchableHighlight styles={styles.highlight}
                     onPress={() => updateLocation(item.item)}>
                         <Text style={styles.suggestions}>{item.item.description}</Text>
                     </TouchableHighlight>
@@ -150,7 +150,7 @@ const GroceryStoreSearch = ({ navigation }) => {
             });
 
             navigation.navigate('Search');
-        }      
+        }
         catch (err) {
             console.log(err);
         }
@@ -159,7 +159,7 @@ const GroceryStoreSearch = ({ navigation }) => {
     const renderButton = ({item}) => {
         return (
             <View>
-                <TouchableOpacity style={styles.button} 
+                <TouchableOpacity style={styles.button}
                 activeOpacity={0.7}
                 onPress={async () => await locationPressed(item) }>
                     <Text style={styles.title}>{item.name}</Text>
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
         height: 32,
         width: 32,
         top: -51,
-        left: 365,
+        left: 329,
     },
     searchIcon: {
         position: 'absolute',

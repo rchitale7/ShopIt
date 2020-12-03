@@ -19,7 +19,7 @@ function Map() {
 
     const dispatch = useGlobalDispatch();
     const globalState = useGlobalState();
-    
+
     // React hooks
     const [fontsLoaded] = useFonts({ComicNeue_400Regular, ComicNeue_700Bold});
     const [modalVisible, setModalVisible] = useState(false);
@@ -39,13 +39,13 @@ function Map() {
     useEffect(() => {
         if (globalState.selectedStoreData !== null) {
             // Resize floorplan, pins, and items positions. Then cluster items
-            Image.getSize(globalState.selectedStoreData.floorPlan, 
+            Image.getSize(globalState.selectedStoreData.floorPlan,
             (width, height) => {
                 let imgRatio = width/height;
                 let newWidth = imgRatio * zoomableRegionHeight;
                 let newHeight = zoomableRegionHeight;
                 let newPinSize = Math.min(newWidth, newHeight)/20;
-    
+
                 setMapDimensions({
                     width: newWidth,
                     height: newHeight
@@ -53,7 +53,7 @@ function Map() {
                 setPinSize(newPinSize);
                 setClusterRadius(newPinSize);
                 setItems(clusterItems(scaleItemPositions(globalState.groceryList.filter(item => !item.retrieved), zoomableRegionHeight, height), clusterRadius));
-    
+
                 setComponentLoaded(true);
             })
         }
@@ -94,10 +94,10 @@ function Map() {
                                             <Text style={styles.textStyle}><B>Category:</B> {item.category}</Text>
                                             <Text style={styles.textStyle}><B>Price:</B> ${item.price}</Text>
 
-                                            <Image 
+                                            <Image
                                                 source={{ uri: item.imageURL }}
                                                 style={{width: 200, height: 200, marginTop: 20, marginBottom: 20}} />
-                                                
+
                                             <Pressable
                                                 style={{ ...styles.modalButton }}
                                                 onPress={() => {
@@ -118,11 +118,11 @@ function Map() {
                         </View>
                     </View>
                 </Modal>
-                
+
                 <ImageZoom cropWidth={Dimensions.get('window').width}
                             cropHeight={Dimensions.get('window').height}
-                            imageWidth={mapDimensions.width}
-                            imageHeight={mapDimensions.height}>
+                            imageWidth={Dimensions.get('window').width - 120}
+                            imageHeight={Dimensions.get('window').height - 120}>
                     <ImageBackground source={{ uri: globalState.selectedStoreData.floorPlan }} style={mapDimensions}>
                         {items.map((cluster) => {
                             if (cluster.cluster.length > 0) {
@@ -134,7 +134,7 @@ function Map() {
                                         }}
                                         key={cluster._id}
                                     >
-                                        <Image 
+                                        <Image
                                             source={LocationPin}
                                             style={[
                                                 styles.locationPin,
