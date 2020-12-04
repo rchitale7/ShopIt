@@ -131,7 +131,7 @@ const GroceryStoreSearch = ({ navigation }) => {
         if (search != "") {
             return (
                 <View>
-                    <TouchableHighlight styles={styles.highlight} 
+                    <TouchableHighlight styles={styles.highlight}
                     onPress={() => updateLocation(item.item)}>
                         <Text style={styles.suggestions}>{item.item.description}</Text>
                     </TouchableHighlight>
@@ -198,6 +198,7 @@ const GroceryStoreSearch = ({ navigation }) => {
                 </View>
                 <View style={styles.suggestionsList}>
                     <FlatList
+                    keyboardShouldPersistTaps='handled'
                     data={predictions}
                     renderItem={item => renderSuggestion(item)}
                     keyExtractor={(item, index) => index.toString()}
@@ -248,7 +249,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
     },
     suggestions: {
-        marginLeft: 10,
         padding: 7,
         fontSize: 18,
         backgroundColor: '#FFF',
