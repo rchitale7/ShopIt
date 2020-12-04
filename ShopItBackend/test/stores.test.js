@@ -15,7 +15,7 @@ chai.use(chaiHttp);
 suppressLogs();
 
 const exampleStore1 = {
-    "name": "Lucky's",
+    "name": "Dummy Store",
     "address": "Foothill Expressway, Palo Alto, CA, USA"
 };
 
@@ -428,6 +428,66 @@ describe('Stores', () => {
                 .then((res) => {
                     assert.strictEqual(res.status, 400);
                 });
+                
+        });
+
+        it('Should add store name and address, add items from csv, add floor plan, and match items in store to images in zip file', async () => {
+
+
+            let images = path.resolve(__dirname, "../test_files/images_valid.zip")
+            let items = path.resolve(__dirname, "../test_files/items_valid.csv")
+            let floorplan = path.resolve(__dirname, "../test_files/floor_plan.png")
+
+            let csv_items = await csv().fromFile(items);
+            return await chai.request(app)
+                .post('/stores/' + exampleUser.username)
+                .set('Cookie', token)
+                .set('Content-Type', 'multipart/form-data')
+                .field('name', exampleStore1.name)
+                .field('address', exampleStore1.address)
+                .attach('images', 
+                    fs.readFileSync(images), 
+                    'images_valid.zip'
+                )
+                .attach('items', 
+                    fs.readFileSync(items), 
+                    'items_valid.csv'
+                )
+                .attach('floorPlan', 
+                    fs.readFileSync(floorplan), 
+                    'floor_plan.png'
+                )
+                .then((res) => {
+                    assert.strictEqual(res.status, 200);
+                    return User.findOne({username: exampleUser.username});
+                }).then((user) => {
+                    return Store.findById(user.store);
+                }).then((store) => {
+                    assert.notStrictEqual(null, store); 
+                    assert.notStrictEqual(undefined, store);
+
+                    assert.strictEqual(exampleStore1.name, store.name)
+                    assert.strictEqual(exampleStore1.address, store.address)
+                    assert.strictEqual("https://shopit-item-images.s3.us-west-2.amazonaws.com/floorplan-images/" + exampleUser.username + "/floor_plan.png", store.floorPlan)
+
+                    for (let i = 0; i < csv_items.length; i++) {
+                        assert.strictEqual(csv_items[i].name, store.items[i].name)
+                        assert.strictEqual(csv_items[i].brand, store.items[i].brand)
+                        assert.strictEqual(csv_items[i].category, store.items[i].category)
+                        assert.strictEqual(parseFloat(csv_items[i].price), store.items[i].price)
+                        assert.strictEqual(csv_items[i].size, store.items[i].size)
+                        let name = csv_items[i].name.split(" ")
+                        // to handle the case where
+                        // the item is > 1 word
+                        // because the s3 url inserts %20 symbols for spaces
+                        if (name.length > 1) {
+                            csv_items[i].name = name[0] + "%20" + name[1]
+                        }
+                        assert.strictEqual("https://shopit-item-images.s3.us-west-2.amazonaws.com/item-images/" + exampleUser.username + "/images/" + csv_items[i].name + ".jpeg", store.items[i].imageURL)
+                    }
+
+
+                }); 
                 
         });
 
