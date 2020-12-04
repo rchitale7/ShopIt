@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
         height: 32,
         width: 32,
         top: -51,
-        left: 365,
+        left: 329,
     },
     searchIcon: {
         position: 'absolute',
