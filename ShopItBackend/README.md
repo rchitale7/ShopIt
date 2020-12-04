@@ -25,3 +25,7 @@ Testing instructions (test:coverage generates coverage statistics and enforces c
 npm run test
 npm run test:coverage
 ```
+
+## Documentation
+
+https://documenter.getpostman.com/view/6616705/TVmPBdCv
