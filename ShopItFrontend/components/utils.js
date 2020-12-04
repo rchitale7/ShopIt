@@ -90,14 +90,15 @@ const removeItemFromClusters = (clusters, item) => {
  * @param {Number} imageHeight Actual height of image
  */
 const scaleItemPositions = (items, mapHeight, imageHeight) => {
+    let res = _.cloneDeep(items);
     let ratio = mapHeight/imageHeight;
 
-    for (let i = 0; i < items.length; i++) {
-        items[i].posX = items[i].posX * ratio;
-        items[i].posY = items[i].posY * ratio
+    for (let i = 0; i < res.length; i++) {
+        res[i].posX = res[i].posX * ratio;
+        res[i].posY = res[i].posY * ratio
     }
 
-    return items;
+    return res;
 }
 
 module.exports.itemDistance = itemDistance;

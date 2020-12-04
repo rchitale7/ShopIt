@@ -4,14 +4,14 @@ import Logo from '../assets/logo_filled.png';
 function Login() {
   return (
     <>
-      <img src={Logo} className="img" />
+      <img src={Logo} className="img" alt="ShopIt" />
       <div className="header">Welcome to ShopIt!</div>
       <div className="container">
         <form>
-          <input className="input" type="text" id="username" placeholder="username..."/>
+          <input className="input" type="text" id="username" placeholder="username..." />
         </form>
         <form>
-          <input className="input" type="text" id="password" placeholder="password..." type="password"/>
+          <input className="input" type="password" id="password" placeholder="password..." />
         </form>
         <button className="button"
             type="button"

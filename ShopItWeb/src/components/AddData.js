@@ -42,7 +42,7 @@ class AddData extends React.Component {
       >{prediction.description}</button>);
     return (
       <>
-        <img src={Logo} className="img" />
+        <img src={Logo} className="img" alt="ShopIt" />
         <div className="header">Update store data!</div>
         <div className="datacontainer">
           <div className="innertext">Name</div>
@@ -75,9 +75,6 @@ class AddData extends React.Component {
                 e.preventDefault();
                 var name = document.getElementById('name').value
                 var addr = document.getElementById('address').value
-                var items = document.getElementById('items').value
-                var floorPlan = document.getElementById('floorPlan').value
-                var images = document.getElementById('images').value
                 if(name === null || name === "") {
                   alert("Please input name.")
                   return
@@ -144,9 +141,6 @@ class AddData extends React.Component {
               e.preventDefault();
               var name = document.getElementById('name').value
               var addr = document.getElementById('address').value
-              var items = document.getElementById('items').value
-              var floorPlan = document.getElementById('floorPlan').value
-              var images = document.getElementById('images').value
               if(name === null || name === "") {
                 alert("Please input name.")
                 return

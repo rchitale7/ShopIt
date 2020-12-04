@@ -34,7 +34,7 @@ function AutoLogin() {
   }, []);
   return (
     <>
-      <img src={Logo} className="img" />
+      <img src={Logo} className="img" alt="ShopIt" />
     </>
   );
 }
