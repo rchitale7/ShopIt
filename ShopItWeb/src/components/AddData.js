@@ -1,5 +1,6 @@
 import React from 'react';
 import Logo from '../assets/logo_filled.png';
+import ReactTooltip from 'react-tooltip';
 const API_KEY='AIzaSyB0OBBZB0abirvfDAjbAWbCeGqk-knKvtw';
 
 class AddData extends React.Component {
@@ -54,17 +55,32 @@ class AddData extends React.Component {
             <input className="input" type="text" id="address" placeholder="address..." defaultValue={window.localStorage.getItem("address")} onInput={this.onChangeDestination}/>
           </form>
           <div className="autocomplete" id="autocomplete">{suggestionsList}</div>
-          <div className="innertext">Inventory</div>
+          <div className="innertext">Inventory
+            <img data-tip data-for="inventoryTip" src="https://www.freeiconspng.com/uploads/information-icon-3.png" className="info"/>
+          </div>
+          <ReactTooltip id="inventoryTip" place="bottom">
+            All items in csv file must contain values for columns: name, brand, category, price, size.
+          </ReactTooltip>
           <form>
             <input className="input" type="file" id="items" name="items" accept=".csv"/>
             <div className="filetext">Accepted file types: .csv</div>
           </form>
-          <div className="innertext">Floor Plan</div>
+          <div className="innertext">Floor Plan
+          <img data-tip data-for="planTip" src="https://www.freeiconspng.com/uploads/information-icon-3.png" className="info"/>
+          </div>
+          <ReactTooltip id="planTip" place="bottom">
+            Note: some floor plan images that are too small might not render correctly.
+          </ReactTooltip>
           <form>
             <input className="input" type="file" id="floorPlan" name="floorPlan" accept=".png, .jpg, .jpeg"/>
             <div className="filetext">Accepted file types: .jpg, .jpeg, .png</div>
           </form>
-          <div className="innertext">Images</div>
+          <div className="innertext">Images
+            <img data-tip data-for="imagesTip" src="https://www.freeiconspng.com/uploads/information-icon-3.png" className="info"/>
+          </div>
+          <ReactTooltip id="imagesTip" place="bottom">
+            The name of each image in the zip file must match the name of the item you want it to be associated with.
+          </ReactTooltip>
           <form>
             <input className="input" type="file" id="images" name="images" accept=".zip"/>
             <div className="filetext">Accepted file types: .zip</div>
