@@ -1,6 +1,6 @@
 # How to run
 
-Create a .env file in the root directory with the following properties, replacing \<values\> with the appropriate secret values. 
+Create a .env file in the ShopItBackend directory (filepath: ShopIt/ShopItBackend/.env) with the following properties, replacing \<values\> with the appropriate secret values. 
 ```
 ATLAS_URI=mongodb+srv://<username>:<password>@cluster0.qkybc.mongodb.net/<dbname>?retryWrites=true&w=majority
 BUCKET=shopit-item-images
